@@ -1,3 +1,6 @@
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -21,8 +24,8 @@ struct State {
 			uint32_t LR;
 			uint32_t PC;
 			uint32_t CPSR;
-		};
-		uint32_t R[17];
+		} struct_access;
+		uint32_t array_access[17];
 	} registers;
 	uint32_t memory[16384];
 };
@@ -70,8 +73,4 @@ struct Instruction {
 	uint32_t offset;   // bottom 12 or bottom 24 bits used
 };
 
-struct Pipeline {
-	uint32_t (*fetch)(struct State *state_struct_ptr);
-	struct Instruction (*decode)(uint32_t instruction_binary);
-	bool (*execute)(struct Instruction instruction, struct State *state);
-};
+#endif
