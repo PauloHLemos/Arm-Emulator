@@ -71,8 +71,6 @@ struct Instruction {
 };
 
 struct Pipeline {
-	bool ready_to_exectute;
-	bool ready_to_decode;
 	uint32_t (*fetch)(struct State *state_struct_ptr);
 	struct Instruction (*decode)(uint32_t instruction_binary);
 	bool (*execute)(struct Instruction instruction, struct State *state);
