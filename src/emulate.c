@@ -7,9 +7,9 @@
 int main(int argc, char **argv) {
 	struct State state;
 	state.registers.r0 = 5;
+	printf("%d\n", state.registers.R[0]);
 	state.registers.R[4] = 10;
 	printf("%d\n", state.registers.r0);
-	printf("%d\n", state.registers.R[0]);
 	printf("%d\n", state.registers.r4);
 
 	state.memory[1230] = 1209; 

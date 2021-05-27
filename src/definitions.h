@@ -55,6 +55,7 @@ struct Instruction {
 	enum Instruction_Type type;
 	enum Condition cond;
 	enum Opcode opcode;
+	bool halt;
 	bool immediate_operand;
 	bool set_condition_codes;
 	bool accumulate;
