@@ -9,19 +9,19 @@ void print_binary(uint32_t number) {
 	printf("\n");
 }
 
-bool negative_flag_set(struct State *state_ptr) {
+uint32_t negative_flag_set(struct State *state_ptr) {
 	uint32_t mask = 1 << 31;
 	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
 }
-bool zero_flag_set(struct State *state_ptr) {
+uint32_t zero_flag_set(struct State *state_ptr) {
 	uint32_t mask = 1 << 30;
 	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
 }
-bool carry_flag_set(struct State *state_ptr) {
+uint32_t carry_flag_set(struct State *state_ptr) {
 	uint32_t mask = 1 << 29;
 	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
 }
-bool overflow_flag_set(struct State *state_ptr) {
+uint32_t overflow_flag_set(struct State *state_ptr) {
 	uint32_t mask = 1 << 28;
 	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
 }
@@ -39,6 +39,8 @@ int main(void) {
 	printf("%s\n", zero_flag_set(&state) ? "Flag set" : "Flag not set");
 	printf("%s\n", carry_flag_set(&state) ? "Flag set" : "Flag not set");
 	printf("%s\n", overflow_flag_set(&state) ? "Flag set" : "Flag not set");
+
+
 
 	return 0;
 }
