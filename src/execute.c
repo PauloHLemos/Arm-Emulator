@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "definitions.h"
 #include "execute.h"
+#include "instructions.h"
 
 void print_binary(uint32_t number) {
 	for (int i = 0, mask = 1 << 31; i < 32; i++, number <<= 1) 
@@ -30,6 +31,7 @@ uint32_t get_overflow_flag(struct State *state_ptr) {
 }
 
 
+/*
 int main(void) {
 	struct Instruction instruction;
 	struct State state;
@@ -48,12 +50,13 @@ int main(void) {
 
 	return 0;
 }
+*/
 
 bool execute(struct Instruction instruction, struct State *state_ptr) {
-	uint32_t N = get_negative_flag(state_ptr);
-	uint32_t Z = get_zero_flag(state_ptr);
-	uint32_t C = get_carry_flag(state_ptr);
-	uint32_t V = get_overflow_flag(state_ptr);
+	char N = get_negative_flag(state_ptr);
+	char Z = get_zero_flag(state_ptr);
+	char C = get_carry_flag(state_ptr);
+	char V = get_overflow_flag(state_ptr);
 
 	switch(instruction.cond) {
 		case EQUAL:	         if (!(Z)) { return false; } break;
@@ -65,5 +68,40 @@ bool execute(struct Instruction instruction, struct State *state_ptr) {
 		case ALWAYS:		 break;
 	}
 
-	return true;
+	switch(instruction.type) {
+		case DATA_PROCESSING: 
+			data_processing(state_ptr,
+					instruction.opcode, 
+					instruction.immediate_operand,
+					instruction.set_condition_codes,
+					instruction.rn,
+					instruction.rd,
+					instruction.operand2);
+			break;
+		case MULTIPLY: 
+			multiply(state_ptr,
+					instruction.accumulate,
+					instruction.set_condition_codes,
+					instruction.rd,
+					instruction.rn,
+					instruction.rs,
+					instruction.rm);
+			break;
+		case SINGLE_DATA_TRANSFER: 
+			single_data_transfer(state_ptr,
+					// Might be better to add a bool for immediate offset
+					instruction.immediate_operand,
+					instruction.pre_post_indexing,
+					instruction.up,
+					instruction.load_store,
+					instruction.rn,
+					instruction.rd,
+					instruction.offset);
+			break;
+		case BRANCH: 
+			branch(state_ptr, instruction.offset);
+			return true;
+			break;
+	}
+	return false;
 }

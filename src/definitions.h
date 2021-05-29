@@ -59,7 +59,7 @@ struct Instruction {
 	enum Condition cond;
 	enum Opcode opcode;
 	bool halt;
-	bool immediate_operand;
+	bool immediate_operand; // Add another bool for immediate_offset
 	bool set_condition_codes;
 	bool accumulate;
 	bool pre_post_indexing;
