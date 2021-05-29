@@ -11,12 +11,18 @@ all: assemble emulate
 
 assemble: assemble.o
 
-emulate: emulate.o pipeline.o fetch.o decode.o execute.o
+emulate: emulate.o pipeline.o \
+	fetch.o decode.o execute.o \
+	data_processing.o multiply.o single_data_transfer.o branch.o
 emulate.o: definitions.h pipeline.h 
 pipeline.o: pipeline.h definitions.h fetch.h decode.h execute.h
-fetch.o: fetch.h
-decode.o: decode.h
-execute.o: execute.h
+fetch.o: definitions.h fetch.h
+decode.o: definitions.h decode.h
+execute.o: execute.h instructions.h definitions.h
+data_processing.o: definitions.h instructions.h
+multiply.o: definitions.h instructions.h
+single_data_transfer.o: definitions.h instructions.h
+branch.o: definitions.h instructions.h
 
 
 

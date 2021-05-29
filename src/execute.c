@@ -31,6 +31,7 @@ uint32_t get_overflow_flag(struct State *state_ptr) {
 }
 
 
+/*
 int main(void) {
 	struct Instruction instruction;
 	struct State state;
@@ -49,11 +50,12 @@ int main(void) {
 
 	return 0;
 }
+*/
 
 bool execute(struct Instruction instruction, struct State *state_ptr) {
 	char N = get_negative_flag(state_ptr);
 	char Z = get_zero_flag(state_ptr);
-	char C = get_carry_flag(state_ptr);
+	// char C = get_carry_flag(state_ptr); unused
 	char V = get_overflow_flag(state_ptr);
 
 	switch(instruction.cond) {
