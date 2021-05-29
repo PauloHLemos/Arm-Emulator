@@ -26,6 +26,6 @@ void single_data_transfer(struct State *state_ptr,
 		uint8_t rn,
 		uint8_t rd,
 		uint32_t offset);
-bool branch(struct State *state_ptr, uint32_t offset);
+void branch(struct State *state_ptr, uint32_t offset);
 
 #endif
