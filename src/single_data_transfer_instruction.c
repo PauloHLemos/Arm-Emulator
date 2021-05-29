@@ -8,14 +8,12 @@ void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr
 static uint32_t calculate_offset(struct State state, uint32_t offset);
 
 void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr) {
-	//struct Instruction instr = *instr_ptr;
-	//struct State state = *state_ptr;
 	uint32_t offset;
 	uint32_t address = state_ptr->registers.array_access[instr_ptr->rn];
 	if (instr_ptr->immediate_operand) { //should be immediate_offset
 		offset = calculate_offset(*state_ptr, instr_ptr->offset);
 	} else {
-		offset = instr_ptr->offset; // convert to 12 bit unsigned
+		offset = instr_ptr->offset; 
 	}
 	// offset is made negative if its value is to be subtracted instead of added.
 	if (!instr_ptr->up) {
@@ -60,18 +58,21 @@ int main(int argc, char **argv) {
 	instr.immediate_operand = false;
 	instr.up = true;
 	instr.pre_post_indexing = true;
-	instr.offset = 0;
+	instr.offset = 16;
 	instr.rn = 1;
 	instr.rd = 2;
-	instr.load_store = true;
+	instr.load_store = false;
 
-	state.registers.array_access[1] = 1;
-	state.registers.array_access[2] = 2;
+	state.registers.array_access[1] = 4;
+	state.registers.array_access[2] = 8;
 	state.memory[0] = 20;
-	state.memory[1] = 30;
+	state.memory[4] = 200;
+	state.memory[20] = 13;
 
 	single_data_transfer(&state, &instr);	
-	printf("%d\n", state.registers.array_access[2]);
+	printf("%d\n", state.registers.array_access[instr.rd]);
+	printf("%d\n", state.registers.array_access[instr.rn]);
+	printf("%d\n", state.memory[20]);
 	return EXIT_SUCCESS;
 }
 
