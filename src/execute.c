@@ -4,12 +4,6 @@
 #include "execute.h"
 #include "instructions.h"
 
-void print_binary(uint32_t number) {
-	for (int i = 0, mask = 1 << 31; i < 32; i++, number <<= 1) 
-		printf("%i", ((number & mask) == 0) ? 0 : 1);
-	printf("\n");
-}
-
 char get_CPSR_bit(struct State *state_ptr, char bit_no) {
 	// indexing starts at 0
 	uint32_t mask = 1 << bit_no;
