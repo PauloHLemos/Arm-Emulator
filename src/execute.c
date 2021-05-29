@@ -52,7 +52,7 @@ int main(void) {
 }
 */
 
-bool execute(struct Instruction instruction, struct State *state_ptr) {
+bool condition_met(struct Instruction instruction, struct State *state_ptr) {
 	char N = get_negative_flag(state_ptr);
 	char Z = get_zero_flag(state_ptr);
 	// char C = get_carry_flag(state_ptr); unused
@@ -67,6 +67,12 @@ bool execute(struct Instruction instruction, struct State *state_ptr) {
 		case LESS_THAN_OR_EQUAL: if (!(Z || (N != V))) { return false; } break;
 		case ALWAYS:		 break;
 	}
+	return true;
+}
+
+bool execute(struct Instruction instruction, struct State *state_ptr) {
+
+	if (!condition_met(instruction, state_ptr)) return false;
 
 	switch(instruction.type) {
 		case DATA_PROCESSING: 
