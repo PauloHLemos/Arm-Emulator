@@ -34,5 +34,4 @@ void pipeline(struct State *state_ptr) {
 		}
 		ready_to_decode = true;
 	}
-	return;
 }
