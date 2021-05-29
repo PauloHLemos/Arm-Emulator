@@ -10,53 +10,17 @@ void print_binary(uint32_t number) {
 	printf("\n");
 }
 
-uint32_t get_negative_flag(struct State *state_ptr) {
-	uint32_t mask = 1 << 31;
+char get_CPSR_bit(struct State *state_ptr, char bit_no) {
+	// indexing starts at 0
+	uint32_t mask = 1 << bit_no;
 	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
 }
-
-uint32_t get_zero_flag(struct State *state_ptr) {
-	uint32_t mask = 1 << 30;
-	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
-}
-
-uint32_t get_carry_flag(struct State *state_ptr) {
-	uint32_t mask = 1 << 29;
-	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
-}
-
-uint32_t get_overflow_flag(struct State *state_ptr) {
-	uint32_t mask = 1 << 28;
-	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
-}
-
-
-/*
-int main(void) {
-	struct Instruction instruction;
-	struct State state;
-
-	uint32_t number = 2588011328;
-	print_binary(number);
-	instruction.cond = EQUAL;
-	state.registers.struct_access.CPSR = number;
-
-	printf("%s\n", get_negative_flag(&state) ? "N flag set" : "N flag clear");
-	printf("%s\n", get_zero_flag(&state) ? "Z flag set" : "Z flag clear");
-	printf("%s\n", get_carry_flag(&state) ? "C flag set" : "C flag clear");
-	printf("%s\n\n", get_overflow_flag(&state) ? "V flag set" : "V flag clear");
-
-	printf("%i\n", execute(instruction, &state));
-
-	return 0;
-}
-*/
 
 bool condition_met(struct Instruction instruction, struct State *state_ptr) {
-	char N = get_negative_flag(state_ptr);
-	char Z = get_zero_flag(state_ptr);
-	// char C = get_carry_flag(state_ptr); unused
-	char V = get_overflow_flag(state_ptr);
+	char N = get_CPSR_bit(state_ptr, 31);
+	char Z = get_CPSR_bit(state_ptr, 30);
+	// char C = get_CPSR_bit(state_ptr, 29); unused
+	char V = get_CPSR_bit(state_ptr, 28);
 
 	switch(instruction.cond) {
 		case EQUAL:	         if (!(Z)) { return false; } break;
