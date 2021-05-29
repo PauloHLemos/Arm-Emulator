@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "definitions.h"
-// #include "instructions.h"
+#include "instructions.h"
 
 void data_processing(struct State *state_ptr,
 		enum Opcode opcode,
@@ -12,11 +12,32 @@ void data_processing(struct State *state_ptr,
 		uint8_t rn,
 		uint8_t rd,
 		uint32_t operand2) {
+
+	// retrieve operand1 from the register file
+	uint32_t operand1 = state_ptr->registers.array_access[rn];
+
+	// calculate operand2
+	if (immediate_operand) {
+		// process operand2 as immediate value
+		
+	} else {
+		// process operand2 as shifted register
+
+	}
+
+	// calculate result by applying a function corresponding to the opcode,
+	// applying to operand1 and operand2
+	uint32_t result = 123;
+	
+	if (set_condition_codes) {
+		// set the condition codes
+	}
+
+	state_ptr->registers.array_access[rd] = result;
 	return;
 }
 
 int main(void) {
-	printf("Hello world\n");
 	struct State state;
 	struct Instruction instruction;
 	memset(&state, 0, sizeof(struct State));
@@ -36,6 +57,8 @@ int main(void) {
 			instruction.rn,
 			instruction.rd,
 			instruction.operand2);
+
+	printf("%d\n", state.registers.array_access[instruction.rd]);
 
 	return 0;
 }
