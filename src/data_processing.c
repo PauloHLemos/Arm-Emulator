@@ -75,7 +75,7 @@ void data_processing(struct State *state_ptr,
 			process_operand2_immediate_value(operand2) : 
 			process_operand2_shifted_register(state_ptr, operand2);
 
-	uint32_t result = apply_operation(opcode, operand1, operand2, &write_result);
+	uint32_t result = apply_operation(opcode, operand1, operand2_processed, &write_result);
 	// calculate result by applying a function corresponding to the opcode,
 	// applying to operand1 and operand2
 	
@@ -90,26 +90,26 @@ uint32_t apply_operation(enum Opcode opcode,
 		uint32_t operand1, 
 		uint32_t operand2, 
 		bool *write_result_ptr) {
-	*write_result_ptr = true;
 	switch (opcode) {
-		case AND:	       return operand1 & operand2;
-		case EXCLUSIVE_OR:     return operand1 ^ operand2;
-		case SUBTRACT:	       return operand1 - operand2;
-		case REVERSE_SUBTRACT: return operand2 - operand1;
-		case ADD:	       return operand1 + operand2; 
+		case AND:	       *write_result_ptr = true;  return operand1 & operand2;
+		case EXCLUSIVE_OR:     *write_result_ptr = true;  return operand1 ^ operand2;
+		case SUBTRACT:	       *write_result_ptr = true;  return operand1 - operand2;
+		case REVERSE_SUBTRACT: *write_result_ptr = true;  return operand2 - operand1;
+		case ADD:	       *write_result_ptr = true;  return operand1 + operand2; 
 		case TEST_BITS:	       *write_result_ptr = false; return operand1 & operand2;
 		case TEST_EQUALS:      *write_result_ptr = false; return operand1 ^ operand2;
 		case COMPARE:	       *write_result_ptr = false; return operand1 - operand2;
-		case OR:	       return operand1 | operand2;
-		case MOVE:	       return operand2;
+		case OR:	       *write_result_ptr = true;  return operand1 | operand2;
+		case MOVE:	       *write_result_ptr = true;  return operand2;
+		default:	       return -1;
 	}
 }
 
 uint32_t process_operand2_immediate_value(uint32_t operand2) {
 	// bits 0-7 are an unsigned 8 bit number bits 8-11 are a shift to Imm
-	uint32_t immediate	       = operand2 & 0xff; // with implicit zero extension
-	uint32_t right_rotation_amount = 2 * ((operand2 & 0xf00) >> 8);
-	return rotate_right(immediate, right_rotation_amount);
+	uint32_t immediate    = operand2 & 0xff;
+	uint32_t shift_amount = 2 * ((operand2 & 0xf00) >> 8);
+	return rotate_right(immediate, shift_amount);
 }
 
 uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2) {
@@ -124,21 +124,24 @@ uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2) {
 	bool bit_4 = (operand2 & 0b10000) != 0;
 	if (bit_4) {
 		// Register case, bits 8-11 are the register, we use bottom byte of it
-		uint8_t shift_register_index  = (operand2 & 0xf00) >> 8;
-		uint32_t shift_register_value = state_ptr->registers.array_access[shift_register_index];
-		return				(shift_register_value & 0xff);
+		uint32_t rs_index      = (operand2 & 0xf00) >> 8;
+		uint32_t rs	       = state_ptr->registers.array_access[rs_index];
+		uint32_t rs_first_byte = (rs & 0xff);
+		return rs_first_byte;
 	} else {
 		// Integer case, bits 7-11 are the shift
-		return ((operand2 & 0b111110000000) >> 7);
+		uint32_t immediate_shift = ((operand2 & 0b111110000000) >> 7);
+		return immediate_shift;
 	}
 }
 
 uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount) {
 	switch (shift_code) {
-		case 0: return logical_shift_left(rm, shift_amount); break;
-		case 1: return logical_shift_right(rm, shift_amount); break;
-		case 2: return arithmetic_shift_right(rm, shift_amount); break;
-		case 3: return rotate_right(rm, shift_amount); break;
+		case 0:  return logical_shift_left(rm, shift_amount); 
+		case 1:  return logical_shift_right(rm, shift_amount); 
+		case 2:  return arithmetic_shift_right(rm, shift_amount); 
+		case 3:  return rotate_right(rm, shift_amount); 
+		default: return -1;
 	}
 }
 
