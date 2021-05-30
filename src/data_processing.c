@@ -12,12 +12,10 @@ void data_processing(struct State *state_ptr,
 		uint8_t rn,
 		uint8_t rd,
 		uint32_t operand2);
-void apply_operation(enum Opcode opcode, 
+uint32_t apply_operation(enum Opcode opcode, 
 		uint32_t operand1, 
 		uint32_t operand2, 
-		uint32_t *result_ptr, 
 		bool *write_result_ptr); 
-uint32_t process_operand2(struct State *state_ptr, uint32_t operand2, bool immediate_operand);
 uint32_t process_operand2_immediate_value(uint32_t operand2); 
 uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2);
 enum Shift_Type get_shift_type(uint32_t operand2);
@@ -70,13 +68,14 @@ void data_processing(struct State *state_ptr,
 		uint32_t operand2) {
 	// consider overflows, flag setting
 	bool write_result;
-	uint32_t operand2_processed;
 	uint32_t operand1 = state_ptr->registers.array_access[rn];
-	uint32_t result   = 0;
 	// assert only the bottome 12 bits of operand2 used?
-	operand2_processed = process_operand2(state_ptr, operand2, immediate_operand);
-	apply_operation(opcode, operand1, operand2, &result, &write_result);
 
+	uint32_t operand2_processed = (immediate_operand) ? 
+			process_operand2_immediate_value(operand2) : 
+			process_operand2_shifted_register(state_ptr, operand2);
+
+	uint32_t result = apply_operation(opcode, operand1, operand2, &write_result);
 	// calculate result by applying a function corresponding to the opcode,
 	// applying to operand1 and operand2
 	
@@ -87,73 +86,37 @@ void data_processing(struct State *state_ptr,
 	if (write_result) state_ptr->registers.array_access[rd] = result;
 }
 
-uint32_t process_operand2(struct State *state_ptr,
-		 uint32_t operand2, 
-		 bool immediate_operand) {
-	if (immediate_operand) {
-		return process_operand2_immediate_value(operand2);
-	} else {
-		return process_operand2_shifted_register(state_ptr, operand2);
-	}
-}
-
-
-void apply_operation(enum Opcode opcode, 
+uint32_t apply_operation(enum Opcode opcode, 
 		uint32_t operand1, 
 		uint32_t operand2, 
-		uint32_t *result_ptr, 
 		bool *write_result_ptr) {
 	*write_result_ptr = true;
 	switch (opcode) {
-		// THINK ABOUT OVERFLOWS
-		case AND: 
-			*result_ptr = operand1 & operand2;
-			break;
-		case EXCLUSIVE_OR: 
-			*result_ptr = operand1 ^ operand2;
-			break;
-		case SUBTRACT: 
-			*result_ptr = operand1 - operand2;
-			break;
-		case REVERSE_SUBTRACT: 
-			*result_ptr = operand2 - operand1;
-			break;
-		case ADD: 
-			*result_ptr = operand1 + operand2; 
-			break;
-		case TEST_BITS: 
-			*result_ptr = operand1 & operand2;
-			*write_result_ptr = false;
-			break;
-		case TEST_EQUALS: 
-			*result_ptr = operand1 ^ operand2;
-			*write_result_ptr = false;
-			break;
-		case COMPARE: 
-			*result_ptr = operand1 - operand2;
-			*write_result_ptr = false;
-			break;
-		case OR: 
-			*result_ptr = operand1 | operand2;
-			break;
-		case MOVE: 
-			*result_ptr = operand2;
-			break;
+		case AND:	       return operand1 & operand2;
+		case EXCLUSIVE_OR:     return operand1 ^ operand2;
+		case SUBTRACT:	       return operand1 - operand2;
+		case REVERSE_SUBTRACT: return operand2 - operand1;
+		case ADD:	       return operand1 + operand2; 
+		case TEST_BITS:	       *write_result_ptr = false; return operand1 & operand2;
+		case TEST_EQUALS:      *write_result_ptr = false; return operand1 ^ operand2;
+		case COMPARE:	       *write_result_ptr = false; return operand1 - operand2;
+		case OR:	       return operand1 | operand2;
+		case MOVE:	       return operand2;
 	}
 }
 
 uint32_t process_operand2_immediate_value(uint32_t operand2) {
 	// bits 0-7 are an unsigned 8 bit number bits 8-11 are a shift to Imm
-	uint32_t immediate		  = operand2 & 0xff; // with implicit zero extension
-	uint32_t right_rotation_amount	  = 2 * ((operand2 & 0xf00) >> 8);
+	uint32_t immediate	       = operand2 & 0xff; // with implicit zero extension
+	uint32_t right_rotation_amount = 2 * ((operand2 & 0xf00) >> 8);
 	return rotate_right(immediate, right_rotation_amount);
 }
 
 uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2) {
 	uint32_t rm_index	   = operand2 & 0xf;
 	uint32_t rm		   = state_ptr->registers.array_access[rm_index];
-	uint32_t shift_code = (operand2 & 0b1100000) >> 5;
-	uint32_t shift_amount = get_shift_amount(state_ptr, operand2);
+	uint32_t shift_code	   = (operand2 & 0b1100000) >> 5;
+	uint32_t shift_amount	   = get_shift_amount(state_ptr, operand2);
 	return shift(rm, shift_code, shift_amount);
 }
 
