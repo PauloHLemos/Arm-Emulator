@@ -13,7 +13,8 @@ assemble: assemble.o
 
 emulate: emulate.o pipeline.o \
 	fetch.o decode.o execute.o \
-	data_processing.o multiply.o single_data_transfer.o branch.o
+	data_processing.o multiply.o single_data_transfer.o branch.o \
+	loader.o
 emulate.o: definitions.h pipeline.h 
 pipeline.o: pipeline.h definitions.h fetch.h decode.h execute.h
 fetch.o: definitions.h fetch.h
@@ -23,6 +24,7 @@ data_processing.o: definitions.h instructions.h
 multiply.o: definitions.h instructions.h
 single_data_transfer.o: definitions.h instructions.h
 branch.o: definitions.h instructions.h
+loader.o: definitions.h loader.h 
 
 
 
