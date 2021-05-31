@@ -1,23 +1,22 @@
 #include <stdlib.h>
-#include <stdint.h>
+#include <assert.h>
+#include <string.h>
+#include <stdio.h>
 #include "definitions.h"
+#include "pipeline.h"
 
 
+void pipeline(struct State *state);
 
 int main(int argc, char **argv) {
-	struct State state;
-	state.registers.r0 = 5;
-	printf("%d\n", state.registers.R[0]);
-	state.registers.R[4] = 10;
-	printf("%d\n", state.registers.r0);
-	printf("%d\n", state.registers.r4);
 
-	state.memory[1230] = 1209; 
-	printf("%d\n", state.memory[1230]);
+	struct State *state_ptr = malloc(sizeof(struct State));
+	assert(state_ptr != NULL);
+	state_ptr = memset(state_ptr, 0, sizeof(struct State));
+	assert(state_ptr != NULL);
 
-	struct Instruction instruction;
-	instruction.opcode = EXCLUSIVE_OR;
-	printf("%d\n", instruction.opcode);
+	// pipeline(state_ptr);
 
 	return EXIT_SUCCESS;
 }
+
