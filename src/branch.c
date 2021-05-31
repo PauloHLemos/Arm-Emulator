@@ -8,6 +8,7 @@ void branch(struct State *state_ptr, struct Instruction *instruction_ptr){
 			offset *= 4;
 			//Sign extension by 6 bits (equivalent to + 11111100 00000000 00000000 00000000) 
 			if (offset >> 25){
-					offset += 4227858432;
-			state_ptr->registers.PC += offset;
+					offset += 0b11111100000000000000000000000000;
+			state_ptr->registers.struct_access.PC += offset;
+			}
 }
