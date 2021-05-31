@@ -15,7 +15,7 @@ void pipeline(struct State *state_ptr) {
 
 	while (!instruction_struct.halt) {
 		if (ready_to_execute) {
-			flush = execute(instruction_struct, state_ptr);
+			flush = execute(&instruction_struct, state_ptr);
 			if (flush) {
 				ready_to_decode = false;
 				ready_to_execute = false;
