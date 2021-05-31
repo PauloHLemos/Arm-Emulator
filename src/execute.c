@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "definitions.h"
 #include "execute.h"
 #include "instructions.h"
@@ -44,8 +45,10 @@ bool execute(struct Instruction *instruction_ptr, struct State *state_ptr) {
 			break;
 		case BRANCH: 
 			branch(state_ptr, instruction_ptr);
+			free(instruction_ptr);
 			return true;
 			break;
 	}
+	free(instruction_ptr);
 	return false;
 }
