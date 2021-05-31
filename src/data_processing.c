@@ -12,21 +12,26 @@ void data_processing(struct State *state_ptr,
 		uint8_t rn,
 		uint8_t rd,
 		uint32_t operand2);
-uint32_t apply_operation(enum Opcode opcode, 
-		uint32_t operand1, 
+uint32_t apply_operation(enum Opcode opcode,
+        uint32_t operand1,
 		uint32_t operand2, 
 		bool *write_result_ptr); 
-uint32_t process_operand2_immediate_value(uint32_t operand2); 
-uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2);
-enum Shift_Type get_shift_type(uint32_t operand2);
+uint32_t process_operand2_immediate_value(uint32_t operand2, bool *carry_flag_ptr); 
+uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2, bool *carry_flag_ptr);
 uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2);
-uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount);
-uint32_t logical_shift_left(uint32_t n, uint32_t spaces); // PLACEHOLDER
-uint32_t logical_shift_right(uint32_t n, uint32_t spaces); // PLACEHOLDER
-uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces); // PLACEHOLDER  
-uint32_t rotate_right(uint32_t n, uint32_t spaces); 
+uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount, bool *carry_flag_ptr);
+uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); // PLACEHOLDER
+uint32_t logical_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); // PLACEHOLDER
+uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); // PLACEHOLDER  
+uint32_t rotate_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr);
 
 void print_binary(uint32_t number);
+
+bool get_CPSR_bit(struct State *state_ptr, char bit_no) {
+	// indexing starts at 0
+	uint32_t mask = 1 << bit_no;
+	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
+}
 
 int main(void) {
 	struct State state;
@@ -41,14 +46,22 @@ int main(void) {
 	//			            109876543210
 	state.registers.array_access[0] = 0b111111111111;
 	state.registers.array_access[1] = 0b000000000000;
-	state.registers.array_access[2] = 0b000000000000;
-	state.registers.array_access[3] = 0b000000000000;
+	state.registers.array_access[2] = 5; // 0b000000000000;
+	state.registers.array_access[3] = (1 << 29) + 0b000001010101;
+	// state.registers.struct_access.CPSR |= 0xf0000000;
+
+	
 
 	//						 109876543210
-	state.registers.array_access[instruction.rn] = 0b000011011011;
+	state.registers.array_access[instruction.rn] = 0b000000000000;
 	instruction.opcode			     = AND;
 	//						 109876543210
-	instruction.operand2			     = 0b000001110011; 
+	instruction.operand2			     = 0b001001010011; 
+
+	printf("V flag: %d\n", get_CPSR_bit(&state, 28));
+	printf("C flag: %d\n", get_CPSR_bit(&state, 29));
+	printf("Z flag: %d\n", get_CPSR_bit(&state, 30));
+	printf("N flag: %d\n\n", get_CPSR_bit(&state, 31));
 
 	data_processing(&state,
 			instruction.opcode,
@@ -57,6 +70,12 @@ int main(void) {
 			instruction.rn,
 			instruction.rd,
 			instruction.operand2);
+
+	printf("V flag: %d\n", get_CPSR_bit(&state, 28));
+	printf("C flag: %d\n", get_CPSR_bit(&state, 29));
+	printf("Z flag: %d\n", get_CPSR_bit(&state, 30));
+	printf("N flag: %d\n", get_CPSR_bit(&state, 31));
+
 	return 0;
 }
 
@@ -71,16 +90,35 @@ void data_processing(struct State *state_ptr,
 	uint32_t operand1 = state_ptr->registers.array_access[rn];
 	// assert only the bottome 12 bits of operand2 used?
 
+	
+	bool carry_flag;
 	uint32_t operand2_processed = (immediate_operand) ? 
-			process_operand2_immediate_value(operand2) : 
-			process_operand2_shifted_register(state_ptr, operand2);
+			process_operand2_immediate_value(operand2, &carry_flag) : 
+			process_operand2_shifted_register(state_ptr, operand2, &carry_flag);
 
 	uint32_t result = apply_operation(opcode, operand1, operand2_processed, &write_result);
 	// calculate result by applying a function corresponding to the opcode,
 	// applying to operand1 and operand2
 	
 	if (set_condition_codes) {
-		// set the condition codes
+		// bool n = true; //31
+		// bool z = true; //30
+		bool c = true; //29
+		if ((result & (1 << 31)) != 0) {
+			state_ptr->registers.struct_access.CPSR |= (1 << 31);
+		} else {
+			state_ptr->registers.struct_access.CPSR &= ~(1 << 31);
+		}
+		if (result == 0) {
+			state_ptr->registers.struct_access.CPSR |= (1 << 30);
+		} else {
+			state_ptr->registers.struct_access.CPSR &= ~(1 << 30);
+		}
+		if (c) {
+			state_ptr->registers.struct_access.CPSR |= (1 << 29);
+		} else {
+			state_ptr->registers.struct_access.CPSR &= ~(1 << 29);
+		}
 	}
 
 	if (write_result) state_ptr->registers.array_access[rd] = result;
@@ -95,7 +133,7 @@ uint32_t apply_operation(enum Opcode opcode,
 		case EXCLUSIVE_OR:     *write_result_ptr = true;  return operand1 ^ operand2;
 		case SUBTRACT:	       *write_result_ptr = true;  return operand1 - operand2;
 		case REVERSE_SUBTRACT: *write_result_ptr = true;  return operand2 - operand1;
-		case ADD:	       *write_result_ptr = true;  return operand1 + operand2; 
+		case ADD:	       *write_result_ptr = true;  return operand1 + operand2;
 		case TEST_BITS:	       *write_result_ptr = false; return operand1 & operand2;
 		case TEST_EQUALS:      *write_result_ptr = false; return operand1 ^ operand2;
 		case COMPARE:	       *write_result_ptr = false; return operand1 - operand2;
@@ -105,19 +143,21 @@ uint32_t apply_operation(enum Opcode opcode,
 	}
 }
 
-uint32_t process_operand2_immediate_value(uint32_t operand2) {
+uint32_t process_operand2_immediate_value(uint32_t operand2, bool *carry_flag_ptr) {
 	// bits 0-7 are an unsigned 8 bit number bits 8-11 are a shift to Imm
 	uint32_t immediate    = operand2 & 0xff;
 	uint32_t shift_amount = 2 * ((operand2 & 0xf00) >> 8);
-	return rotate_right(immediate, shift_amount);
+	return rotate_right(immediate, shift_amount, carry_flag_ptr);
 }
 
-uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2) {
+uint32_t process_operand2_shifted_register(struct State *state_ptr, 
+		uint32_t operand2,
+		bool *carry_flag_ptr) {
 	uint32_t rm_index	   = operand2 & 0xf;
 	uint32_t rm		   = state_ptr->registers.array_access[rm_index];
 	uint32_t shift_code	   = (operand2 & 0b1100000) >> 5;
 	uint32_t shift_amount	   = get_shift_amount(state_ptr, operand2);
-	return shift(rm, shift_code, shift_amount);
+	return shift(rm, shift_code, shift_amount, carry_flag_ptr);
 }
 
 uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2) {
@@ -135,32 +175,59 @@ uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2) {
 	}
 }
 
-uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount) {
+uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount, bool *carry_flag_ptr) {
 	switch (shift_code) {
-		case 0:  return logical_shift_left(rm, shift_amount); 
-		case 1:  return logical_shift_right(rm, shift_amount); 
-		case 2:  return arithmetic_shift_right(rm, shift_amount); 
-		case 3:  return rotate_right(rm, shift_amount); 
+		case 0:  return logical_shift_left(rm, shift_amount, carry_flag_ptr); 
+		case 1:  return logical_shift_right(rm, shift_amount, carry_flag_ptr); 
+		case 2:  return arithmetic_shift_right(rm, shift_amount, carry_flag_ptr); 
+		case 3:  return rotate_right(rm, shift_amount, carry_flag_ptr); 
 		default: return -1;
 	}
 }
 
-uint32_t logical_shift_left(uint32_t n, uint32_t spaces) {
-	return n << spaces;	
+uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
+	uint32_t result = (spaces > 31) ? 0 : n << spaces;
+	bool carry = (n & (1 << (32 - spaces))) != 0;
+	*carry_flag_ptr = carry;
+	return result;	
 }
 
-uint32_t logical_shift_right(uint32_t n, uint32_t spaces) {
-	return n >> spaces;
+uint32_t logical_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
+	uint32_t result = (spaces > 31) ? 0 : n >> spaces;
+	bool carry = (n & (1 << (spaces - 1))) != 0;
+	*carry_flag_ptr = carry;
+	return result;
 }
 
-uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces) {
-	return 0;
+uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
+	bool sign_bit = (n & (1 << 31)) != 0;
+	uint32_t result;
+	bool carry = 0;
+	if (spaces == 0) {
+		return n;
+	}
+
+	carry = (n & (1 << (spaces - 1))) != 0;
+
+	if (sign_bit) {
+		result = (spaces > 31) ? 0xffffffff : n >> spaces;
+		result = result | (0xffffffff << (32 - spaces));
+	} else {
+		result = (spaces > 31) ? 0 : (n >> spaces);
+	}
+
+	*carry_flag_ptr = carry;
+
+	return result;
 }
 
-uint32_t rotate_right(uint32_t n, uint32_t spaces) {
+uint32_t rotate_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
 	uint32_t arithmetic_shifted_right = n >> spaces;
 	uint32_t overflow_bits		  = n << (32 - spaces);
-	return (arithmetic_shifted_right | overflow_bits);
+	bool carry = (n & (1 << (spaces - 1))) != 0;
+	uint32_t result = (arithmetic_shifted_right | overflow_bits);
+	*carry_flag_ptr = carry;
+	return result;
 }
 
 void print_binary(uint32_t number) {
