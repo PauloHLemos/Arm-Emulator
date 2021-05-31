@@ -1,3 +1,6 @@
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -21,8 +24,8 @@ struct State {
 			uint32_t LR;
 			uint32_t PC;
 			uint32_t CPSR;
-		};
-		uint32_t R[17];
+		} struct_access;
+		uint32_t array_access[17];
 	} registers;
 	uint32_t memory[16384];
 };
@@ -32,31 +35,31 @@ enum Instruction_Type {DATA_PROCESSING,
 		SINGLE_DATA_TRANSFER,
 		BRANCH};
 
-enum Condition {EQUAL, 
-		NOT_EQUAL, 
-		GREATER_OR_EQUAL, 
-		LESS_THAN, 
-		GREATER_THAN, 
-		LESS_THAN_OR_EQUAL, 
-		ALWAYS};
+enum Condition {EQUAL=0, 
+		NOT_EQUAL=1, 
+		GREATER_OR_EQUAL=10, 
+		LESS_THAN=11, 
+		GREATER_THAN=12, 
+		LESS_THAN_OR_EQUAL=13, 
+		ALWAYS=14};
 
-enum Opcode {AND,
-		EXCLUSIVE_OR,
-		SUBTRACT,
-		REVERSE_SUBTRACT,
-		ADD,
-		TEST_BITS,   //tst; test bits; and no result written
-		TEST_EQUALS, //teq; test equals; eor no result written
-		COMPARE,     //cmp; compare; sub no result written
-		OR,
-		MOVE};
+enum Opcode {AND=0,
+		EXCLUSIVE_OR=1,
+		SUBTRACT=2,
+		REVERSE_SUBTRACT=3,
+		ADD=4,
+		TEST_BITS=8,   //tst; test bits; and no result written
+		TEST_EQUALS=9, //teq; test equals; eor no result written
+		COMPARE=10,     //cmp; compare; sub no result written
+		OR=12,
+		MOVE=13};
 
 struct Instruction {
 	enum Instruction_Type type;
 	enum Condition cond;
 	enum Opcode opcode;
 	bool halt;
-	bool immediate_operand;
+	bool immediate_operand; // Add another bool for immediate_offset
 	bool set_condition_codes;
 	bool accumulate;
 	bool pre_post_indexing;
@@ -70,10 +73,4 @@ struct Instruction {
 	uint32_t offset;   // bottom 12 or bottom 24 bits used
 };
 
-struct Pipeline {
-	bool ready_to_exectute;
-	bool ready_to_decode;
-	uint32_t (*fetch)(struct State *state_struct_ptr);
-	struct Instruction (*decode)(uint32_t instruction_binary);
-	bool (*execute)(struct Instruction instruction, struct State *state);
-};
+#endif
