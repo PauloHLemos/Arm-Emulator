@@ -67,7 +67,7 @@ struct Instruction decode(uint32_t instruction_binary) {
 		instruction.offset = instruction_binary & offset_bitmask;
 	} else {
 		uint32_t offset_bitmask = 16777215;
-		instruction.offset = instruction_binary & offset_binary;
+		instruction.offset = instruction_binary & offset_bitmask;
 	}
 
 	return instruction;

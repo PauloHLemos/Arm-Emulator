@@ -10,13 +10,13 @@ char get_CPSR_bit(struct State *state_ptr, char bit_no) {
 	return !((state_ptr->registers.struct_access.CPSR & mask) == 0);
 }
 
-bool condition_met(struct Instruction instruction, struct State *state_ptr) {
+bool condition_met(struct Instruction *instruction_ptr, struct State *state_ptr) {
 	char N = get_CPSR_bit(state_ptr, 31);
 	char Z = get_CPSR_bit(state_ptr, 30);
 	// char C = get_CPSR_bit(state_ptr, 29); unused
 	char V = get_CPSR_bit(state_ptr, 28);
 
-	switch(instruction.cond) {
+	switch(instruction_ptr->cond) {
 		case EQUAL:	         if (!(Z)) { return false; } break;
 		case NOT_EQUAL:		 if (!(!Z)) { return false; } break;
 		case GREATER_OR_EQUAL:	 if (!(N == V)) { return false; } break;
@@ -28,42 +28,22 @@ bool condition_met(struct Instruction instruction, struct State *state_ptr) {
 	return true;
 }
 
-bool execute(struct Instruction instruction, struct State *state_ptr) {
+bool execute(struct Instruction *instruction_ptr, struct State *state_ptr) {
 
-	if (!condition_met(instruction, state_ptr)) return false;
+	if (!condition_met(instruction_ptr, state_ptr)) return false;
 
-	switch(instruction.type) {
+	switch(instruction_ptr->type) {
 		case DATA_PROCESSING: 
-			data_processing(state_ptr,
-					instruction.opcode, 
-					instruction.immediate_operand,
-					instruction.set_condition_codes,
-					instruction.rn,
-					instruction.rd,
-					instruction.operand2);
+			data_processing(state_ptr, instruction_ptr);
 			break;
 		case MULTIPLY: 
-			multiply(state_ptr,
-					instruction.accumulate,
-					instruction.set_condition_codes,
-					instruction.rd,
-					instruction.rn,
-					instruction.rs,
-					instruction.rm);
+			multiply(state_ptr, instruction_ptr);
 			break;
 		case SINGLE_DATA_TRANSFER: 
-			single_data_transfer(state_ptr,
-					// Might be better to add a bool for immediate offset
-					instruction.immediate_operand,
-					instruction.pre_post_indexing,
-					instruction.up,
-					instruction.load_store,
-					instruction.rn,
-					instruction.rd,
-					instruction.offset);
+			single_data_transfer(state_ptr, instruction_ptr);
 			break;
 		case BRANCH: 
-			branch(state_ptr, instruction.offset);
+			branch(state_ptr, instruction_ptr);
 			return true;
 			break;
 	}
