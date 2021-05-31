@@ -5,25 +5,29 @@
 #include "definitions.h"
 #include "instructions.h"
 
-void data_processing(struct State *state_ptr,
+void data_processing(
+		struct State *state_ptr,
 		enum Opcode opcode,
 		bool immediate_operand,
 		bool set_condition_codes,
 		uint8_t rn,
 		uint8_t rd,
 		uint32_t operand2);
-uint32_t apply_operation(enum Opcode opcode,
-        uint32_t operand1,
+uint32_t apply_operation(
+		enum Opcode opcode,
+		uint32_t operand1,
 		uint32_t operand2, 
-		bool *write_result_ptr); 
+		bool *write_result_ptr,
+		bool *carry_flag_ptr); 
 uint32_t process_operand2_immediate_value(uint32_t operand2, bool *carry_flag_ptr); 
 uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2, bool *carry_flag_ptr);
 uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2);
 uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount, bool *carry_flag_ptr);
-uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); // PLACEHOLDER
-uint32_t logical_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); // PLACEHOLDER
-uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); // PLACEHOLDER  
+uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); 
+uint32_t logical_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr);
+uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr);
 uint32_t rotate_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr);
+void set_condition_codes_function(struct State *state_ptr, uint32_t result, bool carry_flag);
 
 void print_binary(uint32_t number);
 
@@ -38,7 +42,7 @@ int main(void) {
 	memset(&state, 0, sizeof(struct State));
 
 	struct Instruction instruction;
-	instruction.immediate_operand = false; 
+	instruction.immediate_operand = true; 
 	instruction.set_condition_codes = true;
 	instruction.rn = 1; // number from 0-12 for register containing first operand
 	instruction.rd = 10; // number from 0-12 for destination register
@@ -53,10 +57,10 @@ int main(void) {
 	
 
 	//						 109876543210
-	state.registers.array_access[instruction.rn] = 0b000000000000;
-	instruction.opcode			     = AND;
+	state.registers.array_access[instruction.rn] = 0xffffffff; // 0b000111111111;
+	instruction.opcode			     = ADD;
 	//						 109876543210
-	instruction.operand2			     = 0b001001010011; 
+	instruction.operand2			     = 0b000000000001; 
 
 	printf("V flag: %d\n", get_CPSR_bit(&state, 28));
 	printf("C flag: %d\n", get_CPSR_bit(&state, 29));
@@ -80,65 +84,83 @@ int main(void) {
 }
 
 void data_processing(struct State *state_ptr,
-		enum Opcode opcode, bool immediate_operand,
+		enum Opcode opcode, 
+		bool immediate_operand,
 		bool set_condition_codes,
 		uint8_t rn,
 		uint8_t rd,
 		uint32_t operand2) {
 	// consider overflows, flag setting
-	bool write_result;
 	uint32_t operand1 = state_ptr->registers.array_access[rn];
 	// assert only the bottome 12 bits of operand2 used?
-
 	
 	bool carry_flag;
+	bool write_result;
+
 	uint32_t operand2_processed = (immediate_operand) ? 
 			process_operand2_immediate_value(operand2, &carry_flag) : 
 			process_operand2_shifted_register(state_ptr, operand2, &carry_flag);
 
-	uint32_t result = apply_operation(opcode, operand1, operand2_processed, &write_result);
-	// calculate result by applying a function corresponding to the opcode,
-	// applying to operand1 and operand2
-	
-	if (set_condition_codes) {
-		// bool n = true; //31
-		// bool z = true; //30
-		bool c = true; //29
-		if ((result & (1 << 31)) != 0) {
-			state_ptr->registers.struct_access.CPSR |= (1 << 31);
-		} else {
-			state_ptr->registers.struct_access.CPSR &= ~(1 << 31);
-		}
-		if (result == 0) {
-			state_ptr->registers.struct_access.CPSR |= (1 << 30);
-		} else {
-			state_ptr->registers.struct_access.CPSR &= ~(1 << 30);
-		}
-		if (c) {
-			state_ptr->registers.struct_access.CPSR |= (1 << 29);
-		} else {
-			state_ptr->registers.struct_access.CPSR &= ~(1 << 29);
-		}
-	}
+	print_binary(operand1);
+	print_binary(operand2_processed);
 
+	uint32_t result = apply_operation(
+			opcode, 
+			operand1, 
+			operand2_processed, 
+			&write_result,
+			&carry_flag);
+
+	print_binary(result);
+
+	if (set_condition_codes) set_condition_codes_function(state_ptr, result, carry_flag);
 	if (write_result) state_ptr->registers.array_access[rd] = result;
 }
 
-uint32_t apply_operation(enum Opcode opcode, 
+void set_condition_codes_function(struct State *state_ptr, uint32_t result, bool carry_flag) {
+	if ((result & (1 << 31)) != 0) {
+		state_ptr->registers.struct_access.CPSR |= (1 << 31);
+	} else {
+		state_ptr->registers.struct_access.CPSR &= ~(1 << 31);
+	}
+	if (result == 0) {
+		state_ptr->registers.struct_access.CPSR |= (1 << 30);
+	} else {
+		state_ptr->registers.struct_access.CPSR &= ~(1 << 30);
+	}
+	if (carry_flag) {
+		state_ptr->registers.struct_access.CPSR |= (1 << 29);
+	} else {
+		state_ptr->registers.struct_access.CPSR &= ~(1 << 29);
+	}
+}
+
+uint32_t apply_operation(
+		enum Opcode opcode, 
 		uint32_t operand1, 
 		uint32_t operand2, 
-		bool *write_result_ptr) {
+		bool *write_result_ptr,
+		bool *carry_flag_ptr) {
 	switch (opcode) {
 		case AND:	       *write_result_ptr = true;  return operand1 & operand2;
 		case EXCLUSIVE_OR:     *write_result_ptr = true;  return operand1 ^ operand2;
-		case SUBTRACT:	       *write_result_ptr = true;  return operand1 - operand2;
-		case REVERSE_SUBTRACT: *write_result_ptr = true;  return operand2 - operand1;
-		case ADD:	       *write_result_ptr = true;  return operand1 + operand2;
 		case TEST_BITS:	       *write_result_ptr = false; return operand1 & operand2;
 		case TEST_EQUALS:      *write_result_ptr = false; return operand1 ^ operand2;
-		case COMPARE:	       *write_result_ptr = false; return operand1 - operand2;
 		case OR:	       *write_result_ptr = true;  return operand1 | operand2;
 		case MOVE:	       *write_result_ptr = true;  return operand2;
+				       
+		case SUBTRACT:	       *write_result_ptr = true;  
+				       *carry_flag_ptr = operand2 > operand1;
+				       return operand1 - operand2;
+		case REVERSE_SUBTRACT: *write_result_ptr = true;  
+				       *carry_flag_ptr = operand1 > operand2;
+				       return operand2 - operand1;
+		case ADD:	       *write_result_ptr = true;  
+				       *carry_flag_ptr = (operand1 > (0xffffffff - operand2));
+				       return operand1 + operand2;
+		case COMPARE:	       *write_result_ptr = false; 
+				       *carry_flag_ptr = operand2 > operand1;
+				       return operand1 - operand2;
 		default:	       return -1;
 	}
 }
