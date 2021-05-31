@@ -5,14 +5,7 @@
 #include "definitions.h"
 #include "instructions.h"
 
-void data_processing(
-		struct State *state_ptr,
-		enum Opcode opcode,
-		bool immediate_operand,
-		bool set_condition_codes,
-		uint8_t rn,
-		uint8_t rd,
-		uint32_t operand2);
+void data_processing(struct State *state_ptr, struct Instruction *instruction_ptr);
 uint32_t apply_operation(
 		enum Opcode opcode,
 		uint32_t operand1,
@@ -32,31 +25,29 @@ uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_pt
 uint32_t rotate_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr);
 void set_condition_codes_function(struct State *state_ptr, uint32_t result, bool carry_flag);
 
-void data_processing(
-		struct State *state_ptr,
-		enum Opcode opcode, 
-		bool immediate_operand,
-		bool set_condition_codes,
-		uint8_t rn,
-		uint8_t rd,
-		uint32_t operand2) {
+void data_processing(struct State *state_ptr, struct Instruction *instruction_ptr) {
 	bool carry_flag;
 	bool write_result;
 
-	uint32_t operand1 = state_ptr->registers.array_access[rn];
-	uint32_t operand2_processed = (immediate_operand) ? 
-			process_operand2_immediate_value(operand2, &carry_flag) : 
-			process_operand2_shifted_register(state_ptr, operand2, &carry_flag);
+	uint32_t operand1 = state_ptr->registers.array_access[instruction_ptr->rn];
+	uint32_t operand2_processed = (instruction_ptr->immediate_operand) ? 
+			process_operand2_immediate_value(instruction_ptr->operand2, &carry_flag) : 
+			process_operand2_shifted_register(
+					state_ptr, 
+					instruction_ptr->operand2, 
+					&carry_flag);
 
 	uint32_t result = apply_operation(
-			opcode, 
+			instruction_ptr->opcode, 
 			operand1, 
 			operand2_processed, 
 			&write_result,
 			&carry_flag);
 
-	if (set_condition_codes) set_condition_codes_function(state_ptr, result, carry_flag);
-	if (write_result) state_ptr->registers.array_access[rd] = result;
+	if (instruction_ptr->set_condition_codes) 
+		set_condition_codes_function(state_ptr, result, carry_flag);
+
+	if (write_result) state_ptr->registers.array_access[instruction_ptr->rd] = result;
 }
 
 void set_condition_codes_function(struct State *state_ptr, uint32_t result, bool carry_flag) {
