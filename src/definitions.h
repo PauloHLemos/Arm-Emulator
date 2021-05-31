@@ -27,7 +27,7 @@ struct State {
 		} struct_access;
 		uint32_t array_access[17];
 	} registers;
-	uint32_t memory[16384];
+	uint8_t memory[65536];
 };
 
 enum Instruction_Type {DATA_PROCESSING,
