@@ -25,8 +25,9 @@ int main(int argc, char **argv) {
 	}
 	char *filename = *(argv + 1);
 
+	loader(filename, state_ptr->memory);
 
-	//pipeline(state_ptr);
+	 pipeline(state_ptr);
 
 	// print the register values here
 
