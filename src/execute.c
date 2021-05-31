@@ -29,9 +29,24 @@ bool condition_met(struct Instruction *instruction_ptr, struct State *state_ptr)
 	return true;
 }
 
+bool instruction_is_halt(struct Instruction *instruction_ptr) {
+	return ((instruction_ptr->cond) == EQUAL) &&
+		((instruction_ptr->opcode) == AND) &&
+		!(instruction_ptr->immediate_operand) &&
+		!(instruction_ptr->set_condition_codes) &&
+		((instruction_ptr->rn) == 0) &&
+		((instruction_ptr->rd) == 0) &&
+		((instruction_ptr->operand2) == 0);
+}
+
 bool execute(struct Instruction *instruction_ptr, struct State *state_ptr) {
+	if (!instruction_is_halt(instruction_ptr)) {
+		instruction_ptr->halt = true;
+		return true;
+	}
 
 	if (!condition_met(instruction_ptr, state_ptr)) return false;
+
 
 	switch(instruction_ptr->type) {
 		case DATA_PROCESSING: 
