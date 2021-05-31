@@ -16,6 +16,16 @@ int main(int argc, char **argv) {
 	state_ptr = memset(state_ptr, 0, sizeof(struct State));
 	assert(state_ptr != NULL);
 
+	if (argc < 2) {
+		printf("Not enough arguments. \n");
+		return EXIT_FAILURE;
+	} else if (argc > 2) {
+		printf("Too many arguments. \n");
+		return EXIT_FAILURE;
+	}
+	char *filename = *(argv + 1);
+
+
 	//pipeline(state_ptr);
 
 	// print the register values here
