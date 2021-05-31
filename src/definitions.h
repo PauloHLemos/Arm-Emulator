@@ -35,24 +35,24 @@ enum Instruction_Type {DATA_PROCESSING,
 		SINGLE_DATA_TRANSFER,
 		BRANCH};
 
-enum Condition {EQUAL, 
-		NOT_EQUAL, 
-		GREATER_OR_EQUAL, 
-		LESS_THAN, 
-		GREATER_THAN, 
-		LESS_THAN_OR_EQUAL, 
-		ALWAYS};
+enum Condition {EQUAL=0, 
+		NOT_EQUAL=1, 
+		GREATER_OR_EQUAL=10, 
+		LESS_THAN=11, 
+		GREATER_THAN=12, 
+		LESS_THAN_OR_EQUAL=13, 
+		ALWAYS=14};
 
-enum Opcode {AND,
-		EXCLUSIVE_OR,
-		SUBTRACT,
-		REVERSE_SUBTRACT,
-		ADD,
-		TEST_BITS,   //tst; test bits; and no result written
-		TEST_EQUALS, //teq; test equals; eor no result written
-		COMPARE,     //cmp; compare; sub no result written
-		OR,
-		MOVE};
+enum Opcode {AND=0,
+		EXCLUSIVE_OR=1,
+		SUBTRACT=2,
+		REVERSE_SUBTRACT=3,
+		ADD=4,
+		TEST_BITS=8,   //tst; test bits; and no result written
+		TEST_EQUALS=9, //teq; test equals; eor no result written
+		COMPARE=10,     //cmp; compare; sub no result written
+		OR=12,
+		MOVE=13};
 
 struct Instruction {
 	enum Instruction_Type type;
