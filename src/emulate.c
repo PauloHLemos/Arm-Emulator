@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "definitions.h"
 #include "pipeline.h"
+#include "loader.h"
 
 
 void pipeline(struct State *state);
@@ -15,7 +16,11 @@ int main(int argc, char **argv) {
 	state_ptr = memset(state_ptr, 0, sizeof(struct State));
 	assert(state_ptr != NULL);
 
-	// pipeline(state_ptr);
+	//pipeline(state_ptr);
+
+	// print the register values here
+
+	free(state_ptr);
 
 	return EXIT_SUCCESS;
 }
