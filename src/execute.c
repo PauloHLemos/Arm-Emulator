@@ -40,7 +40,7 @@ bool instruction_is_halt(struct Instruction *instruction_ptr) {
 }
 
 bool execute(struct Instruction *instruction_ptr, struct State *state_ptr) {
-	if (!instruction_is_halt(instruction_ptr)) {
+	if (instruction_is_halt(instruction_ptr)) {
 		instruction_ptr->halt = true;
 		return true;
 	}
