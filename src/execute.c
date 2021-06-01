@@ -30,7 +30,8 @@ bool condition_met(struct Instruction *instruction_ptr, struct State *state_ptr)
 }
 
 bool instruction_is_halt(struct Instruction *instruction_ptr) {
-	return ((instruction_ptr->cond) == EQUAL) &&
+	return ((instruction_ptr->type) == DATA_PROCESSING) &&
+		((instruction_ptr->cond) == EQUAL) &&
 		((instruction_ptr->opcode) == AND) &&
 		!(instruction_ptr->immediate_operand) &&
 		!(instruction_ptr->set_condition_codes) &&

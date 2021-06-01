@@ -12,5 +12,5 @@ void branch(struct State *state_ptr, struct Instruction *instruction_ptr){
 	//Sign extension by 6 bits (equivalent to + 11111100 00000000 00000000 00000000) 
 
 	//TODO: make sure PC is getting the signed effect of the offset
-	state_ptr->registers.struct_access.PC += (offset - 8);
+	state_ptr->registers.struct_access.PC += offset;
 }

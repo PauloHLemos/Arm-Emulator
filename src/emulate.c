@@ -38,6 +38,14 @@ void print_registers(struct State *state_ptr) {
 	}
 }
 
+void print_binary(uint32_t number) {
+        printf("%d = ", number);
+        for (uint32_t i = 0, mask = 1 << 31; i < 32; i++, number <<= 1) {
+                printf("%i", ((number & mask) == 0) ? 0 : 1);
+        }
+        printf("\n");
+}
+
 int main(int argc, char **argv) {
 
 	struct State *state_ptr = malloc(sizeof(struct State));
