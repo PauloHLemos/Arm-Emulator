@@ -159,23 +159,11 @@ uint32_t logical_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) 
 
 uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
 	bool sign_bit = (n & (1 << 31)) != 0;
-	uint32_t result;
-	bool carry = 0;
-	if (spaces == 0) {
-		return n;
-	}
-
-	carry = (n & (1 << (spaces - 1))) != 0;
-
-	if (sign_bit) {
-		result = (spaces > 31) ? 0xffffffff : n >> spaces;
-		result = result | (0xffffffff << (32 - spaces));
-	} else {
-		result = (spaces > 31) ? 0 : (n >> spaces);
-	}
-
+	uint64_t large_result = (((uint64_t) n) << 32) >> spaces;
+	bool carry = ((1 << 31) & large_result) != 0;
+	uint32_t result = (uint32_t) (large_result >> 32);
+	if (sign_bit) result |= (0xffffffff << (32 - spaces));
 	*carry_flag_ptr = carry;
-
 	return result;
 }
 
