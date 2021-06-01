@@ -92,7 +92,7 @@ uint32_t apply_operation(
 				       *carry_flag_ptr = (operand1 > (0xffffffff - operand2));
 				       return operand1 + operand2;
 		case COMPARE:	       *write_result_ptr = false; 
-				       *carry_flag_ptr = operand2 > operand1;
+				       *carry_flag_ptr = !(operand2 > operand1);
 				       return operand1 - operand2;
 		default:	       return -1;
 	}
