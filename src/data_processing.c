@@ -142,8 +142,8 @@ uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount, bool *ca
 }
 
 uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
-	uint32_t result = (spaces > 31) ? 0 : n << spaces;
-	bool carry = (n & (1 << (32 - spaces))) != 0;
+	uint32_t result = n << spaces;
+	uint32_t carry = (!spaces) ? 0 : n << spaces;
 	*carry_flag_ptr = carry;
 	return result;	
 }
