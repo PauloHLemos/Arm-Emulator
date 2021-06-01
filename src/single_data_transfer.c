@@ -26,7 +26,11 @@ void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr
 	// loaded from memory
 	assert(address >= 0 && address <=16384); // remove magic number; change to byte addressible addresses.
 	if (instr_ptr->load_store) {
-		state_ptr->registers.array_access[instr_ptr->rd] = state_ptr->memory[address];
+		state_ptr->registers.array_access[instr_ptr->rd] = 
+			(state_ptr->memory[address]) + 
+			(state_ptr->memory[address + 1] << 8) +
+			(state_ptr->memory[address + 2] << 16) +
+			(state_ptr->memory[address + 3] << 24);
 	} // stored to memory
 	else {
 		state_ptr->memory[address] = state_ptr->registers.array_access[instr_ptr->rd];
