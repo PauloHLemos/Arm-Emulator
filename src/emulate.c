@@ -8,21 +8,21 @@
 
 void print_registers(struct State *state_ptr) {
 	printf("Registers:\n");
-	printf("$0  :%11d (0x%08x)\n", state_ptr->registers.array_access[0], state_ptr->registers.array_access[0]);
-	printf("$1  :%11d (0x%08x)\n", state_ptr->registers.array_access[1], state_ptr->registers.array_access[1]);
-	printf("$2  :%11d (0x%08x)\n", state_ptr->registers.array_access[2], state_ptr->registers.array_access[2]);
-	printf("$3  :%11d (0x%08x)\n", state_ptr->registers.array_access[3], state_ptr->registers.array_access[3]);
-	printf("$4  :%11d (0x%08x)\n", state_ptr->registers.array_access[4], state_ptr->registers.array_access[4]);
-	printf("$5  :%11d (0x%08x)\n", state_ptr->registers.array_access[5], state_ptr->registers.array_access[5]);
-	printf("$6  :%11d (0x%08x)\n", state_ptr->registers.array_access[6], state_ptr->registers.array_access[6]);
-	printf("$7  :%11d (0x%08x)\n", state_ptr->registers.array_access[7], state_ptr->registers.array_access[7]);
-	printf("$8  :%11d (0x%08x)\n", state_ptr->registers.array_access[8], state_ptr->registers.array_access[8]);
-	printf("$9  :%11d (0x%08x)\n", state_ptr->registers.array_access[9], state_ptr->registers.array_access[9]);
-	printf("$10 :%11d (0x%08x)\n", state_ptr->registers.array_access[10], state_ptr->registers.array_access[10]);
-	printf("$11 :%11d (0x%08x)\n", state_ptr->registers.array_access[11], state_ptr->registers.array_access[11]);
-	printf("$12 :%11d (0x%08x)\n", state_ptr->registers.array_access[12], state_ptr->registers.array_access[12]);
-	printf("PC  :%11d (0x%08x)\n", state_ptr->registers.struct_access.PC, state_ptr->registers.struct_access.PC);
-	printf("CPSR:%11d (0x%08x)\n", state_ptr->registers.struct_access.CPSR, state_ptr->registers.struct_access.CPSR);
+	printf("$0  : %10d (0x%08x)\n", state_ptr->registers.array_access[0], state_ptr->registers.array_access[0]);
+	printf("$1  : %10d (0x%08x)\n", state_ptr->registers.array_access[1], state_ptr->registers.array_access[1]);
+	printf("$2  : %10d (0x%08x)\n", state_ptr->registers.array_access[2], state_ptr->registers.array_access[2]);
+	printf("$3  : %10d (0x%08x)\n", state_ptr->registers.array_access[3], state_ptr->registers.array_access[3]);
+	printf("$4  : %10d (0x%08x)\n", state_ptr->registers.array_access[4], state_ptr->registers.array_access[4]);
+	printf("$5  : %10d (0x%08x)\n", state_ptr->registers.array_access[5], state_ptr->registers.array_access[5]);
+	printf("$6  : %10d (0x%08x)\n", state_ptr->registers.array_access[6], state_ptr->registers.array_access[6]);
+	printf("$7  : %10d (0x%08x)\n", state_ptr->registers.array_access[7], state_ptr->registers.array_access[7]);
+	printf("$8  : %10d (0x%08x)\n", state_ptr->registers.array_access[8], state_ptr->registers.array_access[8]);
+	printf("$9  : %10d (0x%08x)\n", state_ptr->registers.array_access[9], state_ptr->registers.array_access[9]);
+	printf("$10 : %10d (0x%08x)\n", state_ptr->registers.array_access[10], state_ptr->registers.array_access[10]);
+	printf("$11 : %10d (0x%08x)\n", state_ptr->registers.array_access[11], state_ptr->registers.array_access[11]);
+	printf("$12 : %10d (0x%08x)\n", state_ptr->registers.array_access[12], state_ptr->registers.array_access[12]);
+	printf("PC  : %10d (0x%08x)\n", state_ptr->registers.struct_access.PC, state_ptr->registers.struct_access.PC);
+	printf("CPSR: %10d (0x%08x)\n", state_ptr->registers.struct_access.CPSR, state_ptr->registers.struct_access.CPSR);
 	printf("Non-zero memory:\n");
 
 	uint32_t current_memory_location; 
