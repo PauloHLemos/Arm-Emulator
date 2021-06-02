@@ -15,7 +15,9 @@ struct State {
 			uint32_t r5;
 			uint32_t r6;
 			uint32_t r7;
-			uint32_t r8; uint32_t r9; uint32_t r10;
+			uint32_t r8; 
+			uint32_t r9; 
+			uint32_t r10;
 			uint32_t r11;
 			uint32_t r12;
 			uint32_t SP;
@@ -28,29 +30,35 @@ struct State {
 	uint8_t memory[65536];
 };
 
-enum Instruction_Type {DATA_PROCESSING,
+enum Instruction_Type {
+		DATA_PROCESSING,
 		MULTIPLY,
 		SINGLE_DATA_TRANSFER,
-		BRANCH};
+		BRANCH
+};
 
-enum Condition {EQUAL=0, 
+enum Condition {
+		EQUAL=0, 
 		NOT_EQUAL=1, 
 		GREATER_OR_EQUAL=10, 
 		LESS_THAN=11, 
 		GREATER_THAN=12, 
 		LESS_THAN_OR_EQUAL=13, 
-		ALWAYS=14};
+		ALWAYS=14
+};
 
-enum Opcode {AND=0,
+enum Opcode {
+		AND=0,
 		EXCLUSIVE_OR=1,
 		SUBTRACT=2,
 		REVERSE_SUBTRACT=3,
 		ADD=4,
-		TEST_BITS=8,   //tst; test bits; and no result written
-		TEST_EQUALS=9, //teq; test equals; eor no result written
-		COMPARE=10,     //cmp; compare; sub no result written
+		TEST_BITS=8,
+		TEST_EQUALS=9, 
+		COMPARE=10,     
 		OR=12,
-		MOVE=13};
+		MOVE=13
+};
 
 struct Instruction {
 	enum Instruction_Type type;
@@ -68,8 +76,8 @@ struct Instruction {
 	uint8_t rn;
 	uint8_t rm;
 	uint8_t rs;
-	uint32_t operand2; // only bottom 12 bits used
-	uint32_t offset;   // bottom 12 or bottom 24 bits used
+	uint32_t operand2; 
+	uint32_t offset;  
 };
 
 #endif
