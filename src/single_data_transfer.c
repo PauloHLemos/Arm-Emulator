@@ -21,8 +21,9 @@ void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr
 		offset = -offset;	
 	}
 	if (instr_ptr->pre_post_indexing) {
+		// pre indexing case
 		address += offset;
-	}
+	} 
 	// loaded from memory
 	// remove magic number; change to byte addressible addresses.
 	if (!(address >= 0 && address <= 65533)) {
@@ -37,12 +38,10 @@ void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr
 			(state_ptr->memory[address + 3] << 24);
 	} else { // stored to memory
 		uint32_t rd = state_ptr->registers.array_access[instr_ptr->rd];
-		// setting a single byte
-
 		state_ptr->memory[address] = rd;
-		state_ptr->memory[address + 1] = rd >> 0xf;
-		state_ptr->memory[address + 2] = rd >> 0xff;
-		state_ptr->memory[address + 3] = rd >> 0xfff;
+		state_ptr->memory[address + 1] = rd >> 8;
+		state_ptr->memory[address + 2] = rd >> 16;
+		state_ptr->memory[address + 3] = rd >> 24;
 	} //do post-indexing if flag set
 	if (!instr_ptr->pre_post_indexing) {
 		assert(instr_ptr->rn != instr_ptr->rm);
