@@ -15,9 +15,7 @@ struct State {
 			uint32_t r5;
 			uint32_t r6;
 			uint32_t r7;
-			uint32_t r8;
-			uint32_t r9;
-			uint32_t r10;
+			uint32_t r8; uint32_t r9; uint32_t r10;
 			uint32_t r11;
 			uint32_t r12;
 			uint32_t SP;
@@ -60,6 +58,7 @@ struct Instruction {
 	enum Opcode opcode;
 	bool halt;
 	bool immediate_operand; // Add another bool for immediate_offset
+	bool immediate_offset; // Add another bool for immediate_offset
 	bool set_condition_codes;
 	bool accumulate;
 	bool pre_post_indexing;

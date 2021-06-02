@@ -11,7 +11,7 @@ static uint32_t calculate_offset_shifted_register(struct State state, uint32_t o
 void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr) {
 	uint32_t offset;
 	uint32_t address = state_ptr->registers.array_access[instr_ptr->rn];
-	if (instr_ptr->immediate_operand) { //should be immediate_offset
+	if (instr_ptr->immediate_offset) { //should be immediate_offset
 		offset = calculate_offset_shifted_register(*state_ptr, instr_ptr->offset);
 	} else {
 		offset = instr_ptr->offset; 

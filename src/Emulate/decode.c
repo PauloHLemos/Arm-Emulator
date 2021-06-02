@@ -58,7 +58,7 @@ struct Instruction decode(uint32_t instruction_binary) {
 		uint32_t rn_bitmask = 983040;
 		uint32_t rd_bitmask = 61440;
 		uint32_t offset_bitmask = 4095;
-		instruction.immediate_operand = (instruction_binary & immediate_bitmask) != 0;
+		instruction.immediate_offset = (instruction_binary & immediate_bitmask) != 0;
 		instruction.pre_post_indexing = (instruction_binary & indexing_bitmask) != 0;
 		instruction.up = (instruction_binary & up_bitmask) != 0;
 		instruction.load_store = (instruction_binary & load_store_bitmask) != 0;
