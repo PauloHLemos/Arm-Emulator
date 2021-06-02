@@ -9,6 +9,7 @@ CFLAGS  = -Wall -g -D_POSIX_SOURCE -D_DEFAULT_SOURCE -std=c99 -pedantic
 
 # all: assemble emulate
 all: emulate
+	cp emulate ../emulate
 
 assemble: assemble.o
 
@@ -33,6 +34,6 @@ process_operand2.o: process_operand2.h definitions.h
 
 clean:
 	rm -f $(wildcard *.o)
-	rm -f assemble
 	rm -f emulate
+	rm -f ../emulate
 	rm -f core
