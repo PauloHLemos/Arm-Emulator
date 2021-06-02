@@ -36,7 +36,13 @@ void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr
 			(state_ptr->memory[address + 2] << 16) +
 			(state_ptr->memory[address + 3] << 24);
 	} else { // stored to memory
-		state_ptr->memory[address] = state_ptr->registers.array_access[instr_ptr->rd];
+		uint32_t rd = state_ptr->registers.array_access[instr_ptr->rd];
+		// setting a single byte
+
+		state_ptr->memory[address] = rd;
+		state_ptr->memory[address + 1] = rd >> 0xf;
+		state_ptr->memory[address + 2] = rd >> 0xff;
+		state_ptr->memory[address + 3] = rd >> 0xfff;
 	} //do post-indexing if flag set
 	if (!instr_ptr->pre_post_indexing) {
 		assert(instr_ptr->rn != instr_ptr->rm);
