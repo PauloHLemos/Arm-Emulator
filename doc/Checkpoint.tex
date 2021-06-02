@@ -26,6 +26,9 @@ For the majority of the emulator work, communication was carried out through onl
 
 Our emulator is structured as pictured below. At the top level we have the emulate.c file which runs the main process. In this file the instructions are loaded using the loader.c script and then run on the pipeline.c script. The state is also instantiated and passed by pointer to the pipeline. The pipeline.c script runs the execute, decode and fetch stages - in that order, where the next stage is processing the next instruction. The fetch stage passes a pointer to the state into the fetch.c script, which then fetches the next instruction and returns it as a 32 bit binary number. The decode stage passes a pointer to the state to the decode.c script, and the 32 bit binary instruction to be decoded. This then translates it into an Instruction struct, which is returned. The execute phase passes a pointer to the state and a pointer to the Instruction struct into the execute.c script. This then checks the type of instruction and then passes both a pointer to the instruction struct and a pointer to the state to one of the four instructions. These are handled by the data_processing.c, multiply.c, single_data_transfer.c or the branch.c scripts. These are all defined in the instructions.h file, which is included in the pipeline.c script. All the files also rely on the definitions.h file to define the State struct, Instruction struct as well as the Instruction_type, Opcode, and Condition enums, which are used in the Instruction struct.
 
-  \includegraphics[]{emulate_structure}
+ \begin{figure}[h]
+ \includegraphics[scale=0.4]{emulate_structure}
+ \centering
+ \end{figure}
 
   \end{document}
