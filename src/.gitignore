@@ -1,4 +1,6 @@
 *.o
+Assemble/assemble
+Emulate/emulate
 assemble
 emulate
 core
