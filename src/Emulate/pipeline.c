@@ -27,9 +27,7 @@ void pipeline(struct State *state_ptr) {
 			ready_to_execute = true;
 		}
 
-		// store !instruction_struct.halt in a more descriptive bool
 		if (!instruction_struct.halt) {
-			// I'm not sure if we should be passing only state here
 			instruction_binary = fetch(state_ptr);
 		}
 		ready_to_decode = true;
