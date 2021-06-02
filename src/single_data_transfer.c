@@ -24,7 +24,11 @@ void single_data_transfer(struct State *state_ptr, struct Instruction *instr_ptr
 		address += offset;
 	}
 	// loaded from memory
-	assert(address >= 0 && address <= 65533); // remove magic number; change to byte addressible addresses.
+	// remove magic number; change to byte addressible addresses.
+	if (!(address >= 0 && address <= 65533)) {
+		printf("Error: Out of bounds memory access at address 0x%08x\n", address);
+		return;
+	}	
 	if (instr_ptr->load_store) {
 		state_ptr->registers.array_access[instr_ptr->rd] = 
 			(state_ptr->memory[address]) + 
@@ -55,31 +59,3 @@ static uint32_t calculate_offset_shifted_register(struct State state, uint32_t o
 	*/
 	return process_operand2_shifted_register(&state, offset, &carry_flag);
 }
-
-// int main(int argc, char **argv) {
-// 
-// 	struct State state;
-// 	memset(&state, 0, sizeof(struct State));
-// 	
-// 	struct Instruction instr;
-// 	instr.immediate_operand = false;
-// 	instr.up = true;
-// 	instr.pre_post_indexing = true;
-// 	instr.offset = 16;
-// 	instr.rn = 1;
-// 	instr.rd = 2;
-// 	instr.load_store = false;
-// 
-// 	state.registers.array_access[1] = 4;
-// 	state.registers.array_access[2] = 8;
-// 	state.memory[0] = 20;
-// 	state.memory[4] = 200;
-// 	state.memory[20] = 13;
-// 
-// 	single_data_transfer(&state, &instr);	
-// 	printf("%d\n", state.registers.array_access[instr.rd]);
-// 	printf("%d\n", state.registers.array_access[instr.rn]);
-// 	printf("%d\n", state.memory[20]);
-// 	return EXIT_SUCCESS;
-// }
-
