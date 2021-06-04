@@ -4,6 +4,7 @@
 #include "definitions.h"
 #include "test.h"
 #include "string.h"
+#include "split_instructions.h"
 // #include "instructions.h"
 
 enum Opcode extract_opcode(char *opcode_string) {
@@ -20,26 +21,6 @@ enum Opcode extract_opcode(char *opcode_string) {
 	else { fprintf(stderr, "Opcode \"%s\" does not exist. \n", opcode_string); exit(1); return -1; }
 }
 
-void print_at_separators(char *string, char *arg1, char *arg2, char *arg3, char *arg4) {
-	for ( ; *string != ' '; string += 1) {
-		strncat(arg1, string, 1);
-	}
-	string += 1;
-
-	for ( ; *string != ','; string += 1) {
-		strncat(arg2, string, 1);
-	}
-	string += (*(string + 1) == ' ') ? 2 : 1;
-
-	for ( ; *string != ','; string += 1) {
-		strncat(arg3, string, 1);
-	}
-	string += (*(string + 1) == ' ') ? 2 : 1;
-
-	for ( ; *string != '\0'; string += 1) {
-		strncat(arg4, string, 1);
-	}
-}
 
 uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_ptr*/) {
 	// Make andeq a special case
@@ -54,7 +35,7 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 	char arg3[100] = "";
 	char arg4[100] = "";
 
-	print_at_separators(opcode_string, arg1, arg2, arg3, arg4);
+	split_4_arguments(opcode_string, arg1, arg2, arg3, arg4);
 
 	printf("%s\n", arg1);
 	printf("%s\n", arg2);
