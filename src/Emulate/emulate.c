@@ -32,18 +32,9 @@ void print_registers(struct State *state_ptr) {
 				(state_ptr->memory[i+2]<<8) + 
 				(state_ptr->memory[i+1]<<16) + 
 				(state_ptr->memory[i]<<24); 
-		if (current_memory_location != 0) {
-			printf("0x%08x: 0x%08x\n", i, current_memory_location);
-		}
-	}
-}
 
-void print_binary(uint32_t number) {
-        printf("%d = ", number);
-        for (uint32_t i = 0, mask = 1 << 31; i < 32; i++, number <<= 1) {
-                printf("%i", ((number & mask) == 0) ? 0 : 1);
-        }
-        printf("\n");
+		if (current_memory_location != 0) printf("0x%08x: 0x%08x\n", i, current_memory_location);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -60,16 +51,14 @@ int main(int argc, char **argv) {
 		printf("Too many arguments. \n");
 		return EXIT_FAILURE;
 	}
+
 	char *filename = *(argv + 1);
 
 	loader(filename, state_ptr->memory);
-
 	pipeline(state_ptr);
-
 	print_registers(state_ptr);
 
 	free(state_ptr);
-
 	return EXIT_SUCCESS;
 }
 
