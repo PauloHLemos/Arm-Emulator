@@ -54,7 +54,7 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 	char arg3[100] = "";
 	char arg4[100] = "";
 
-	print_at_separators(opcode_string, &arg1, &arg2, &arg3, &arg4);
+	print_at_separators(opcode_string, arg1, arg2, arg3, arg4);
 
 	printf("%s\n", arg1);
 	printf("%s\n", arg2);
