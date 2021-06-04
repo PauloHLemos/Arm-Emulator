@@ -1,6 +1,9 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 enum Instruction_Type {
 		DATA_PROCESSING,
 		MULTIPLY,
