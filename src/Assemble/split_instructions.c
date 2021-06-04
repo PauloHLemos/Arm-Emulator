@@ -25,3 +25,7 @@ void split_3_arguments(char *string, char *arg1, char *arg2, char *arg3) {
 
 	for ( ; *string != '\0'; string += 1) strncat(arg3, string, 1);
 }
+
+void extract_opcode(char *string, char *arg1) {
+	for ( ; *string != ' '; string += 1) strncat(arg1, string, 1);
+}
