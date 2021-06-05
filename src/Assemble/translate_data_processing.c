@@ -21,23 +21,48 @@ enum Opcode convert_opcode(char *opcode_string) {
 	else { fprintf(stderr, "Opcode \"%s\" does not exist. \n", opcode_string); exit(1); return -1; }
 }
 
+bool instruction_computes_results(enum Opcode opcode) {
+	switch(opcode) {
+		case AND:	       return true;
+		case EXCLUSIVE_OR:     return true;
+		case SUBTRACT:	       return true;
+		case REVERSE_SUBTRACT: return true;
+		case ADD:	       return true;
+		case OR:	       return true;
+		default:	       return false
+	}
+}
+
+bool instruction_sets_CPSR_only(enum Opcode opcode) {
+	switch(opcode) {
+		case TEST_BITS:	  return true;
+		case TEST_EQUALS: return true;
+		case COMPARE:	  return true;
+		default:	  return false
+	}
+}
+
 
 uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_ptr*/) {
 	// Make andeq a special case
 	
-	// struct Instruction instruction_struct;
+	struct Instruction instruction_struct;
 	
 	// this won't catch andeq, it will just chop off the eq
 	char instruction_string[30] = "sub r1, r2    , r3, lsl r4";
 	char opcode_string[30];
 	extract_opcode(instruction_string, opcode_string);
-	printf("%s\n", opcode_string);
+	if (opcode == "andeq") {
+		instruction_struct.opcode = AND;
+		instruction_struct.cond	  = EQUAL;
+	} else {
+		instruction_struct.opcode = convert_opcode(opcode_string);
+		instruction_struct.cond   = ALWAYS;
+	}
 
 	char arg1[100];
 	char arg2[100];
 	char arg3[100];
-	char arg4[100];
-
 	split_4_arguments(instruction_string, opcode_string, arg2, arg3, arg4);
 
 	printf("%s\n", opcode_string);
