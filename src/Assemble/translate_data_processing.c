@@ -49,9 +49,8 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 	struct Instruction instruction_struct;
 	
 	// this won't catch andeq, it will just chop off the eq
-	char instruction_string[30] = "sub r1, r2    , r3, lsl r4";
-	char opcode_string[30];
-	extract_opcode(instruction_string, opcode_string);
+	char opcode_string[100];
+	extract_opcode(instruction, opcode_string);
 
 	if (opcode_string == "andeq") {
 		instruction_struct.opcode = AND;
@@ -61,24 +60,32 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 		instruction_struct.cond   = ALWAYS;
 	}
 
-	char arg1[100];
-	char arg2[100];
-	char arg3[100];
-	char arg4[100];
-	split_4_arguments(instruction_string, opcode_string, arg2, arg3, arg4);
+	char operand2[100];
+	if (instruction_computes_results(instruction_struct.opcode))  {
+		char rd[100];
+		char rn[100];
+		split_4_arguments(instruction, opcode_string, rd, rn, operand2);
 
-	printf("%s\n", opcode_string);
-	printf("%s\n", arg2);
-	printf("%s\n", arg3);
-	printf("%s\n", arg4);
+		instruction_struct.rd = *(rd + 1) - '0';
+		instruction_struct.rn = *(rn + 1) - '0';
 
+	} else if (instruction_struct.opcode == MOVE)  {
+		char rd[100];
+		split_3_arguments(instruction, opcode_string, rd, operand2);
+		instruction_struct.rd = *(rd + 1) - '0';
 
+	} else if (instruction_sets_CPSR_only(instruction_struct.opcode)) {
+		char rn[100];
+		split_3_arguments(instruction, opcode_string, rn, operand2);
+
+		instruction_struct.rn = *(rn + 1) - '0';
+	}
 
 	return 0;
 }
 
 int main(void) {
-	translate_data_processing("poo r1, r5");
+	translate_data_processing("sub r0, r1, r4, lsl r3");
 	return 0;
 }
 
