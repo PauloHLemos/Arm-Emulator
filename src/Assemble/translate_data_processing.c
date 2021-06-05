@@ -42,6 +42,10 @@ bool instruction_sets_CPSR_only(enum Opcode opcode) {
 	}
 }
 
+void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immediate_operand_ptr) {
+	printf("%s\n", operand2_string);
+}
+
 
 uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_ptr*/) {
 	// Make andeq a special case
@@ -60,26 +64,36 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 		instruction_struct.cond   = ALWAYS;
 	}
 
-	char operand2[100];
+	char operand2_string[100];
 	if (instruction_computes_results(instruction_struct.opcode))  {
 		char rd[100];
 		char rn[100];
-		split_4_arguments(instruction, opcode_string, rd, rn, operand2);
+		split_4_arguments(instruction, opcode_string, rd, rn, operand2_string);
 
 		instruction_struct.rd = *(rd + 1) - '0';
 		instruction_struct.rn = *(rn + 1) - '0';
-
+		instruction_struct.set_condition_codes = false;
 	} else if (instruction_struct.opcode == MOVE)  {
 		char rd[100];
-		split_3_arguments(instruction, opcode_string, rd, operand2);
-		instruction_struct.rd = *(rd + 1) - '0';
+		split_3_arguments(instruction, opcode_string, rd, operand2_string);
 
+		instruction_struct.rd = *(rd + 1) - '0';
+		instruction_struct.set_condition_codes = false;
 	} else if (instruction_sets_CPSR_only(instruction_struct.opcode)) {
 		char rn[100];
-		split_3_arguments(instruction, opcode_string, rn, operand2);
+		split_3_arguments(instruction, opcode_string, rn, operand2_string);
 
 		instruction_struct.rn = *(rn + 1) - '0';
+		instruction_struct.set_condition_codes = true;
 	}
+
+	uint32_t operand2;
+	bool immediate_operand;
+	process_operand2(operand2_string, &operand2, &immediate_operand);
+
+	instruction_struct.immediate_operand = immediate_operand;
+	instruction_struct.operand2	     = operand2;
+
 
 	return 0;
 }
