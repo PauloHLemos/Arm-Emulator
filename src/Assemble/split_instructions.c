@@ -1,6 +1,11 @@
 #include <string.h>
 
 void split_4_arguments(char *string, char *arg1, char *arg2, char *arg3, char *arg4) {
+	*arg1 = '\0';
+	*arg2 = '\0';
+	*arg3 = '\0';
+	*arg4 = '\0';
+
 	// extract the opcode
 	for ( ; *string != ' '; string += 1) strncat(arg1, string, 1);
 	string += 1;
@@ -17,6 +22,10 @@ void split_4_arguments(char *string, char *arg1, char *arg2, char *arg3, char *a
 }
 
 void split_3_arguments(char *string, char *arg1, char *arg2, char *arg3) {
+	*arg1 = '\0';
+	*arg2 = '\0';
+	*arg3 = '\0';
+
 	for ( ; *string != ' '; string += 1) strncat(arg1, string, 1);
 	string += 1;
 
@@ -27,5 +36,6 @@ void split_3_arguments(char *string, char *arg1, char *arg2, char *arg3) {
 }
 
 void extract_opcode(char *string, char *arg1) {
+	*arg1 = '\0';
 	for ( ; *string != ' '; string += 1) strncat(arg1, string, 1);
 }

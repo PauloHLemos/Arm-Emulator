@@ -29,18 +29,18 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 	
 	// this won't catch andeq, it will just chop off the eq
 	char instruction_string[30] = "sub r1, r2    , r3, lsl r4";
-	char opcode_string[30] = "";
+	char opcode_string[30];
 	extract_opcode(instruction_string, opcode_string);
 	printf("%s\n", opcode_string);
 
-	char arg1[100] = "";
-	char arg2[100] = "";
-	char arg3[100] = "";
-	char arg4[100] = "";
+	char arg1[100];
+	char arg2[100];
+	char arg3[100];
+	char arg4[100];
 
-	split_4_arguments(instruction_string, arg1, arg2, arg3, arg4);
+	split_4_arguments(instruction_string, opcode_string, arg2, arg3, arg4);
 
-	printf("%s\n", arg1);
+	printf("%s\n", opcode_string);
 	printf("%s\n", arg2);
 	printf("%s\n", arg3);
 	printf("%s\n", arg4);
