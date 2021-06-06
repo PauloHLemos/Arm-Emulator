@@ -12,6 +12,7 @@ void pipeline(struct State *state_ptr) {
 	bool flush = false;
 	uint32_t instruction_binary;
 	struct Instruction instruction_struct;
+	instruction_struct.halt = false;
 
 	while (!instruction_struct.halt) {
 		if (ready_to_execute) {
