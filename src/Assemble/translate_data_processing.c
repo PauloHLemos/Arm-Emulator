@@ -55,7 +55,7 @@ void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immed
 		*immediate_operand_ptr = true;
 		operand2_string += 1;
 		// TODO: fix incomplete behaviour
-		*operand2_ptr = atoi(operand2_string); 
+		*operand2_ptr = (uint32_t) strtol(operand2_string, NULL, 0); 
 	} else {
 		*immediate_operand_ptr = false;
 	}
@@ -137,8 +137,7 @@ void test_instruction_equals(char *instruction_string,
 			& rn_correct & rd_correct & operand2_correct)) {
 		printf("--------------------------------------\n");
 		printf("Test name:\t%s\n"
-		       "Instruction:\t%s\n"
-		       "Status:\t\tFailed\n", test_name, instruction_string);
+		       "Instruction:\t%s\n" "Status:\t\tFailed\n", test_name, instruction_string);
 	} else {
 		printf("--------------------------------------\n");
 		printf("Test name:\t%s\n"
@@ -175,10 +174,12 @@ void run_tests() {
 	test_instruction_equals(instruction_string, instruction, "Sub with immediate operand", 
 			ALWAYS, true, SUBTRACT,	0, 1, 0, 2342);		
 
-	strncpy(instruction_string, "add r1, r4, lsl r5", 100);
+	strncpy(instruction_string, "and r2,r1,#0xAB", 100);
 	instruction = translate_data_processing(instruction_string);
-	test_instruction_equals(instruction_string, instruction, "Add with left shift by register",
-			ALWAYS, false, ADD, 0, 4, 1, 100);
+	test_instruction_equals(instruction_string, instruction, "Immediate hex operand2", 
+			ALWAYS, true, AND, 0, 1, 2, 0b000010101011);		
+
+
 
 	free(instruction_string);
 }
