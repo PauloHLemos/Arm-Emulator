@@ -10,10 +10,7 @@ uint32_t process_operand2_immediate_value(uint32_t operand2, bool *carry_flag_pt
 	return rotate_right(immediate, shift_amount, carry_flag_ptr);
 }
 
-uint32_t process_operand2_shifted_register(
-		struct State *state_ptr, 
-		uint32_t operand2,
-		bool *carry_flag_ptr) {
+uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2, bool *carry_flag_ptr) {
 	uint32_t rm_index	   = operand2 & 0xf;
 	uint32_t rm		   = state_ptr->registers.array_access[rm_index];
 	uint32_t shift_code	   = (operand2 & 0b1100000) >> 5;
@@ -48,26 +45,30 @@ uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount, bool *ca
 
 uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
 	uint64_t large_result = n << spaces;
-	uint32_t result = (uint32_t) large_result;
-	uint32_t carry = large_result >> 32;
-	*carry_flag_ptr = (carry != 0);
+	uint32_t result	      = (uint32_t) large_result;
+	bool carry	      = (large_result >> 32) != 0;
+
+	*carry_flag_ptr = carry;
 	return result;	
 }
 
 uint32_t logical_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
 	uint64_t large_result = (((uint64_t) n) << 32) >> spaces;
-	bool carry = ((1 << 31) & large_result) != 0;
-	uint32_t result = (uint32_t) (large_result >> 32);
-	*carry_flag_ptr = carry;
+	bool carry	      = ((1 << 31) & large_result) != 0;
+	uint32_t result	      = (uint32_t) (large_result >> 32);
+
+	*carry_flag_ptr	      = carry;
 	return result;
 }
 
 uint32_t arithmetic_shift_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
-	bool sign_bit = (n & (1 << 31)) != 0;
+	bool sign_bit	      = (n & (1 << 31)) != 0;
 	uint64_t large_result = (((uint64_t) n) << 32) >> spaces;
-	bool carry = ((1 << 31) & large_result) != 0;
-	uint32_t result = (uint32_t) (large_result >> 32);
+	bool carry	      = ((1 << 31) & large_result) != 0;
+	uint32_t result	      = (uint32_t) (large_result >> 32);
+
 	if (sign_bit) result |= (0xffffffff << (32 - spaces));
+
 	*carry_flag_ptr = carry;
 	return result;
 }
@@ -77,6 +78,7 @@ uint32_t rotate_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
 	uint32_t overflow_bits		  = n << (32 - spaces);
 	bool carry			  = (n & (1 << (spaces - 1))) != 0;
 	uint32_t result			  = (arithmetic_shifted_right | overflow_bits);
+
 	*carry_flag_ptr			  = carry;
 	return result;
 }

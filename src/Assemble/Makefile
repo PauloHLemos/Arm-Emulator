@@ -9,7 +9,7 @@ CFLAGS  = -Wall -g -D_POSIX_SOURCE -D_DEFAULT_SOURCE -std=c99 -pedantic
 
 # all: assemble emulate
 all: assemble
-	cp assemble ../assemble
+	cp ./assemble ../assemble
 
 assemble: assemble.o
 
