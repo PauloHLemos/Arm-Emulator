@@ -7,11 +7,13 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 	struct Instruction instruction_struct;
 	uint32_t offset;
 	char cond[4], expression[100];
+	char *cond_ptr = cond;
+	char *expression_ptr = expression;
 
 	sscanf(instruction, "%s %s", cond, expression);
-	instruction_struct.cond = search_table(st_head_ptr, cond);
+	instruction_struct.cond = search_table(st_head_ptr, cond_ptr);
 	if (atoi(expression) == 0){
-		offset = search_table(st_head_ptr, expression);
+		offset = search_table(st_head_ptr, expression_ptr);
 	}
 	else{
 		offset = atoi(expression);
@@ -27,6 +29,8 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 //    char instruct[] = "bne 2341";
 //    char *instruction = instruct;
 //    uint32_t current_address= 2000;
+//	  char *cond_ptr = cond;
+//	  char *expression_ptr = expression;
 //
 //    uint32_t offset;
 //    char cond[4], expression[100];
