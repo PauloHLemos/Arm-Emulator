@@ -24,6 +24,22 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 	return instruction_struct;
 	}
 
-int main(void){
-    return 0;
-}
+//int main(void){
+//    char instruct[] = "bne 2341";
+//    char *instruction = instruct;
+//    uint32_t current_address= 2000;
+//
+//    uint32_t offset;
+//    char cond[4], expression[100];
+//    sscanf(instruction, "%s %s", cond, expression);
+//    printf("%s\n", cond);
+//    if (atoi(expression) == 0){
+//        offset = 0;
+//    }
+//    else{
+//        offset = atoi(expression);
+//    }
+//    offset = current_address > offset ? current_address - offset : offset - current_address;
+//    offset -= 8;
+//    printf("%d\n", offset);
+//}
