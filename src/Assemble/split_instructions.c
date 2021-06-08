@@ -1,4 +1,5 @@
 #include <string.h>
+#include "split_instructions.h"
 
 void split_4_arguments(char *string, char *arg1, char *arg2, char *arg3, char *arg4) {
 	*arg1 = '\0';

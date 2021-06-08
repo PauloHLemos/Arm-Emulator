@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "definitions.h"
 #include "test.h"
-#include "string.h"
 #include "split_instructions.h"
 // #include "instructions.h"
 
@@ -43,7 +43,14 @@ bool instruction_sets_CPSR_only(enum Opcode opcode) {
 }
 
 void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immediate_operand_ptr) {
-	printf("%s\n", operand2_string);
+	if (*operand2_string == '#') {
+		*immediate_operand_ptr = true;
+		operand2_string += 1;
+		*operand2_ptr = atoi(operand2_string);
+	} else {
+		*immediate_operand_ptr = true;
+
+	}
 }
 
 
@@ -56,7 +63,7 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 	char opcode_string[100];
 	extract_opcode(instruction, opcode_string);
 
-	if (opcode_string == "andeq") {
+	if (strcmp(opcode_string, "andeq") == 0) {
 		instruction_struct.opcode = AND;
 		instruction_struct.cond	  = EQUAL;
 	} else {
@@ -99,7 +106,7 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 }
 
 int main(void) {
-	translate_data_processing("sub r0, r1, r4, lsl r3");
+	translate_data_processing("sub r0, r1, #2342");
 	return 0;
 }
 
