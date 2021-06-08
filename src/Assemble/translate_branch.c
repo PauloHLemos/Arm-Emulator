@@ -21,6 +21,7 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 	offset = current_address > offset ? current_address - offset : offset - current_address;
 	offset -= 8;
 	instruction_struct.offset = offset;
+	offset >>= 8;
 	return instruction_struct;
 	}
 
