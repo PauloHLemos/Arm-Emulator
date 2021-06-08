@@ -12,9 +12,10 @@ all: assemble
 	cp ./assemble ../assemble
 
 assemble: assemble.o
-translate_data_processing: translate_data_processing.o split_instructions.o
+translate_data_processing: translate_data_processing.o split_instructions.o test.o
 translate_data_processing.o: test.h split_instructions.h definitions.h
 split_instruction.o: split_instructions.h
+test.o: test.h
 
 
 clean:

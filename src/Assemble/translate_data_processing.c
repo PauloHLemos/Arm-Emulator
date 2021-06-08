@@ -54,7 +54,7 @@ void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immed
 }
 
 
-uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_ptr*/) {
+struct Instruction translate_data_processing(char *instruction/*, struct ST_Node *st_head_ptr*/) {
 	// Make andeq a special case
 	
 	struct Instruction instruction_struct;
@@ -92,8 +92,7 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 
 		instruction_struct.rn = *(rn + 1) - '0';
 		instruction_struct.set_condition_codes = true;
-	}
-
+	} 
 	uint32_t operand2;
 	bool immediate_operand;
 	process_operand2(operand2_string, &operand2, &immediate_operand);
@@ -101,12 +100,24 @@ uint32_t translate_data_processing(char *instruction/*, struct ST_Node *st_head_
 	instruction_struct.immediate_operand = immediate_operand;
 	instruction_struct.operand2	     = operand2;
 
-
-	return 0;
+	return instruction_struct;
 }
 
+void run_tests() {
+	char *instruction_string = "sub r0, r1, #2342";
+	struct Instruction instruction = translate_data_processing(instruction_string);
+	assert_true(instruction.cond ==			ALWAYS,		"Cond read incorrectly");
+	assert_true(instruction.immediate_operand ==	true,		"Immediate operand read incorrectly");
+	assert_true(instruction.opcode ==		SUBTRACT,	"Opcode read incorrectly");
+	assert_true(instruction.set_condition_codes ==	0,		"Immediate operand read incorrectly");
+	assert_true(instruction.rn ==			1,		"Rn read incorrectly");
+	assert_true(instruction.rd ==			0,		"Rd read incorrectly");
+	assert_true(instruction.operand2 ==		2342,		"Operand2 read incorrectly");
+}
+
+
 int main(void) {
-	translate_data_processing("sub r0, r1, #2342");
+	run_tests();
 	return 0;
 }
 

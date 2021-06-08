@@ -27,6 +27,6 @@ bool test_somefile(void) {
 }
 
 
-int main(void) {
-	test_somefile();
-}
+// int main(void) {
+// 	test_somefile();
+// }
