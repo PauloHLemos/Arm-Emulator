@@ -7,11 +7,9 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 	struct Instruction instruction_struct;
 	uint32_t offset;
 	char cond[4], expression[100];
-	
+
 	sscanf(instruction, "%s %s", cond, expression);
-	
 	instruction_struct.cond = search_table(st_head_ptr, cond);
-	
 	if (atoi(expression) == 0){
 		offset = search_table(st_head_ptr, expression);
 	}
