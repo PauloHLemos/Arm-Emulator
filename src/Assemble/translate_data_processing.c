@@ -61,7 +61,7 @@ uint32_t find_rotation(uint32_t operand) {
 		}
 	}
 	fprintf(stderr, "Error: Number %d cannot be represented as an immediate operand. ", operand);
-	exit(0);
+	exit(1);
 }
 
 uint32_t process_operand2_shifted_register(char *operand2_string) {
