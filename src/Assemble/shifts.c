@@ -42,3 +42,14 @@ uint32_t rotate_right(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
 	*carry_flag_ptr			  = carry;
 	return result;
 }
+
+uint32_t rotate_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
+	uint64_t large_result		  = n << spaces;
+	uint32_t arithmetic_shifted_left  = (uint32_t) large_result;
+	uint32_t overflow_bits		  = n >> (32 - spaces);
+	bool carry			  = (large_result >> 32) != 0;
+	uint32_t result			  = (arithmetic_shifted_left | overflow_bits);
+
+	*carry_flag_ptr			  = carry;
+	return result;
+}
