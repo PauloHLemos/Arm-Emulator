@@ -44,15 +44,50 @@ bool instruction_sets_CPSR_only(enum Opcode opcode) {
 	}
 }
 
-uint32_t find_rotation(uint32_t result) {
-	assert(result >= (1 << 8));
-	uint32_t shifted = result;
+uint32_t find_rotation(uint32_t operand) {
+	assert(operand >= (1 << 8));
+	uint32_t shifted = operand;
 	bool carry;
 	for (int i = 0; i < 16; i++, shifted = rotate_left(shifted, 2, &carry)) {
 		if ((shifted & 0xff) == shifted) {
 			return (i << 8) + shifted;
 		}
 	}
+	fprintf(stderr, "Error: Number %d cannot be represented as an immediate operand. ", operand);
+	exit(0);
+}
+
+uint32_t process_operand2_shifted_register(char *operand2_string) {
+	char shift_register_string[10] = "";
+	uint32_t operand2 = 0;
+
+	for ( ; *operand2_string != ',' && *operand2_string != '\0'; operand2_string += 1) 
+			strncat(shift_register_string, operand2_string, 1);
+
+	if (*operand2_string == '\0') {
+		// register case
+		printf("Shift register: %s\n", shift_register_string);
+		return atoi(shift_register_string + 1);
+	} else {
+		// optional shift case
+
+		char shift_type_string[10] = "";
+		char shift_amount_string[20] = "";
+		operand2_string += (*(operand2_string + 1) == ' ') ? 2 : 1;
+		for ( ; *operand2_string != ' '; operand2_string += 1) 
+				strncat(shift_type_string, operand2_string, 1);
+		operand2_string += 1;
+		for ( ; *operand2_string != '\0'; operand2_string += 1) 
+				strncat(shift_amount_string, operand2_string, 1);
+
+		printf("Shift register: %s\n", shift_register_string);
+		printf("Shift type: %s\n", shift_type_string);
+		printf("Shift amount: %s\n", shift_amount_string);
+	}
+
+
+
+	return 0;
 }
 
 void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immediate_operand_ptr) {
@@ -65,7 +100,7 @@ void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immed
 
 	} else {
 		*immediate_operand_ptr = false;
-		*operand2_ptr = 0;
+		*operand2_ptr = process_operand2_shifted_register(operand2_string);
 	}
 }
 

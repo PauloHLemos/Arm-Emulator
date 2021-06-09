@@ -21,7 +21,9 @@ void test_instruction_equals(char *instruction_string,
 			     bool set_condition_codes,	
 			     uint32_t rd,
 			     uint32_t rn,
-			     uint32_t operand2) {
+			     uint32_t operand2,
+			     uint32_t *tests_passed,
+			     uint32_t *tests_run) {
 
 	bool instruction_computes_results = (opcode == AND) || 
 					    (opcode == EXCLUSIVE_OR) ||
@@ -50,6 +52,9 @@ void test_instruction_equals(char *instruction_string,
 				rn_correct && 
 				rd_correct &&
 				operand2_correct;
+	
+	(*tests_run)++;
+	if (all_tests_passed) (*tests_passed)++;
 
 	printf("--------------------------------------------------------------\n"
 	       "Test name:\t%s\n"
@@ -69,6 +74,9 @@ void test_instruction_equals(char *instruction_string,
 
 void run_tests() {
 	char *instruction_string = (char *) malloc(100 * 8 * sizeof(char));
+	uint32_t tests_passed = 0;
+	uint32_t tests_run = 0;
+
 	strncpy(instruction_string, "andeq r0, r0, r0", 100);
 	struct Instruction instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Andeq halt instruction", 
@@ -78,28 +86,62 @@ void run_tests() {
 			0,     // Set condition codes	
 			0,     // Rd			NULL for TST, TEQ, CMP
 			0,     // Rn			NULL for MOV
-			0);    // Operand2
+			0,     // Operand2
+			&tests_passed,
+			&tests_run);    
 
 
-	strncpy(instruction_string, "sub r0, r1, #2342", 100); // result 
+
+	strncpy(instruction_string, "sub r0, r1, #10", 100); // result 
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Sub with immediate operand", 
-			ALWAYS, true, SUBTRACT,	0, 0, 1, 2342);		
+			ALWAYS, true, SUBTRACT,	0, 0, 1, 10,
+			&tests_passed, &tests_run);		
+
+	strncpy(instruction_string, "sub r0, r1, r4", 100); // result 
+	instruction = translate_data_processing(instruction_string);
+	test_instruction_equals(instruction_string, instruction, "Sub with register operand", 
+			ALWAYS, false, SUBTRACT,	0, 0, 1, 0b000000000100,
+			&tests_passed, &tests_run);		
 
 	strncpy(instruction_string, "and r2,r1,#0xAB", 100);
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Immediate hex operand2", 
-			ALWAYS, true, AND, 0, 2, 1, 0b000010101011);		
+			ALWAYS, true, AND, 0, 2, 1, 0b000010101011,
+			&tests_passed, &tests_run);		
 
 	strncpy(instruction_string, "mov r3,#0x100", 100);
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Mov with immediate operand2 with rotation", 
-			ALWAYS, true, MOVE, 0, 3, NULL, 0b110000000001);		
+			ALWAYS, true, MOVE, 0, 3, NULL, 0b110000000001,
+			&tests_passed, &tests_run);		
 
 	strncpy(instruction_string, "mov r2,#0x3F0000", 100);
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Mov with immediate operand2 with rotation 2", 
-			ALWAYS, true, MOVE, 0, 2, NULL, 0b100000111111);		
+			ALWAYS, true, MOVE, 0, 2, NULL, 0b100000111111,
+			&tests_passed, &tests_run);		
+
+	strncpy(instruction_string, "and r2,r1,#0x3F0000", 100);
+	instruction = translate_data_processing(instruction_string);
+	test_instruction_equals(instruction_string, instruction, "And with immediate operand2 with rotation", 
+			ALWAYS, true, AND, 0, 2, 1, 0b100000111111,
+			&tests_passed, &tests_run);		
+
+	strncpy(instruction_string, "sub r5,r4, r3, lsr r2", 100);
+	instruction = translate_data_processing(instruction_string);
+	test_instruction_equals(instruction_string, instruction, "Sub with operand2 shifted by reg", 
+			ALWAYS, false, SUBTRACT, 0, 5, 4, 0b001000110011,
+			&tests_passed, &tests_run);		
+
+	strncpy(instruction_string, "sub r5,r4, r3, lsr #24", 100);
+	instruction = translate_data_processing(instruction_string);
+	test_instruction_equals(instruction_string, instruction, "Sub with operand2 shifted by immediate", 
+			ALWAYS, false, SUBTRACT, 0, 5, 4, 0b110000100011,
+			&tests_passed, &tests_run);		
+
+
+	printf("\n%d of %d tests passed. \n", tests_passed, tests_run);
 
 
 	free(instruction_string);
