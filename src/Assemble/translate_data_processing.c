@@ -10,18 +10,25 @@
 #include "shifts.h"
 // #include "instructions.h"
 
-enum Opcode convert_opcode(char *opcode_string) {
-	if	(strcmp(opcode_string, "and") == 0) { return AND; } 
-	else if (strcmp(opcode_string, "eor") == 0) { return EXCLUSIVE_OR; }
-	else if (strcmp(opcode_string, "sub") == 0) { return SUBTRACT; }
-	else if (strcmp(opcode_string, "rsb") == 0) { return REVERSE_SUBTRACT; }
-	else if (strcmp(opcode_string, "add") == 0) { return ADD; }
-	else if (strcmp(opcode_string, "orr") == 0) { return OR; }
-	else if (strcmp(opcode_string, "mov") == 0) { return MOVE; }
-	else if (strcmp(opcode_string, "tst") == 0) { return TEST_BITS; }
-	else if (strcmp(opcode_string, "teq") == 0) { return TEST_EQUALS; }
-	else if (strcmp(opcode_string, "cmp") == 0) { return COMPARE; }
-	else { fprintf(stderr, "Opcode \"%s\" does not exist. \n", opcode_string); exit(1); return -1; }
+void convert_opcode(char *opcode_string, enum Opcode *opcode_ptr, enum Condition *cond_ptr) {
+	if (strcmp(opcode_string, "andeq") == 0) {
+		*opcode_ptr = AND;
+		*cond_ptr = EQUAL;
+		return;
+	}
+	*cond_ptr = ALWAYS;
+
+	if	(strcmp(opcode_string, "and") == 0) { *opcode_ptr = AND; } 
+	else if (strcmp(opcode_string, "eor") == 0) { *opcode_ptr = EXCLUSIVE_OR; }
+	else if (strcmp(opcode_string, "sub") == 0) { *opcode_ptr = SUBTRACT; }
+	else if (strcmp(opcode_string, "rsb") == 0) { *opcode_ptr = REVERSE_SUBTRACT; }
+	else if (strcmp(opcode_string, "add") == 0) { *opcode_ptr = ADD; }
+	else if (strcmp(opcode_string, "orr") == 0) { *opcode_ptr = OR; }
+	else if (strcmp(opcode_string, "mov") == 0) { *opcode_ptr = MOVE; }
+	else if (strcmp(opcode_string, "tst") == 0) { *opcode_ptr = TEST_BITS; }
+	else if (strcmp(opcode_string, "teq") == 0) { *opcode_ptr = TEST_EQUALS; }
+	else if (strcmp(opcode_string, "cmp") == 0) { *opcode_ptr = COMPARE; }
+	else { fprintf(stderr, "Opcode \"%s\" does not exist. \n", opcode_string); exit(1); }
 }
 bool instruction_computes_results(enum Opcode opcode) {
 	switch(opcode) {
@@ -115,21 +122,11 @@ void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immed
 
 
 struct Instruction translate_data_processing(char *instruction, struct ST_Node *st_head_ptr) {
-	// Make andeq a special case
-	
 	struct Instruction instruction_struct;
 	
-	// this won't catch andeq, it will just chop off the eq
 	char opcode_string[100];
 	extract_opcode(instruction, opcode_string);
-
-	if (strcmp(opcode_string, "andeq") == 0) {
-		instruction_struct.opcode = AND;
-		instruction_struct.cond	  = EQUAL;
-	} else {
-		instruction_struct.opcode = convert_opcode(opcode_string);
-		instruction_struct.cond   = ALWAYS;
-	}
+	convert_opcode(opcode_string, &instruction_struct.opcode, &instruction_struct.cond);
 
 	char operand2_string[100];
 	if (instruction_computes_results(instruction_struct.opcode))  {
@@ -156,6 +153,7 @@ struct Instruction translate_data_processing(char *instruction, struct ST_Node *
 		instruction_struct.rn = *(rn + 1) - '0';
 		instruction_struct.set_condition_codes = true;
 	} 
+
 	uint32_t operand2;
 	bool immediate_operand;
 	process_operand2(operand2_string, &operand2, &immediate_operand);
