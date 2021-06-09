@@ -2,10 +2,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "definitions.h"
 #include "test.h"
 #include "split_instructions.h"
 #include "test_translate_data_processing.h"
+#include "shifts.h"
 // #include "instructions.h"
 
 enum Opcode convert_opcode(char *opcode_string) {
@@ -42,13 +44,25 @@ bool instruction_sets_CPSR_only(enum Opcode opcode) {
 	}
 }
 
+uint32_t find_rotation(uint32_t result) {
+	assert(result >= (1 << 8));
+	uint32_t shifted = result;
+	bool carry;
+	for (int i = 0; i < 16; i++, shifted = rotate_left(shifted, 2, &carry)) {
+		if ((shifted & 0xff) == shifted) {
+			return (i << 8) + shifted;
+		}
+	}
+}
 
 void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immediate_operand_ptr) {
 	if (*operand2_string == '#') {
 		*immediate_operand_ptr = true;
 		operand2_string += 1;
 		// TODO: fix incomplete behaviour, what if there is an overflow
-		*operand2_ptr = (uint32_t) strtol(operand2_string, NULL, 0); 
+		uint32_t result = (uint32_t) strtol(operand2_string, NULL, 0); 
+		*operand2_ptr = (result >= (1 << 8)) ? find_rotation(result) : result;
+
 	} else {
 		*immediate_operand_ptr = false;
 		*operand2_ptr = 0;
