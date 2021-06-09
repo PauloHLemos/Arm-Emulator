@@ -16,7 +16,21 @@ uint8_t cond_to_int(enum Condition cond) {
 		case ALWAYS:		 return 14;
 	}
 }
-
+uint8_t opcode_to_int(enum Opcode opcode) {
+	switch(opcode) {
+		case AND:	       return 0;
+		case EXCLUSIVE_OR:     return 1;
+		case SUBTRACT:         return 2;
+		case REVERSE_SUBTRACT: return 3;
+		case ADD:              return 4;
+		case TEST_BITS:        return 8;
+		case TEST_EQUALS:      return 9; 
+		case COMPARE:	       return 10;
+		case OR:               return 12;
+		case MOVE:             return 13;
+	}                               
+}                                       
+                                        
 void set_bit(uint32_t *number, char bit_no, bool bit_value) {
 	if (bit_value) {
 		*number |= (1 << bit_no);
@@ -38,8 +52,11 @@ uint32_t encode_data_processing(struct Instruction instruction) {
 	instruction_binary |= (instruction.rd << 12);
 	instruction_binary |= (instruction.rn << 16);
 
-	// Condition code setting
+	// Condition setting
 	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+	
+	// Opcode setting
+	instruction_binary |= (opcode_to_int(instruction.opcode) << 21);
 
 	
 	return instruction_binary;
@@ -66,7 +83,7 @@ uint32_t encode_multiply(struct Instruction instruction) {
 	instruction_binary |= (instruction.rn << 12);
 	instruction_binary |= (instruction.rd << 16);
 	
-	// Condition code setting
+	// Condition setting
 	instruction_binary |= (cond_to_int(instruction.cond) << 28);
 
 	return instruction_binary;
@@ -89,7 +106,7 @@ uint32_t encode_single_data_transfer(struct Instruction instruction) {
 	instruction_binary |= (instruction.rd << 12);
 	instruction_binary |= (instruction.rn << 16);
 
-	// Condition code setting
+	// Condition setting
 	instruction_binary |= (cond_to_int(instruction.cond) << 28);
 
 	return instruction_binary;
@@ -101,8 +118,9 @@ uint32_t encode_branch(struct Instruction instruction) {
 	set_bit(&instruction_binary, 25, 1);
 	set_bit(&instruction_binary, 27, 1);
 
-	// Condition code setting
+	// Condition setting
 	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+
 	return instruction_binary;
 }
 
