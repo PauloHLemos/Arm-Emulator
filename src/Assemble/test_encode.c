@@ -1,12 +1,14 @@
+#include <string.h>
 #include "test_encode.h"
 #include "encode.h"
 #include "definitions.h"
 
 void print_binary(uint32_t number) {
 	char buffer[100] = "";
+	char space = ' ';
         for (uint32_t i = 0, mask = 1 << 31; i < 32; i++, number <<= 1) {
 		if (i % 4 == 0 && i > 0) {
-			strncat(buffer, " ", 1);
+			strncat(buffer, &space, 1);
 		}
                 strncat(buffer, ((number & mask) != 0) ? "1" : "0", 1);
         }
@@ -59,14 +61,16 @@ void test_encode(void) {
 	uint32_t tests_passed = 0;
 
 	struct Instruction instruction;
-	instruction.type = DATA_PROCESSING;
-	instruction.cond = ALWAYS;
-	instruction.opcode = ADD;
+	instruction.type		= DATA_PROCESSING;
+	instruction.cond 		= ALWAYS;
+	instruction.opcode		= ADD;
+	instruction.immediate_operand   = true;
+	instruction.set_condition_codes = false;
+	instruction.rd			= 2;
+	instruction.rn 			= 1;
+	instruction.operand2		= 0b000000000010;
 
-	test_binary_equals("Test test", "andtests test r0", 0b00000000000000000000000000000000, 
-			encode(instruction), &tests_run, &tests_passed);
-
-	test_binary_equals("Test test 2", "thing test r0", 0b00110000010000000000000000110000, 
+	test_binary_equals("Test DP immediate operand", "add r2,r1,#2", 0b11100010100000010010000000000010, 
 			encode(instruction), &tests_run, &tests_passed);
 
 	printf("\n%d of %d tests passed correctly. \n", tests_passed, tests_run);
