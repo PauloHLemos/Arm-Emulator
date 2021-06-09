@@ -7,14 +7,6 @@
 #include "split_instructions.h"
 #include "test_translate_data_processing.h"
 // #include "instructions.h"
-#define EXPECTED_GOT(CONDITION, EXPECTED, GOT, T) \
-	do { \
-		if (!CONDITION) { \
-			printf("\n" #CONDITION ": False \n"); \
-			printf("Expected:\t%"T"\n", EXPECTED); \
-			printf("Got:\t\t%"T"\n", GOT); \
-		} \
-	} while (0)
 
 enum Opcode convert_opcode(char *opcode_string) {
 	if	(strcmp(opcode_string, "and") == 0) { return AND; } 
@@ -59,12 +51,12 @@ void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immed
 		*operand2_ptr = (uint32_t) strtol(operand2_string, NULL, 0); 
 	} else {
 		*immediate_operand_ptr = false;
-		*operand2_ptr = NULL;
+		*operand2_ptr = 0;
 	}
 }
 
 
-struct Instruction translate_data_processing(char *instruction/*, struct ST_Node *st_head_ptr*/) {
+struct Instruction translate_data_processing(char *instruction, struct ST_Node *st_head_ptr) {
 	// Make andeq a special case
 	
 	struct Instruction instruction_struct;

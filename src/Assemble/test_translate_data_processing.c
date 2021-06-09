@@ -23,20 +23,32 @@ void test_instruction_equals(char *instruction_string,
 			     uint32_t rn,
 			     uint32_t operand2) {
 
+	bool instruction_computes_results = (opcode == AND) || 
+					    (opcode == EXCLUSIVE_OR) ||
+					    (opcode == SUBTRACT) ||
+					    (opcode == REVERSE_SUBTRACT) ||
+					    (opcode == ADD) ||
+					    (opcode == OR);
+	bool instruction_is_move	  = (opcode == MOVE);
+	bool instruction_sets_cpsr	  = (opcode == TEST_BITS) ||
+					    (opcode == TEST_EQUALS) ||
+					    (opcode == COMPARE);
+
+
 	bool cond_correct		 = instruction.cond		   == cond;
 	bool immediate_operand_correct	 = instruction.immediate_operand   == immediate_operand;
 	bool opcode_correct		 = instruction.opcode		   == opcode;
 	bool set_condition_codes_correct = instruction.set_condition_codes == set_condition_codes;
-	bool rd_correct 		 = instruction.rd		   == rd;
-	bool rn_correct			 = instruction.rn		   == rn;
+	bool rd_correct 		 = (instruction.rd		   == rd) || instruction_sets_cpsr;
+	bool rn_correct			 = (instruction.rn		   == rn) || instruction_is_move;
 	bool operand2_correct		 = instruction.operand2		   == operand2;
 
-	bool all_tests_passed = cond_correct & 
-				immediate_operand_correct & 
-				opcode_correct & 
-				set_condition_codes_correct & 
-				rn_correct & 
-				rd_correct & 
+	bool all_tests_passed = cond_correct &&
+				immediate_operand_correct &&
+				opcode_correct && 
+				set_condition_codes_correct &&
+				rn_correct && 
+				rd_correct &&
 				operand2_correct;
 
 	printf("--------------------------------------------------------------\n"
@@ -44,13 +56,13 @@ void test_instruction_equals(char *instruction_string,
 	       "Instruction:\t%s\n" "Status:\t\t%s\n", 
 	       test_name, instruction_string, (all_tests_passed) ? "Passed" : "Failed"); 
 
-	EXPECTED_GOT(cond_correct,			cond, instruction.cond, "d");
-	EXPECTED_GOT(immediate_operand_correct,		immediate_operand, instruction.immediate_operand, "d");
-	EXPECTED_GOT(opcode_correct,			opcode, instruction.opcode, "d");
-	EXPECTED_GOT(set_condition_codes_correct,	set_condition_codes, instruction.set_condition_codes, "d");
-	EXPECTED_GOT(rd_correct,			rd, instruction.rd, "d");
-	EXPECTED_GOT(rn_correct,			rn, instruction.rn, "d");
-	EXPECTED_GOT(operand2_correct,			operand2, instruction.operand2, "d");
+	EXPECTED_GOT(cond_correct,		  cond, instruction.cond, "d");
+	EXPECTED_GOT(immediate_operand_correct,	  immediate_operand, instruction.immediate_operand, "d");
+	EXPECTED_GOT(opcode_correct,		  opcode, instruction.opcode, "d");
+	EXPECTED_GOT(set_condition_codes_correct, set_condition_codes, instruction.set_condition_codes, "d");
+	EXPECTED_GOT(rd_correct,		  rd, instruction.rd, "d");
+	EXPECTED_GOT(rn_correct,		  rn, instruction.rn, "d");
+	EXPECTED_GOT(operand2_correct,		  operand2, instruction.operand2, "d");
 
 	printf("--------------------------------------------------------------\n");
 }
