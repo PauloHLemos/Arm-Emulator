@@ -5,23 +5,21 @@
 
 struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address){
 	struct Instruction instruction_struct;
-	uint32_t offset;
+	uint32_t target_address;
 	char cond[4], expression[100];
-	char *cond_ptr = cond;
-	char *expression_ptr = expression;
 
 	sscanf(instruction, "%s %s", cond, expression);
-	instruction_struct.cond = search_table(st_head_ptr, cond_ptr);
+	instruction_struct.cond = search_table(st_head_ptr, cond);
 	if (atoi(expression) == 0){
-		offset = search_table(st_head_ptr, expression_ptr);
+		target_address = search_table(st_head_ptr, expression_ptr);
 	}
 	else{
-		offset = atoi(expression);
+		target_address = atoi(expression);
 	}
-	offset = current_address > offset ? current_address - offset : offset - current_address;
-	offset -= 8;
+	offset = target_address - current_address;
+	offset -= 8; //pipeline offset
+	offset >>= 2; //right shift two bits 
 	instruction_struct.offset = offset;
-	offset >>= 8;
 	return instruction_struct;
 	}
 
@@ -42,7 +40,8 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 //    else{
 //        offset = atoi(expression);
 //    }
-//    offset = current_address > offset ? current_address - offset : offset - current_address;
+//    offset = offset - current_address;
 //    offset -= 8;
+//    offset >>= 2;
 //    printf("%d\n", offset);
 //}
