@@ -135,6 +135,12 @@ void run_tests() {
 			ALWAYS, false, SUBTRACT, 0, 5, 4, 0b110000100011,
 			&tests_passed, &tests_run);		
 
+	strncpy(instruction_string, "sub r11,r4, r3, lsr #24", 100);
+	instruction = translate_data_processing(instruction_string);
+	test_instruction_equals(instruction_string, instruction, "Reg number larger than 9", 
+			ALWAYS, false, SUBTRACT, 0, 11, 4, 0b110000100011,
+			&tests_passed, &tests_run);		
+
 
 	printf("\n%d of %d tests passed. \n", tests_passed, tests_run);
 

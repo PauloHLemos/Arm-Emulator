@@ -110,7 +110,6 @@ void process_operand2(char *operand2_string, uint32_t *operand2_ptr, bool *immed
 	if (*operand2_string == '#') {
 		*immediate_operand_ptr = true;
 		operand2_string += 1;
-		// TODO: fix incomplete behaviour, what if there is an overflow
 		uint32_t result = (uint32_t) strtol(operand2_string, NULL, 0); 
 		*operand2_ptr = (result >= (1 << 8)) ? find_rotation(result) : result;
 
@@ -135,22 +134,22 @@ struct Instruction translate_data_processing(char *instruction, struct ST_Node *
 		char rn[100];
 		split_4_arguments(instruction, opcode_string, rd, rn, operand2_string);
 
-		instruction_struct.rd = *(rd + 1) - '0';
-		instruction_struct.rn = *(rn + 1) - '0';
+		instruction_struct.rd = atoi(rd + 1);
+		instruction_struct.rn = atoi(rn + 1);
 		instruction_struct.set_condition_codes = false;
 	} else if (instruction_struct.opcode == MOVE)  {
 		// MOV instruction
 		char rd[100];
 		split_3_arguments(instruction, opcode_string, rd, operand2_string);
 
-		instruction_struct.rd = *(rd + 1) - '0';
+		instruction_struct.rd = atoi(rd + 1);
 		instruction_struct.set_condition_codes = false;
 	} else if (instruction_sets_CPSR_only(instruction_struct.opcode)) {
 		// CPSR setting instructions
 		char rn[100];
 		split_3_arguments(instruction, opcode_string, rn, operand2_string);
 
-		instruction_struct.rn = *(rn + 1) - '0';
+		instruction_struct.rn = atoi(rn + 1);
 		instruction_struct.set_condition_codes = true;
 	} 
 
