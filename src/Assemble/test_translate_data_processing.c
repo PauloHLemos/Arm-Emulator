@@ -96,7 +96,7 @@ void run_tests() {
 	strncpy(instruction_string, "sub r0, r1, r4", 100); // result 
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Sub with register operand", 
-			ALWAYS, false, SUBTRACT,	0, 0, 1, 0b000000000100,
+			ALWAYS, false, SUBTRACT, 0, 0, 1, 0b000000000100,
 			&tests_passed, &tests_run);		
 
 	strncpy(instruction_string, "and r2,r1,#0xAB", 100);
@@ -140,7 +140,6 @@ void run_tests() {
 	test_instruction_equals(instruction_string, instruction, "Reg number larger than 9", 
 			ALWAYS, false, SUBTRACT, 0, 11, 4, 0b110000100011,
 			&tests_passed, &tests_run);		
-
 
 	printf("\n%d of %d tests passed. \n", tests_passed, tests_run);
 
