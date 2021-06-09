@@ -57,6 +57,10 @@ uint32_t encode_data_processing(struct Instruction instruction) {
 	
 	// Opcode setting
 	instruction_binary |= (opcode_to_int(instruction.opcode) << 21);
+	
+	// Operand2 setting
+	assert(instruction.operand2 < (1 << 12));
+	instruction_binary |= instruction.operand2;
 
 	
 	return instruction_binary;
