@@ -19,10 +19,29 @@ void add_node(struct ST_Node *node, char *label, uint32_t address) {
 	while (node->next_ptr != NULL) {
 		node = node->next_ptr;
 	}
-	struct ST_Node new_node;
-	new_node.label = label;
-	new_node.address = address;
-	new_node.next_ptr = NULL;
-	node->next_ptr = &new_node;
+	struct ST_Node *new_node = initialize();
+	new_node->label = label;
+	new_node->address = address;
+	new_node->next_ptr = NULL;
+	node->next_ptr = new_node;
 }
 
+static struct ST_Node* allocate_node() {
+	struct ST_Node *node = malloc(sizeof(node));
+	return node;
+}
+
+struct ST_Node* initialize() {
+	struct ST_Node *node = allocate_node();
+	node->label = "";
+	return node;
+}
+
+void dealocate(struct ST_Node* node) {
+	struct ST_Node *next;
+	while (node != NULL) {
+		next = node->next_ptr;
+		free(node);
+		node = next;
+	}
+}
