@@ -5,6 +5,18 @@
 #include "definitions.h"
 #include "test_encode.h"
 
+uint8_t cond_to_int(enum Condition cond) {
+	switch(cond) {
+		case EQUAL:		 return 0;
+		case NOT_EQUAL:		 return 1;
+		case GREATER_OR_EQUAL:	 return 10;
+		case LESS_THAN:		 return 11;
+		case GREATER_THAN:	 return 12;
+		case LESS_THAN_OR_EQUAL: return 13;
+		case ALWAYS:		 return 14;
+	}
+}
+
 void set_bit(uint32_t *number, char bit_no, bool bit_value) {
 	if (bit_value) {
 		*number |= (1 << bit_no);
@@ -25,6 +37,9 @@ uint32_t encode_data_processing(struct Instruction instruction) {
 	assert(instruction.rn < (1 << 4));
 	instruction_binary |= (instruction.rd << 12);
 	instruction_binary |= (instruction.rn << 16);
+
+	// Condition code setting
+	instruction_binary |= (cond_to_int(instruction.cond) << 28);
 
 	
 	return instruction_binary;
@@ -50,6 +65,9 @@ uint32_t encode_multiply(struct Instruction instruction) {
 	instruction_binary |= (instruction.rs << 8);
 	instruction_binary |= (instruction.rn << 12);
 	instruction_binary |= (instruction.rd << 16);
+	
+	// Condition code setting
+	instruction_binary |= (cond_to_int(instruction.cond) << 28);
 
 	return instruction_binary;
 }
@@ -71,6 +89,9 @@ uint32_t encode_single_data_transfer(struct Instruction instruction) {
 	instruction_binary |= (instruction.rd << 12);
 	instruction_binary |= (instruction.rn << 16);
 
+	// Condition code setting
+	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+
 	return instruction_binary;
 }
 
@@ -80,6 +101,8 @@ uint32_t encode_branch(struct Instruction instruction) {
 	set_bit(&instruction_binary, 25, 1);
 	set_bit(&instruction_binary, 27, 1);
 
+	// Condition code setting
+	instruction_binary |= (cond_to_int(instruction.cond) << 28);
 	return instruction_binary;
 }
 
