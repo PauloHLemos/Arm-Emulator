@@ -4,6 +4,7 @@
 #include "test_translate_data_processing.h"
 #include "definitions.h"
 #include "instructions.h"
+#define UNUSED 0
 #define EXPECTED_GOT(CONDITION, EXPECTED, GOT, T) \
 	do { \
 		if (!CONDITION) { \
@@ -25,12 +26,6 @@ void test_instruction_equals(char *instruction_string,
 			     uint32_t *tests_passed,
 			     uint32_t *tests_run) {
 
-	bool instruction_computes_results = (opcode == AND) || 
-					    (opcode == EXCLUSIVE_OR) ||
-					    (opcode == SUBTRACT) ||
-					    (opcode == REVERSE_SUBTRACT) ||
-					    (opcode == ADD) ||
-					    (opcode == OR);
 	bool instruction_is_move	  = (opcode == MOVE);
 	bool instruction_sets_cpsr	  = (opcode == TEST_BITS) ||
 					    (opcode == TEST_EQUALS) ||
@@ -113,13 +108,13 @@ void run_tests() {
 	strncpy(instruction_string, "mov r3,#0x100", 100);
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Mov with immediate operand2 with rotation", 
-			ALWAYS, true, MOVE, 0, 3, NULL, 0b110000000001,
+			ALWAYS, true, MOVE, 0, 3, UNUSED, 0b110000000001,
 			&tests_passed, &tests_run);		
 
 	strncpy(instruction_string, "mov r2,#0x3F0000", 100);
 	instruction = translate_data_processing(instruction_string);
 	test_instruction_equals(instruction_string, instruction, "Mov with immediate operand2 with rotation 2", 
-			ALWAYS, true, MOVE, 0, 2, NULL, 0b100000111111,
+			ALWAYS, true, MOVE, 0, 2, UNUSED, 0b100000111111,
 			&tests_passed, &tests_run);		
 
 	strncpy(instruction_string, "and r2,r1,#0x3F0000", 100);
