@@ -96,5 +96,11 @@ void run_tests() {
 	test_instruction_equals(instruction_string, instruction, "Mov with immediate operand2 with rotation", 
 			ALWAYS, true, MOVE, 0, 3, NULL, 0b110000000001);		
 
+	strncpy(instruction_string, "mov r2,#0x3F0000", 100);
+	instruction = translate_data_processing(instruction_string);
+	test_instruction_equals(instruction_string, instruction, "Mov with immediate operand2 with rotation 2", 
+			ALWAYS, true, MOVE, 0, 2, NULL, 0b100000111111);		
+
+
 	free(instruction_string);
 }
