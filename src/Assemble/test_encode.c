@@ -94,8 +94,49 @@ void test_encode(void) {
 	instruction.rm = 1;                
 	instruction.rs = 0;                
 
+	// MULTIPLY TESTS
 	test_binary_equals("Multiply without accumulate", 
 			"mul r2,r1,r0", 0b11100000000000100000000010010001, 
+			encode(instruction), &tests_run, &tests_passed);
+	
+	instruction.rd = 3;                
+	instruction.rm = 1;                
+	instruction.rs = 2;                
+	test_binary_equals("Multiply without accumulate 2", 
+			"mul r3,r1,r2", 0b11100000000000110000001010010001, 
+			encode(instruction), &tests_run, &tests_passed);
+
+	instruction.accumulate = true;           
+	instruction.rd = 3;                
+	instruction.rm = 1;                
+	instruction.rs = 2;                
+	instruction.rn = 4;
+	test_binary_equals("Multiply with accumulate", 
+			"mla r3,r1,r2,r4", 0b11100000001000110100001010010001, 
+			encode(instruction), &tests_run, &tests_passed);
+
+	// SINGLE DATA TRANSFER TESTS
+	instruction.type = SINGLE_DATA_TRANSFER;
+	instruction.cond = ALWAYS;       
+	instruction.immediate_offset = true;     
+	instruction.pre_post_indexing = false;    
+	instruction.up = true;                   
+	instruction.load_store = true;           
+	instruction.rd = 3;                
+	instruction.rn = 5;                
+	instruction.offset = 0b010010110100;           
+
+	// COND -- IPU -- L Rn   Rd   Offset 
+	// 0000 01 000 00 0 0000 0000 000000000000
+	test_binary_equals("Single data transfer", 
+			"", 0b11100110100101010011010010110100,
+			encode(instruction), &tests_run, &tests_passed);
+	// BRANCH TESTS
+	instruction.type = BRANCH;
+	instruction.cond = EQUAL;
+	instruction.offset = 0b000110001001000100000001;  
+	test_binary_equals("Branch", 
+			"", 0b00001010000110001001000100000001,
 			encode(instruction), &tests_run, &tests_passed);
 
 	printf("\n%d of %d tests passed correctly. \n", tests_passed, tests_run);
