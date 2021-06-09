@@ -113,6 +113,10 @@ uint32_t encode_single_data_transfer(struct Instruction instruction) {
 	// Condition setting
 	instruction_binary |= (cond_to_int(instruction.cond) << 28);
 
+	// Offset setting
+	assert(instruction.offset < (1 << 12));
+	instruction_binary |= instruction.offset;
+
 	return instruction_binary;
 }
 
@@ -124,6 +128,10 @@ uint32_t encode_branch(struct Instruction instruction) {
 
 	// Condition setting
 	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+
+	// Offset setting
+	assert(instruction.offset < (1 << 24));
+	instruction_binary |= instruction.offset;
 
 	return instruction_binary;
 }
