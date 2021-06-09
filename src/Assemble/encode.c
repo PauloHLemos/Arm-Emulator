@@ -86,7 +86,7 @@ uint32_t encode_multiply(struct Instruction instruction) {
 	assert(instruction.rm < (1 << 4));
 	instruction_binary |= (instruction.rm);
 	instruction_binary |= (instruction.rs << 8);
-	instruction_binary |= (instruction.rn << 12);
+	instruction_binary |= (instruction.accumulate) ? (instruction.rn << 12) : 0;
 	instruction_binary |= (instruction.rd << 16);
 	
 	// Condition setting

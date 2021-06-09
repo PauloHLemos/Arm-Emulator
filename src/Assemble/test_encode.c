@@ -22,8 +22,7 @@ void test_binary_equals(char *test_name, char *instruction, uint32_t expected,
 	printf("--------------------------------------------------------------\n"
 	       "Test name:\t%s\n"
 	       "Instruction:\t%s\n" 
-	       "Status:\t\t%s\n", 
-	       test_name, instruction, (expected == got) ? "Passed" : "Failed"); 
+	       "Status:\t\t%s\n", test_name, instruction, (expected == got) ? "Passed" : "Failed"); 
 	
 	if (expected == got)  {
 		(*tests_passed_ptr)++;
@@ -70,7 +69,33 @@ void test_encode(void) {
 	instruction.rn 			= 1;
 	instruction.operand2		= 0b000000000010;
 
+	// DATA PROCESSING TESTS
+
 	test_binary_equals("Test DP immediate operand", "add r2,r1,#2", 0b11100010100000010010000000000010, 
+			encode(instruction), &tests_run, &tests_passed);
+
+	instruction.opcode   = AND;
+	instruction.operand2 = 0xAB;
+	test_binary_equals("Test immediate hex operand", "and r2,r1,#0xAB", 0b11100010000000010010000010101011, 
+			encode(instruction), &tests_run, &tests_passed);
+
+	instruction.immediate_operand	= false;
+	instruction.set_condition_codes = true;
+	test_binary_equals("Test immediate hex operand, altered flags", 
+			"and r2,r1,#0xAB", 0b11100000000100010010000010101011, 
+			encode(instruction), &tests_run, &tests_passed);
+
+	instruction.type = MULTIPLY;
+	instruction.cond = ALWAYS;       
+	instruction.set_condition_codes = false;  
+	instruction.accumulate = false;           
+	instruction.rd = 2;                
+	// instruction.rn = 0;
+	instruction.rm = 1;                
+	instruction.rs = 0;                
+
+	test_binary_equals("Multiply without accumulate", 
+			"mul r2,r1,r0", 0b11100000000000100000000010010001, 
 			encode(instruction), &tests_run, &tests_passed);
 
 	printf("\n%d of %d tests passed correctly. \n", tests_passed, tests_run);
