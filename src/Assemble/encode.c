@@ -14,6 +14,7 @@ uint8_t cond_to_int(enum Condition cond) {
 		case GREATER_THAN:	 return 12;
 		case LESS_THAN_OR_EQUAL: return 13;
 		case ALWAYS:		 return 14;
+		default:		 { fprintf(stderr, "Instruction has no condition. \n"); exit(1); }
 	}
 }
 uint8_t opcode_to_int(enum Opcode opcode) {
@@ -28,6 +29,7 @@ uint8_t opcode_to_int(enum Opcode opcode) {
 		case COMPARE:	       return 10;
 		case OR:               return 12;
 		case MOVE:             return 13;
+		default:	       { fprintf(stderr, "Instruction has no opcode. \n"); exit(1); }
 	}                               
 }                                       
                                         
@@ -142,7 +144,7 @@ uint32_t encode(struct Instruction instruction) {
 		case MULTIPLY:		   { return encode_multiply(instruction); }
 		case SINGLE_DATA_TRANSFER: { return encode_single_data_transfer(instruction); }
 		case BRANCH:		   { return encode_branch(instruction); }
-		default:		   { fprintf(stderr, "Instruction has no opcode. \n"); exit(1); }
+		default:		   { fprintf(stderr, "Instruction has no type. \n"); exit(1); }
 	}
 }
 
