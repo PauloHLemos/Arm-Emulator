@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-// #include "build_symbol_table.h"
-// #include "translate.h"
-// #include "symbol_table.h"
+#include "build_symbol_table.h"
+#include "translate.h"
+#include "symbol_table.h"
 
 int main(int argc, char **argv) {
 	if (argc < 3) {
