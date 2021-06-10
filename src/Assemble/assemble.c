@@ -15,7 +15,15 @@ int main(int argc, char **argv) {
 
 	char *input_filename = *(argv + 1);
 	char *output_filename = *(argv + 2);
-	
+
+	FILE *input_file = fopen(input_filename, "rt");
+	if (!input_file) {
+		perror("File could not be opened");
+		exit(EXIT_FAILURE);
+	}
+
+	fclose(input_file);
+
 	printf("Input filename: %s\nOutput filename: %s\n", input_filename, output_filename);
 
 	return EXIT_SUCCESS;
