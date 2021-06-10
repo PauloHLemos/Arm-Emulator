@@ -16,15 +16,17 @@ int main(int argc, char **argv) {
 	char *input_filename = *(argv + 1);
 	char *output_filename = *(argv + 2);
 
-	FILE *input_file = fopen(input_filename, "rt");
-	if (!input_file) {
+	FILE *input_file_ptr = fopen(input_filename, "rt");
+	if (!input_file_ptr) {
 		perror("File could not be opened");
 		exit(EXIT_FAILURE);
 	}
 
-	fclose(input_file);
+	struct ST_Node *st_head_ptr = build_symbol_table(input_file_ptr);
+	translate(input_file_ptr, st_head_ptr, output_filename);
 
-	printf("Input filename: %s\nOutput filename: %s\n", input_filename, output_filename);
 
+	fclose(input_file_ptr);
+	free(st_head_ptr);
 	return EXIT_SUCCESS;
 }
