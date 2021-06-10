@@ -8,6 +8,7 @@ struct Instruction translate_multiply(char *instruction) {
        struct Instruction instruction_struct;
        char opcode[4], rd[4], rm[4], rs[4], rn[4];
        instruction_struct.type = MULTIPLY;
+       instruction_struct.cond = ALWAYS;
        extract_opcode(instruction, opcode);
        if (opcode == "mla") {
 	       split_4_arguments(instruction, rd, rm, rs, rn);
