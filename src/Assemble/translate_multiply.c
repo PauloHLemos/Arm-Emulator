@@ -4,22 +4,22 @@
 #include "instructions.h"
 #include "definitions.h"
 
-struct Instruction translate_multiply(char *instruction, ST_Node *node) {
-       struct Instruction instruction;
-       char opcode[3], rd[3], rm[3], rs[3], rn[3];
-       instruction.type = MULTIPLY;
-       extract_opcode(opcode, instruction);
-       if (*opcode == "mla") {
+struct Instruction translate_multiply(char *instruction) {
+       struct Instruction instruction_struct;
+       char opcode[4], rd[4], rm[4], rs[4], rn[4];
+       instruction_struct.type = MULTIPLY;
+       extract_opcode(instruction, opcode);
+       if (opcode == "mla") {
 	       split_4_arguments(instruction, rd, rm, rs, rn);
-	       instruction.rn = search_table(node, rn);
-	       instruction.accumulate = true;
+	       instruction_struct.rn = atoi(rn + 1);
+	       instruction_struct.accumulate = true;
        } else {
 	       split_3_arguments(instruction, rd, rm, rs);
-	       instruction.accumulate = false;
+	       instruction_struct.accumulate = false;
        }
-       instruction.rd = search_table(node, rd);
-       instruction.rm = search_table(node, rm);
-       instruction.rs = search_table(node, rs);
-       instruction.set_condition_codes = false;
-       return instruction;
+       instruction_struct.rd = atoi(rd + 1);
+       instruction_struct.rm = atoi(rm + 1);
+       instruction_struct.rs = atoi(rs + 1);
+       instruction_struct.set_condition_codes = false;
+       return instruction_struct;
 }

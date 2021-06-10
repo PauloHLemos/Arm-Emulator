@@ -5,14 +5,12 @@
 #include "symbol_table.h"
 
 
-uint32_t translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address);
+struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address);
 
-uint32_t translate_data_processing(char *instruction, struct ST_Node *st_head_ptr);
+struct Instruction translate_data_processing(char *instruction);
 
-uint32_t translate_single_data_transfer(char *instruction, struct ST_Node *st_head_ptr);
+struct Instruction translate_single_data_transfer(char *instruction);
 
-uint32_t translate_multiply(char *instruction, struct ST_Node *st_head_ptr);
-
-uint32_t translate_single_data_transfer(char *instruction, struct ST_Node *st_head_ptr);
+struct Instruction translate_multiply(char *instruction);
 
 #endif
