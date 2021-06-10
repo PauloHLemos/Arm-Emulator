@@ -23,3 +23,7 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr) {
 	}
 	close_file(output_stream);
 }
+
+bool is_label(char *instruction) {
+	return strchr(instruction, ':') != NULL;
+}
