@@ -17,7 +17,12 @@ bool assert_false(bool condition, char *error_message) {
 }
 
 bool assert_int_equals(uint32_t value, uint32_t expected, char *error_message) {
-	return assert_true(value == expected, error_message);
+	if (assert_true(value == expected, error_message)) {
+		return true;
+	} else {
+		printf("expected: %d\nrecieved: %d\n", expected, value);
+		return false;
+	}
 }
 
 
