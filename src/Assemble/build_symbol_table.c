@@ -19,3 +19,7 @@ struct ST_Node *build_symbol_table(FILE *stream) {
 	return head;
 
 }
+
+int main() {
+	return 0;
+}

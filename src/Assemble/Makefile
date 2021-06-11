@@ -9,12 +9,12 @@ LDLIBS  = -Lsymbol_table -lsymbol_table
 .PHONY: all clean
 
 # all: assemble emulate
-all: assemble
+all: assemble libs
 	cp assemble ../assemble
 
 assemble: assemble.o
 
-build_symbol_table: libs build_symbol_table.o #symbol_table.o
+build_symbol_table: build_symbol_table.o #symbol_table.o
 
 libs:
 	cd symbol_table; make
