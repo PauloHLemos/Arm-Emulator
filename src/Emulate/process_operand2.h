@@ -6,10 +6,7 @@
 #include "definitions.h"
 
 uint32_t process_operand2_immediate_value(uint32_t operand2, bool *carry_flag_ptr); 
-uint32_t process_operand2_shifted_register(
-		struct State *state_ptr, 
-		uint32_t operand2, 
-		bool *carry_flag_ptr);
+uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2, bool *carry_flag_ptr);
 uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2);
 uint32_t shift(uint32_t rm, uint32_t shift_code, uint32_t shift_amount, bool *carry_flag_ptr);
 uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr); 

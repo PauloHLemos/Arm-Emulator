@@ -1,34 +1,8 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#include <stdint.h>
 #include <stdbool.h>
-
-struct State {
-	union {
-		struct {
-			uint32_t r0;
-			uint32_t r1;
-			uint32_t r2;
-			uint32_t r3;
-			uint32_t r4;
-			uint32_t r5;
-			uint32_t r6;
-			uint32_t r7;
-			uint32_t r8; 
-			uint32_t r9; 
-			uint32_t r10;
-			uint32_t r11;
-			uint32_t r12;
-			uint32_t SP;
-			uint32_t LR;
-			uint32_t PC;
-			uint32_t CPSR;
-		} struct_access;
-		uint32_t array_access[17];
-	} registers;
-	uint8_t memory[65536];
-};
+#include <stdint.h>
 
 enum Instruction_Type {
 		DATA_PROCESSING,

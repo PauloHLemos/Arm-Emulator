@@ -13,7 +13,7 @@ uint32_t apply_operation(
 		uint32_t operand2, 
 		bool *write_result_ptr,
 		bool *carry_flag_ptr); 
-void set_condition_codes_function(struct State *state_ptr, uint32_t result, bool carry_flag);
+void update_condition_codes(struct State *state_ptr, uint32_t result, bool carry_flag);
 
 void data_processing(struct State *state_ptr, struct Instruction *instruction_ptr) {
 	bool carry_flag;
@@ -22,10 +22,7 @@ void data_processing(struct State *state_ptr, struct Instruction *instruction_pt
 	uint32_t operand1 = state_ptr->registers.array_access[instruction_ptr->rn];
 	uint32_t operand2_processed = (instruction_ptr->immediate_operand) ? 
 			process_operand2_immediate_value(instruction_ptr->operand2, &carry_flag) : 
-			process_operand2_shifted_register(
-					state_ptr, 
-					instruction_ptr->operand2, 
-					&carry_flag);
+			process_operand2_shifted_register(state_ptr, instruction_ptr->operand2, &carry_flag);
 
 	uint32_t result = apply_operation(
 			instruction_ptr->opcode, 
@@ -34,13 +31,12 @@ void data_processing(struct State *state_ptr, struct Instruction *instruction_pt
 			&write_result,
 			&carry_flag);
 
-	if (instruction_ptr->set_condition_codes) 
-		set_condition_codes_function(state_ptr, result, carry_flag);
+	if (instruction_ptr->set_condition_codes) update_condition_codes(state_ptr, result, carry_flag);
 
 	if (write_result) state_ptr->registers.array_access[instruction_ptr->rd] = result;
 }
 
-void set_condition_codes_function(struct State *state_ptr, uint32_t result, bool carry_flag) {
+void update_condition_codes(struct State *state_ptr, uint32_t result, bool carry_flag) {
 	if ((result & (1 << 31)) != 0) {
 		state_ptr->registers.struct_access.CPSR |= (1 << 31);
 	} else {
