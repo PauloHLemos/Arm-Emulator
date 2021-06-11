@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "binary_file_writer.h"
-//#include "somefile.h"
+#include "translate_single_data_transfer.h"
 
 // testing functions
 
@@ -87,3 +87,4 @@ int main(void) {
 	test_somefile();
 	test_binary_file_writer();
 }
+
