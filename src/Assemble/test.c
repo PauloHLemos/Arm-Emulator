@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "instructions.h"
+#include "definitions.h"
 #include "convert_instructions.h"
 
 bool assert_true(bool condition, char *error_message) {
@@ -11,12 +13,17 @@ bool assert_true(bool condition, char *error_message) {
 	return true;
 }
 
+bool assert_false(bool condition, char *error_message) {
+	return assert_true(!condition, error_message);
+}
+
 bool assert_int_equals(uint32_t value, uint32_t expected, char *error_message) {
-	if (value != expected) {
-		printf("%s\n", error_message);
+	if (assert_true(value == expected, error_message)) {
+		return true;
+	} else {
+		printf("expected: %d\nrecieved: %d\n", expected, value);
 		return false;
 	}
-	return true;
 }
 
 
@@ -26,7 +33,30 @@ bool test_somefile(void) {
 	assert_true(1 == 1, "FAIL: somefile.somefunction is not working.");
 }
 
-bool test_convert_instructions(void) {
+void test_translate_multiply(void) {
+	printf("%s\n", "TESTING TRANSLATE MULTIPLY:");
+
+	char *instruction_string_1 = "mul r1, r4, r12";
+	struct Instruction instruction_1 = translate_multiply(instruction_string_1);
+	assert_int_equals(instruction_1.rd, 1, "mul instruction does not set register rd to correct value");
+	assert_int_equals(instruction_1.rm, 4, "mul instruction does not set register rm to correct value");
+	assert_int_equals(instruction_1.rs, 12, "mul instruction does not set register rs to correct value");
+	assert_false(instruction_1.accumulate, "mul instruction does not set accumulate flag to false");
+	assert_false(instruction_1.set_condition_codes, "mul instruction does not set set_condition_codes flag to false");
+	assert_int_equals(instruction_1.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
+
+	char *instruction_string_2 = "mla r6, r10, r12, r2";
+	struct Instruction instruction_2 = translate_multiply(instruction_string_2);
+	assert_int_equals(instruction_2.rd, 6, "mla instruction does not set register rd to correct value");
+	assert_int_equals(instruction_2.rm, 10, "mla instruction does not set register rm to correct value");
+	assert_int_equals(instruction_2.rs, 12, "mla instruction does not set register rs to correct value");
+	assert_int_equals(instruction_2.rn, 2, "mla instruction does not set register rn to correct value");
+	assert_true(instruction_2.accumulate, "mla instruction does not set accumulate flag to true");
+	assert_int_equals(instruction_2.cond, ALWAYS, "mla instruction does not set condition to ALWAYS");
+	assert_false(instruction_2.set_condition_codes, "mla instruction does not set set_condition_codes flag to false");
+}
+
+void test_convert_instructions(void) {
 	printf("%s\n", "TESTING CONVERT_INSTRUCTIONS:");
 
 	struct ST_Node *st_head_ptr;
@@ -73,11 +103,8 @@ bool test_convert_instructions(void) {
 	char *instruction_8 = "bne wait";
 	uint32_t binary_8 = 0b00011010111111111111111111111100;
 	assert_int_equals(convert_instruction(instruction_8, st_head_ptr, current_address), binary_8, "failed to convert 'bne wait'");
-
-	return true;
 }	
 
-
 int main(void) {
-	test_somefile();
+	test_translate_multiply();	
 }
