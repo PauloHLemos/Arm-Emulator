@@ -24,5 +24,6 @@ struct ST_Node *build_symbol_table(FILE *stream) {
 }
 
 int main() {
+	printf("Working\n");
 	return 0;
 }
