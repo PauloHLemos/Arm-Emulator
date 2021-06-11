@@ -12,8 +12,9 @@ LDLIBS  = -Lsymbol_table -lsymbol_table
 all: assemble libs
 	cp assemble ../assemble
 
-assemble: assemble.o
+assemble: assemble.o build_symbol_table.o translate.o
 encode: encode.o test_encode.o
+assemble.o: build_symbol_table.h translate.h symbol_table.h
 translate_data_processing: translate_data_processing.o split_instructions.o test.o test_translate_data_processing.o shifts.o
 translate_data_processing.o: test.h split_instructions.h definitions.h test_translate_data_processing.h shifts.h
 test_translate_data_processing.o: test_translate_data_processing.h definitions.h instructions.h
@@ -22,6 +23,9 @@ encode.o: encode.h definitions.h test_encode.h
 test_encode.o: test_encode.h encode.h definitions.h
 test.o: test.h
 shifts.o: shifts.h
+
+translate.o: translate.h symbol_table.h
+build_symbol_table.o: build_symbol_table.h symbol_table.h
 
 
 build_symbol_table: build_symbol_table.o #symbol_table.o

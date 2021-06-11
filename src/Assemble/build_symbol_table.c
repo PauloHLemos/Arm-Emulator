@@ -1,5 +1,8 @@
-#include "build_symbol_table.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "build_symbol_table.h"
+#include "symbol_table.h"
 
 struct ST_Node *build_symbol_table(FILE *stream) {
 	struct ST_Node* head = initialize();
