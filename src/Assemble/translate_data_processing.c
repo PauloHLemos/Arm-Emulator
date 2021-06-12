@@ -161,7 +161,7 @@ void process_cpsr_instruction(char *instruction_string,
 		split_2_arguments_after_opcode(instruction_string, rn, operand2_string);
 
 		*rn_ptr			 = atoi(rn + 1);
-		*set_condition_codes_ptr = false;
+		*set_condition_codes_ptr = true;
 
 		process_operand2(operand2_string, operand2_ptr, immediate_operand_ptr);
 }
@@ -197,6 +197,7 @@ void process_instruction(char *instruction_string,
 
 struct Instruction translate_data_processing(char *instruction_string) {
 	struct Instruction instruction_struct;
+	memset(instruction_struct, 0, sizeof(struct Instruction));
 	
 	char opcode_string[100];
 	extract_opcode(instruction_string, opcode_string);

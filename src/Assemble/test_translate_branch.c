@@ -29,14 +29,16 @@ void test_translate_branch(){
     struct Instruction instruction;
 
     struct ST_Node* head = initialize();
-    add_node(head, b, 14);
-    add_node(b, beq, 0);
-    add_node(beq, bne, 1);
-    add_node(bne, bge, 10);
-    add_node(bge, blt, 11);
-    add_node(blt, bgt, 12);
-    add_node(bgt, ble, 13);
-    add_node(ble, bal, 14);
+    add_node(head, "b", 14);
+    add_node("b", "beq", 0);
+    add_node("beq", "bne", 1);
+    add_node("bne", "bge", 10);
+    add_node("bge", "blt", 11);
+    add_node("blt", "bgt", 12);
+    add_node("bgt", "ble", 13);
+    add_node("ble", "bal", 14);
+    
+    add_node("bal", "foo", 0);
 
 	strncpy(instruction_string, "b foo", 100); // result
 	instruction = translate_branch(instruction_string, head, 0);
