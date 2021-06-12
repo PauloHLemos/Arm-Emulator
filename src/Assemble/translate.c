@@ -17,7 +17,7 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename)
 		if (!is_label(buffer)) {
 			translated_instruction = convert_instruction(buffer, st_head_ptr, current_address);
 			binary_file_writer(output_stream, translated_instruction);
-			current_address += 1;
+			current_address += 4;
 		}		
 	}
 	close_file(output_stream);
