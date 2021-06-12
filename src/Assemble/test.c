@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "instructions.h"
-#include "definitions.h"
+#include "binary_file_writer.h"
+//#include "somefile.h"
+
+// testing functions
 
 bool assert_true(bool condition, char *error_message) {
 	if (!condition) {
@@ -12,102 +14,76 @@ bool assert_true(bool condition, char *error_message) {
 	return true;
 }
 
-bool assert_false(bool condition, char *error_message) {
-	return assert_true(!condition, error_message);
-}
-
 bool assert_int_equals(uint32_t value, uint32_t expected, char *error_message) {
-	return assert_true(value == expected, error_message);
+	if (value != expected) {
+		printf("%s\n", error_message);
+		return false;
+	}
+	return true;
 }
 
+// takes two file names and a number of elements and checks that their contents are equal
+bool assert_file_equals_file(char *filename1, char *filename2, int num_elements, char *error_message) {
+	FILE *file1 = fopen(filename1, "rb");
+	FILE *file2 = fopen(filename2, "rb");
+
+	if (file1 == NULL || file2 == NULL) {
+		return false;
+	}
+
+	uint32_t file1_contents[num_elements];
+	size_t file1_size = fread(file1_contents, sizeof(uint32_t), num_elements, file1);
+
+	uint32_t file2_contents[num_elements];
+	size_t file2_size = freda(file2_contents, sizeof(uint32_t), num_elements, file2);
+	
+	if (!array_equals(file1_contents, file2_contens, num_elements)) {
+		printf(error_message);
+		return false;
+	}
+	return true;
+}
+
+
+// takes in two arrays to compare and returns true if they are equal
+bool array_equals(int arr1[], int arr2[], int num_elements) {
+	int i;
+	for (i = 0; i < size; i++) {
+		if (arr1[i] != arr2[i])
+			return false;
+	}
+	return true;
+}
+
+
+// unit test suites
 
 // example test function
 bool test_somefile(void) {
+	bool all_passed = true;
+
 	// run your function in here
-	assert_true(1 == 1, "FAIL: somefile.somefunction is not working.");
+	all_passed = all_passed && assert_true(1 == 1, "FAIL: somefile.somefunction is not working.");
+
+	return all_passed
 }
 
-void test_translate_single_data_transfer(void) {
-	printf("%s\n", "TESTING SINGLE DATA TRANSFER:"); 
-
-	char *instruction_string_1 = "ldr r0,[r1]";
-	struct Instruction instruction_1 = translate_single_data_transfer(instruction_string_1);
-	assert_int_equals(instruction_1.rd, 0, "ldr instruction does not set register rd to correct value");
-	assert_int_equals(instruction_1.rn, 1, "ldr instruction does not set register rn to correct value");
-	assert_int_equals(instruction_1.offset, 0, "ldr instruction does not set offset to correct value");
-	//assert_equals(instruction_1.condition, ALWAYS, "mul instruction does not set condition to ALWAYS");
-	printf("success test1\n");
-
-	char *instruction_string_2 = "ldr r3,[r1,#8]";
-	struct Instruction instruction_2 = translate_single_data_transfer(instruction_string_2);
-	assert_int_equals(instruction_2.rd, 3, "ldr instruction does not set register rd to correct value");
-	assert_int_equals(instruction_2.rn, 1, "ldr instruction does not set register rn to correct value");
-	assert_int_equals(instruction_2.offset, 8, "ldr instruction does not set offset to correct value");
-	//assert_equals(instruction_1.condition, ALWAYS, "mul instruction does not set condition to ALWAYS");
-	printf("success test2\n");
-
-	char *instruction_string_3 = "ldr r3,[r1,#8]";
-	struct Instruction instruction_3 = translate_single_data_transfer(instruction_string_3);
-	assert_int_equals(instruction_3.rd, 3, "ldr instruction does not set register rd to correct value");
-	assert_int_equals(instruction_3.rn, 1, "ldr instruction does not set register rn to correct value");
-	assert_int_equals(instruction_3.offset, 8, "ldr instruction does not set offset to correct value");
-	assert_false(instruction_3.immediate_offset, "ldr instruction does not set immediate to correct value");
-	assert_int_equals(instruction_3.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
-	printf("success test3\n");
-
-	char *instruction_string_4 = "ldr r10,[r11],#8";
-	struct Instruction instruction_4 = translate_single_data_transfer(instruction_string_4);
-	assert_int_equals(instruction_4.rd, 10, "ldr instruction does not set register rd to correct value");
-	assert_int_equals(instruction_4.rn, 11, "ldr instruction does not set register rn to correct value");
-	assert_int_equals(instruction_4.offset, 8, "ldr instruction does not set offset to correct value");
-	assert_false(instruction_4.immediate_offset, "ldr instruction does not set immediate to correct value");
-	assert_false(instruction_4.pre_post_indexing, "ldr instruction does not set pre_post_index to correct value");
-	assert_true(instruction_4.up, "ldr instruction does not set up to correct value");
-	assert_int_equals(instruction_4.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
-	printf("success test4\n");
-
-	char *instruction_string_5 = "ldr r10,[r11],#8";
-	struct Instruction instruction_5 = translate_single_data_transfer(instruction_string_5);
-	assert_int_equals(instruction_5.rd, 10, "ldr instruction does not set register rd to correct value");
-	assert_int_equals(instruction_5.rn, 11, "ldr instruction does not set register rn to correct value");
-	assert_int_equals(instruction_5.offset, 8, "ldr instruction does not set offset to correct value");
-	assert_false(instruction_5.immediate_offset, "ldr instruction does not set immediate to correct value");
-	assert_false(instruction_5.pre_post_indexing, "ldr instruction does not set pre_post_index to correct value");
-	assert_true(instruction_5.up, "ldr instruction does not set up to correct value");
-	assert_int_equals(instruction_5.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
-	printf("success test5\n");
-
-	char *instruction_string_6 = "str r10,[r11],#8";
-	struct Instruction instruction_6 = translate_single_data_transfer(instruction_string_6);
-	assert_int_equals(instruction_6.rd, 10, "ldr instruction does not set register rd to correct value");
-	assert_int_equals(instruction_6.rn, 11, "ldr instruction does not set register rn to correct value");
-	assert_int_equals(instruction_6.offset, 8, "ldr instruction does not set offset to correct value");
-	assert_false(instruction_6.immediate_offset, "ldr instruction does not set immediate to correct value");
-	assert_false(instruction_6.pre_post_indexing, "ldr instruction does not set pre_post_index to correct value");
-	assert_true(instruction_6.up, "ldr instruction does not set up to correct value");
-	assert_int_equals(instruction_6.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
-	assert_false(instruction_6.load_store, "ldr instruction does not set up to correct value");
-	printf("success test6\n");
+bool test_binary_file_writer(void) {
+	bool all_passed = true;
+	
+	// put setup here (e.g. creating files for comparison)
 
 
+	// run your functions in here
 
-	/*
-	char *instruction_string_2 = "mla r6, r10, r12, r2";
-	struct Instruction instruction_2 = translate_multiply(instruction_string_2);
-	assert_int_equals(instruction_2.rd, 6, "mla instruction does not set register rd to correct value");
-	assert_int_equals(instruction_2.rm, 10, "mla instruction does not set register rm to correct value");
-	assert_int_equals(instruction_2.rs, 12, "mla instruction does not set register rs to correct value");
-	assert_int_equals(instruction_2.rn, 2, "mla instruction does not set register rn to correct value");
-	assert_true(instruction_2.accumulate, "mla instruction does not set accumulate flag to true");
-	assert_equals(instruction_2.condition, ALWAYS, "mla instruction does not set condition to ALWAYS");
-	assert_false(instruction_2.set_condition_codes, "mla instruction does not set set_condition_codes flag to false");
-	*/
+
+	// put your cleanup here (e.g. deleting leftover files used in testing)
+
+	return all_passed;
 }
-
-
 
 
 int main(void) {
-	test_translate_single_data_transfer();
+	test_somefile();
+	test_binary_file_writer();
 }
-
