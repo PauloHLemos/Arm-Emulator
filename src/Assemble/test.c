@@ -78,7 +78,7 @@ void test_translate_single_data_transfer(void) {
 	//assert_equals(instruction_1.condition, ALWAYS, "mul instruction does not set condition to ALWAYS");
 	printf("success test2\n");
 
-	char *instruction_string_3 = "ldr r3,[r1,#8]";
+	char *instruction_string_3 = "ldr r3,[r1,#0x8]";
 	struct Instruction instruction_3 = translate_single_data_transfer(instruction_string_3);
 	assert_int_equals(instruction_3.rd, 3, "ldr instruction does not set register rd to correct value");
 	assert_int_equals(instruction_3.rn, 1, "ldr instruction does not set register rn to correct value");
@@ -122,7 +122,21 @@ void test_translate_single_data_transfer(void) {
 	printf("success test6\n");
 
 
-	char *instruction_string_7 = "str r10,=0x08";
+	// should #8 also be able to be be #0x08?
+	char *instruction_string_8 = "str r10,[r11],#-8";
+	struct Instruction instruction_8 = translate_single_data_transfer(instruction_string_8);
+	assert_int_equals(instruction_8.rd, 10, "ldr instruction does not set register rd to correct value");
+	assert_int_equals(instruction_8.rn, 11, "ldr instruction does not set register rn to correct value");
+	assert_int_equals(instruction_8.offset, 8, "ldr instruction does not set offset to correct value");
+	assert_false(instruction_8.immediate_offset, "ldr instruction does not set immediate to correct value");
+	assert_false(instruction_8.pre_post_indexing, "ldr instruction does not set pre_post_index to correct value");
+	assert_false(instruction_8.up, "ldr instruction does not set up to correct value");
+	assert_int_equals(instruction_8.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
+	assert_false(instruction_8.load_store, "ldr instruction does not set up to correct value");
+	printf("success test8\n");
+
+
+	char *instruction_string_7 = "ldr r10,=0x08";
 	struct Instruction instruction_7 = translate_single_data_transfer(instruction_string_7);
 	assert_int_equals(instruction_7.opcode, 13, "ldr instruction does not set register opcode to correct value");
 	/*
@@ -150,8 +164,6 @@ void test_translate_single_data_transfer(void) {
 	*/
 }
 
-}
-
 
 // unit test suites
 
@@ -166,7 +178,7 @@ void test_binary_file_writer(void) {
 
 	// put your cleanup here (e.g. deleting leftover files used in testing)
 }
-
+/*
 void test_translate_multiply(void) {
 	printf("%s\n", "TESTING TRANSLATE MULTIPLY:");
 
@@ -189,7 +201,6 @@ void test_translate_multiply(void) {
 	assert_int_equals(instruction_2.cond, ALWAYS, "mla instruction does not set condition to ALWAYS");
 	assert_false(instruction_2.set_condition_codes, "mla instruction does not set set_condition_codes flag to false");
 }
->>>>>>> src/Assemble/test.c
 
 void test_convert_instructions(void) {
 	printf("%s\n", "TESTING CONVERT_INSTRUCTIONS:");
@@ -239,11 +250,11 @@ void test_convert_instructions(void) {
 	uint32_t binary_8 = 0b00011010111111111111111111111100;
 	assert_int_equals(convert_instructions(instruction_8, st_head_ptr, current_address), binary_8, "failed to convert 'bne wait'");
 }	
-
+*/
 int main(void) {
 	test_translate_single_data_transfer();
-	test_binary_file_writer();
-	test_translate_multiply();	
-	test_convert_instructions();
+	//test_binary_file_writer();
+	//test_translate_multiply();	
+	//test_convert_instructions();
 }
 
