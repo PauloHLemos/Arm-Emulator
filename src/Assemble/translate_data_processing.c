@@ -5,10 +5,11 @@
 #include <assert.h>
 #include "definitions.h"
 #include "test.h"
+#include "symbol_table.h"
 #include "split_instructions.h"
 #include "test_translate_data_processing.h"
 #include "shifts.h"
-// #include "instructions.h"
+#include "instructions.h"
 
 void set_opcode_cond(char *opcode_string, enum Opcode *opcode_ptr, enum Condition *cond_ptr) {
 	if (strcmp(opcode_string, "andeq") == 0) {
@@ -30,6 +31,7 @@ void set_opcode_cond(char *opcode_string, enum Opcode *opcode_ptr, enum Conditio
 	else if (strcmp(opcode_string, "cmp") == 0) { *opcode_ptr = COMPARE; }
 	else { fprintf(stderr, "Opcode \"%s\" does not exist. \n", opcode_string); exit(1); }
 }
+
 bool instruction_computes_results(enum Opcode opcode) {
 	switch(opcode) {
 		case AND:	       return true;
@@ -215,10 +217,5 @@ struct Instruction translate_data_processing(char *instruction_string, struct ST
 
 
 	return instruction_struct;
-}
-
-int main(void) {
-	run_tests();
-	return 0;
 }
 

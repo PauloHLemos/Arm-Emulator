@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "definitions.h"
+#include "encode.h"
 #include "symbol_table.h"
 #include "instructions.h"
 #include "split_instructions.h"
@@ -20,7 +21,7 @@ uint32_t convert_instructions(char *instruction, struct ST_Node *st_head_ptr, ui
 	} else if (is_branch(opcode)) {
 		instruction_struct = translate_branch(instruction, st_head_ptr, current_address);
 	} else {
-		instruction_struct = translate_data_processing(instruction);
+		instruction_struct = translate_data_processing(instruction, st_head_ptr);
 	}
 	return encode(instruction_struct);
 }
