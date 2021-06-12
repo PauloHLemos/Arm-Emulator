@@ -13,12 +13,13 @@ void increment_PC(){
 struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address){
 	struct Instruction instruction_struct;
 	uint32_t target_address;
+	uint32_t offset;
 	char cond[4], expression[100];
 
 	sscanf(instruction, "%s %s", cond, expression);
-	instruction_struct.cond = (Condition) search_table(st_head_ptr, cond);
+	instruction_struct.cond = (Condition)search_table(st_head_ptr, cond);
 	if (atoi(expression) == 0){
-		target_address = search_table(st_head_ptr, expression_ptr);
+		target_address = search_table(st_head_ptr, expression);
 	}
 	else{
 		target_address = atoi(expression);
