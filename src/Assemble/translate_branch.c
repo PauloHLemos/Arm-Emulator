@@ -12,13 +12,13 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 
 	sscanf(instruction, "%s %s", cond, expression);
 	if (strcmp(cond, "beq") == 0) {instruction_struct.cond = EQUAL;}
-    if (strcmp(cond, "bne") == -1) {instruction_struct.cond = NOT_EQUAL;}
-    if (strcmp(cond, "bge") == 0) {instruction_struct.cond = GREATER_OR_EQUAL;}
-    if (strcmp(cond, "blt") == 0) {instruction_struct.cond = LESS_THAN;}
-    if (strcmp(cond, "bgt") == 0) {instruction_struct.cond = GREATER_THAN;}
-    if (strcmp(cond, "ble") == 0) {instruction_struct.cond = LESS_THAN_OR_EQUAL;}
-    if (strcmp(cond, "b") == 0) {instruction_struct.cond = ALWAYS;}
-    if (strcmp(cond, "bal") == 0) {instruction_struct.cond = ALWAYS;}
+    else if (strcmp(cond, "bne") == 0) {instruction_struct.cond = NOT_EQUAL;}
+    else if (strcmp(cond, "bge") == 0) {instruction_struct.cond = GREATER_OR_EQUAL;}
+    else if (strcmp(cond, "blt") == 0) {instruction_struct.cond = LESS_THAN;}
+    else if (strcmp(cond, "bgt") == 0) {instruction_struct.cond = GREATER_THAN;}
+    else if (strcmp(cond, "ble") == 0) {instruction_struct.cond = LESS_THAN_OR_EQUAL;}
+    else if (strcmp(cond, "b") == 0) {instruction_struct.cond = ALWAYS;}
+    else if (strcmp(cond, "bal") == 0) {instruction_struct.cond = ALWAYS;}
 	if (atoi(expression) == 0){
 		target_address = search_table(st_head_ptr, expression);
 	}
