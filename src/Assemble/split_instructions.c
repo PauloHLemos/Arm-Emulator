@@ -80,6 +80,19 @@ void split_3_arguments(char *string, char *arg1, char *arg2, char *arg3) {
 	for ( ; *string != '\0'; string += 1) strncat(arg3, string, 1);
 }
 
+void split_2_arguments_after_opcode(char *string, char *arg1, char *arg2) {
+	*arg1 = '\0';
+	*arg2 = '\0';
+
+	for ( ; *string != ' '; string += 1); 
+	string += 1;
+
+	for ( ; *string != ','; string += 1) strncat(arg1, string, 1);
+	string += (*(string + 1) == ' ') ? 2 : 1;
+
+	for ( ; *string != '\0'; string += 1) strncat(arg2, string, 1);
+}
+
 void extract_opcode(char *string, char *arg1) {
 	*arg1 = '\0';
 	for ( ; *string != ' '; string += 1) strncat(arg1, string, 1);

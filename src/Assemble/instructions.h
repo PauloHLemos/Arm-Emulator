@@ -2,7 +2,8 @@
 #define INSTRUCTIONS_H
 
 #include <stdint.h>
-#include "symbol_table.h"
+// #include "symbol_table.h"
+#include "definitions.h"
 
 
 struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address);
