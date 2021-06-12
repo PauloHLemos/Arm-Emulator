@@ -217,8 +217,9 @@ struct Instruction translate_data_processing(char *instruction_string, struct ST
 	return instruction_struct;
 }
 
+/*
 int main(void) {
 	run_tests();
 	return 0;
 }
-
+*/

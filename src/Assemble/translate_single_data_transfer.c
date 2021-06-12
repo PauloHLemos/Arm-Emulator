@@ -8,19 +8,29 @@
 #include "definitions.h"
 
 void translate_num_const(struct Instruction *instruction_struct_ptr, char *address) {
-	
+	address++;
+	printf("heee\n");
+	if (atoi(address) < 0xff) {
+		//call mov instruction
+		//use instruction_struct_ptr->rd
+		//*instruction_struct_ptr = translate_data_processing(("mov %s, #%s", instruction_struct_ptr->rd, address));
+
+		struct Instruction instr = translate_data_processing(("mov %s, #%s", instruction_struct_ptr->rd, address));
+		printf("opcode: %d\n", instr.opcode);
+	}	
+	printf("here\n");
 }
 
 void translate_pre_indexed(struct Instruction *instruction_struct_ptr, char *address) {
 	address++;
 	address[strlen(address) - 1] = '\0';
-	char rn[sizeof(address)];
-	strcpy(rn, address);
 	//rn = strtok(rn, ",");
-	if (strcmp(rn, address) != 0) {
+	if (strchr(address, ',') == NULL) {
 		instruction_struct_ptr->rn = atoi(address + 1);
 		instruction_struct_ptr->offset = 0;
 	} else {
+		char rn[sizeof(address)];
+		strcpy(rn, address);
 		int pos_separator = 0;
 		for (pos_separator; address[pos_separator] != '\0' && address[pos_separator] != ','; pos_separator++);
 		rn[pos_separator] = '\0';
@@ -41,7 +51,6 @@ void translate_post_indexed(struct Instruction *instruction_struct_ptr, char *ad
 	for (pos_separator; address[pos_separator] != '\0' && address[pos_separator] != ','; pos_separator++);
 	rn[pos_separator] = '\0';
 	address += (pos_separator + 2);
-	//rn[strlen(rn) - 1] = '\0';
 	instruction_struct_ptr->rn = atoi(rn + 1);
 	instruction_struct_ptr->offset = atoi(address);
 	

@@ -90,6 +90,20 @@ void test_translate_single_data_transfer(void) {
 	printf("success test6\n");
 
 
+	char *instruction_string_7 = "str r10,=0x08";
+	struct Instruction instruction_7 = translate_single_data_transfer(instruction_string_7);
+	assert_int_equals(instruction_7.opcode, 13, "ldr instruction does not set register opcode to correct value");
+	/*
+	assert_int_equals(instruction_7.rn, 11, "ldr instruction does not set register rn to correct value");
+	assert_int_equals(instruction_7.offset, 8, "ldr instruction does not set offset to correct value");
+	assert_false(instruction_7.immediate_offset, "ldr instruction does not set immediate to correct value");
+	assert_false(instruction_7.pre_post_indexing, "ldr instruction does not set pre_post_index to correct value");
+	assert_true(instruction_7.up, "ldr instruction does not set up to correct value");
+	assert_int_equals(instruction_7.cond, ALWAYS, "mul instruction does not set condition to ALWAYS");
+	assert_false(instruction_7.load_store, "ldr instruction does not set up to correct value");
+	*/
+	printf("success test7\n");
+
 
 	/*
 	char *instruction_string_2 = "mla r6, r10, r12, r2";
