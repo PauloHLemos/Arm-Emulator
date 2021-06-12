@@ -134,6 +134,8 @@ void test_translate_single_data_transfer(void) {
 	assert_equals(instruction_2.condition, ALWAYS, "mla instruction does not set condition to ALWAYS");
 	assert_false(instruction_2.set_condition_codes, "mla instruction does not set set_condition_codes flag to false");
 	*/
+	printf("%s\n", "FINISHED TESTING SINGLE DATA TRANSFER"); 
+
 }
 
 
@@ -173,12 +175,16 @@ void test_translate_multiply(void) {
 	assert_true(instruction_2.accumulate, "mla instruction does not set accumulate flag to true");
 	assert_int_equals(instruction_2.cond, ALWAYS, "mla instruction does not set condition to ALWAYS");
 	assert_false(instruction_2.set_condition_codes, "mla instruction does not set set_condition_codes flag to false");
+	
+	printf("%s\n", "FINSHED TESTING TRANSLATE MULTIPLY");
 }
 
 void test_convert_instructions(void) {
 	printf("%s\n", "TESTING CONVERT_INSTRUCTIONS:");
 
 	struct ST_Node *st_head_ptr;
+	st_head_ptr->label = "wait";
+	st_head_ptr->address = 4;
 
 	printf("%s\n", "testing add01 instructions");
 	int current_address = 0;
@@ -187,7 +193,7 @@ void test_convert_instructions(void) {
 	assert_int_equals(convert_instructions(instruction_1, st_head_ptr, current_address), binary_1, "failed to convert 'add mov r1,#1'");
 
 	current_address += 4;
-	char *instruction_2 = "add rn,r1,#2";
+	char *instruction_2 = "add r2,r1,#2";
 	uint32_t binary_2 = 0b11100010100000010010000000000010;
 	assert_int_equals(convert_instructions(instruction_2, st_head_ptr, current_address), binary_2, "failed to convert 'add rn,r1,#2'");
 
@@ -222,6 +228,7 @@ void test_convert_instructions(void) {
 	char *instruction_8 = "bne wait";
 	uint32_t binary_8 = 0b00011010111111111111111111111100;
 	assert_int_equals(convert_instructions(instruction_8, st_head_ptr, current_address), binary_8, "failed to convert 'bne wait'");
+	printf("%s\n", "FINISHED TESTING CONVERT_INSTRUCTIONS");
 }	
 
 int main(void) {

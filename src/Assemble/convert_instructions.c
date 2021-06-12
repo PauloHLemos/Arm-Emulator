@@ -27,20 +27,20 @@ uint32_t convert_instructions(char *instruction, struct ST_Node *st_head_ptr, ui
 }
 
 bool is_multiply(char *opcode) {
-	return opcode == "mul" || opcode == "mla";
+	return strcmp(opcode, "mul") == 0 || strcmp(opcode, "mla") == 0;
 }
 
 bool is_single_data_transfer(char *opcode) {
-	return opcode == "ldr" || opcode == "str";
+	return strcmp(opcode, "ldr") == 0 || strcmp(opcode, "str") == 0;
 }
 
 bool is_branch(char *opcode) {
-	return opcode == "beq" ||
-		opcode == "bne" ||
-		opcode == "bge" ||
-		opcode == "blt" ||
-		opcode == "bgt" ||
-		opcode == "ble" ||
-		opcode == "b";
+	return strcmp(opcode, "beq") == 0 ||
+		strcmp(opcode, "bne") == 0 ||
+		strcmp(opcode, "bge") == 0 ||
+		strcmp(opcode, "blt") == 0 ||
+		strcmp(opcode, "bgt") == 0 ||
+		strcmp(opcode, "ble") == 0 ||
+		strcmp(opcode, "b") == 0;
 }
 
