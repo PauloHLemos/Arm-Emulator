@@ -195,7 +195,7 @@ void process_instruction(char *instruction_string,
 	} 
 }
 
-struct Instruction translate_data_processing(char *instruction_string, struct ST_Node *st_head_ptr) {
+struct Instruction translate_data_processing(char *instruction_string) {
 	struct Instruction instruction_struct;
 	
 	char opcode_string[100];
