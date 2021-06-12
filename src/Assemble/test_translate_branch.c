@@ -28,36 +28,48 @@ void test_translate_branch(){
 	uint32_t tests_run = 0;
     struct Instruction instruction;
 
+    struct ST_Node* head = initialize();
+    add_node(head, "b", 14);
+    add_node("b", "beq", 0);
+    add_node("beq", "bne", 1);
+    add_node("bne", "bge", 10);
+    add_node("bge", "blt", 11);
+    add_node("blt", "bgt", 12);
+    add_node("bgt", "ble", 13);
+    add_node("ble", "bal", 14);
+    
+    add_node("bal", "foo", 0);
+
 	strncpy(instruction_string, "b foo", 100); // result
-	instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+	instruction = translate_branch(instruction_string, head, 0);
 	test_instruction(instruction_string, instruction, "b branch", ALWAYS, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "beq foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", EQUAL, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "bne foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", NOT_EQUAL, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "bge foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", GREATER_OR_EQUAL, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "blt foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", LESS_THAN, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "bgt foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", GREATER_THAN, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "ble foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", LESS_THAN_OR_EQUAL, 0, &tests_passed, &tests_run);
 
     strncpy(instruction_string, "bal foo", 100); // result
-    instruction = translate_branch(instruction_string, PLACEHOLDER_SYMBTABLE, 0);
+    instruction = translate_branch(instruction_string, head, 0);
     test_instruction(instruction_string, instruction, "b branch", ALWAYS, 0, &tests_passed, &tests_run);
 
     printf("\n%d of %d tests passed. \n", tests_passed, tests_run);
