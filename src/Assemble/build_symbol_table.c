@@ -20,7 +20,6 @@ struct ST_Node *build_symbol_table(FILE *stream) {
 		address += 4;
 	}
 	return head;
-
 }
 
 int main() {
