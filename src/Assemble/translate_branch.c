@@ -16,7 +16,7 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 	char cond[4], expression[100];
 
 	sscanf(instruction, "%s %s", cond, expression);
-	instruction_struct.cond = search_table(st_head_ptr, cond);
+	instruction_struct.cond = (Condition) search_table(st_head_ptr, cond);
 	if (atoi(expression) == 0){
 		target_address = search_table(st_head_ptr, expression_ptr);
 	}
