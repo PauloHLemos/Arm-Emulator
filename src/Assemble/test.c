@@ -136,7 +136,6 @@ void test_translate_single_data_transfer(void) {
 	*/
 }
 
-}
 
 
 // unit test suites
@@ -175,7 +174,6 @@ void test_translate_multiply(void) {
 	assert_int_equals(instruction_2.cond, ALWAYS, "mla instruction does not set condition to ALWAYS");
 	assert_false(instruction_2.set_condition_codes, "mla instruction does not set set_condition_codes flag to false");
 }
->>>>>>> src/Assemble/test.c
 
 void test_convert_instructions(void) {
 	printf("%s\n", "TESTING CONVERT_INSTRUCTIONS:");
