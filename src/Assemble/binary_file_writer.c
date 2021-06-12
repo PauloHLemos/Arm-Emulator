@@ -3,12 +3,12 @@
 #include <stdlib.h>
 
 void binary_file_writer(char *binary_fname, uint32_t *word){
-        FILE *file = fopen(binary_fname, "ab");
-        if (file == NULL) {
+        FILE *binary_file = fopen(binary_fname, "ab");
+        if (binary_file == NULL) {
             perror("Error opening file.txt!");
             exit(1);
         }
-        size_t size = fwrite(word, 1, 4, file);
+        size_t size = fwrite(word, 1, 4, binary_file);
         fclose(file);
 }
 
