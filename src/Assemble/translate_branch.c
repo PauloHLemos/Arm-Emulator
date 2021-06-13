@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "definitions.h"
 #include "symbol_table.h"
 
@@ -20,12 +21,14 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
         else if (strcmp(cond, "ble") == 0) {instruction_struct.cond = LESS_THAN_OR_EQUAL;}
         else if (strcmp(cond, "b") == 0) {instruction_struct.cond = ALWAYS;}
         else if (strcmp(cond, "bal") == 0) {instruction_struct.cond = ALWAYS;}
+
         if (atoi(expression) == 0){
-            target_address = search_table(st_head_ptr, expression);
+		assert(search_table(st_head_ptr, expression, &target_address));
         }
         else{
-            target_address = atoi(expression);
+		target_address = atoi(expression);
         }
+
         offset = target_address - current_address;
         offset -= 8; //pipeline offset
         offset >>= 2; //right shift two bits
