@@ -8,8 +8,8 @@ LDLIBS  = -Lsymbol_table -lsymbol_table
 
 .PHONY: all clean
 
-all: libs build_symbol_table # assemble
-	# cp assemble ../assemble
+all: libs assemble
+	cp assemble ../assemble
 
 build_symbol_table: build_symbol_table.o 
 build_symbol_table.o: build_symbol_table.h symbol_table/symbol_table.h
