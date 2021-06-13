@@ -148,7 +148,3 @@ uint32_t encode(struct Instruction instruction) {
 	}
 }
 
-int main() {
-	test_encode();
-	return 0;
-}

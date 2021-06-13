@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "split_instructions.h"
 #include "instructions.h"
 #include "definitions.h"

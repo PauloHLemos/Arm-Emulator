@@ -32,6 +32,8 @@ translate.o: translate.h symbol_table/symbol_table.h
 libs:
 	cd symbol_table; make; cd ..;
 
+test: translate_multiply.o translate_data_processing.o translate_branch.o translate_single_data_transfer.o encode.o convert_instructions.o shifts.o split_instructions.o
+
 #build_symbol_table.o: symbol_table.h
 
 clean:

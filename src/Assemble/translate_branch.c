@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "definitions.h"
+#include "symbol_table.h"
 
 struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address){
         struct Instruction instruction_struct;
