@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include "symbol_table.h"
 #include <stdio.h>
+#include <string.h>
 
 // returns address corresponding to label and -1 if label not found.
 bool search_table(struct ST_Node *node, char *label, uint32_t *address_ptr) {
@@ -21,7 +22,7 @@ void add_node(struct ST_Node *node, char *label, uint32_t address) {
 		node = node->next_ptr;
 	}
 	struct ST_Node *new_node = initialize();
-	new_node->label = label;
+	strcpy(new_node->label, label);
 	new_node->address = address;
 	new_node->next_ptr = NULL;
 	node->next_ptr = new_node;
@@ -34,7 +35,7 @@ static struct ST_Node* allocate_node() {
 
 struct ST_Node* initialize() {
 	struct ST_Node *node = allocate_node();
-	node->label = "";
+	strcpy(node->label, "");
 	return node;
 }
 

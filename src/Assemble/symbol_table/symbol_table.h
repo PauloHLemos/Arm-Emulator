@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 struct ST_Node {
-	char *label;
+	char label[100];
 	uint32_t address;
 	struct ST_Node *next_ptr;
 };
