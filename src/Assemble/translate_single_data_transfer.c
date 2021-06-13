@@ -39,7 +39,7 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		instruction_struct_ptr->offset = (end_address - curr_address + 4);
 		instruction_struct_ptr->up = true;
 		//add_node(node, toint(address));			
-		*address++;
+		(*address)++;
 		//set up bit	
 	}	
 }

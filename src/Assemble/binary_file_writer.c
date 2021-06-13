@@ -14,11 +14,11 @@ FILE *open_file(char *binary_fname){
 			exit(1);
 	}
 	return file_ptr;
-};
+}
 
 void close_file(FILE *file_ptr){
 	fclose(file_ptr);	
-};
+}
 
 // int main(void){
 // 	printf("gg");

@@ -2,7 +2,7 @@
 #define INSTRUCTIONS_H
 
 #include <stdint.h>
-// #include "symbol_table.h"
+#include "symbol_table.h"
 #include "definitions.h"
 #include "queue.h"
 
