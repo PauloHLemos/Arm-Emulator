@@ -322,9 +322,9 @@ void test_convert_instructions(void) {
 	printf("%s\n", "FINISHED TESTING CONVERT_INSTRUCTIONS");
 }	
 */
-int main(void) {
-	test_translate_single_data_transfer();
-	//test_binary_file_writer();
-	//test_translate_multiply();	
-	//test_convert_instructions();
-}
+// int main(void) {
+// 	test_translate_single_data_transfer();
+// 	//test_binary_file_writer();
+// 	//test_translate_multiply();	
+// 	//test_convert_instructions();
+// }
