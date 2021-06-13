@@ -8,6 +8,7 @@
 
 struct Instruction translate_multiply(char *instruction) {
        struct Instruction instruction_struct;
+       memset(&instruction_struct, 0, sizeof(struct Instruction));
        char opcode[100], rd[100], rm[100], rs[100], rn[100];
        instruction_struct.type = MULTIPLY;
        instruction_struct.cond = ALWAYS;
