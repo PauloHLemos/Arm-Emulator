@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "binary_file_writer.h"
 
 void binary_file_writer(FILE *file_ptr, uint32_t *word_ptr){
         fwrite(word_ptr, 1, 4, file_ptr);
