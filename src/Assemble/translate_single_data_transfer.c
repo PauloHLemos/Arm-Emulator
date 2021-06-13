@@ -24,7 +24,7 @@ static uint32_t toint(char* string) {
 }
 
 static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct Queue_Node *node, 
-		uint32_t curr_address, uint32_t end_address) {
+		uint32_t curr_address, uint32_t *end_address) {
 	address++;
 	if (toint(address) < 0xff) {
 		//call mov instruction
@@ -39,7 +39,7 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		instruction_struct_ptr->offset = (end_address - curr_address + 4);
 		instruction_struct_ptr->up = true;
 		//add_node(node, toint(address));			
-		(*address)++;
+		*end_address++;
 		//set up bit	
 	}	
 }
@@ -87,7 +87,7 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 }
 
 struct Instruction translate_single_data_transfer(char *instruction, struct Queue_Node *node, 
-		uint32_t curr_address, uint32_t end_address) {
+		uint32_t curr_address, uint32_t *end_address) {
 	struct Instruction instruction_struct;
 	// address size 504 allows lines of length 512 to be processed
 	char opcode[3], rd[4], address[504];

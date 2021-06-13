@@ -12,9 +12,9 @@ bool is_multiply(char *opcode);
 bool is_single_data_transfer(char *opcode);
 bool is_branch(char *opcode);
 
-uint32_t convert_instructions(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address, uint32_t end_address) {
+uint32_t convert_instructions(char *instruction, struct ST_Node *st_head_ptr, 
+		struct Queue_Node *queue_node_ptr, uint32_t current_address, uint32_t *end_address) {
 	struct Instruction instruction_struct;
-	struct Queue_Node *queue_node_ptr = initialize_queue();
 	char opcode[3];
 	extract_opcode(instruction, opcode);
 	if (is_multiply(opcode)) {
