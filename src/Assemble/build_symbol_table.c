@@ -13,8 +13,9 @@ struct ST_Node *build_symbol_table(FILE *stream, uint32_t *address_ptr) {
 	char buffer[max_line_length];
 
 	while(fgets(buffer, max_line_length, stream)) {
-		label = strtok(buffer, ":");
-		if (label != NULL) {
+		buffer[strcspn(buffer, "\n")] = 0;
+		if (strchr(buffer, ':') != NULL) {
+			label = strtok(buffer, ":");
 			add_node(head, label, address);	
 		} else {
 			address += 4;
