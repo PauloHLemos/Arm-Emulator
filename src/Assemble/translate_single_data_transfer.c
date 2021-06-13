@@ -86,7 +86,7 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 	instruction_struct_ptr->immediate_offset = false;
 }
 
-struct Instruction translate_single_data_transfer(char *instruction, struct QUEUE_Node *node, 
+struct Instruction translate_single_data_transfer(char *instruction, struct Queue_Node *node, 
 		uint32_t curr_address, uint32_t end_address) {
 	struct Instruction instruction_struct;
 	// address size 504 allows lines of length 512 to be processed
