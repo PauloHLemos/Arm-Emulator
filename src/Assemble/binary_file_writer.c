@@ -12,12 +12,30 @@ void binary_file_writer(char *binary_fname, uint32_t *word){
         fclose(file);
 }
 
+FILE *open_file(char *binary_fname){
+		FILE *file = fopen(binary_fname, "wb");
+		if (file == NULL) {
+				perror("Error opening file.txt!");
+				exit(1);
+		}
+		return file;
+};
+
+void close_file(FILE *file){
+		fclose(file);	
+};
+
 int main(void){
-		uint32_t number = 0b11111111;
-        uint32_t *word;
-        word = &number;
-        binary_file_writer("test01", word);
-        number = 0b1;
-        binary_file_writer("test01", word);
-        return 0;
+		printf("gg");
+		printf("gg");
+		uint32_t number = 1234;
+		uint32_t *word;
+		word = &number;
+		printf("gg");
+		FILE *file = open_file(("test01"));
+		binary_file_writer(file, word);
+		binary_file_writer(file, word);
+		binary_file_writer(file, word);
+		close_file(open_file(("test01")));
+		return 0;
 }
