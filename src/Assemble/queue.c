@@ -13,7 +13,7 @@ void add_queue_node(struct Queue_Node *node, uint32_t binary) {
 	while (node->next_ptr != NULL) {
 		node = node->next_ptr;
 	}
-	struct Queue_NODE *new_node = initialize_queue();
+	struct Queue_Node *new_node = initialize_queue();
 	new_node->binary = binary;
 	node->next_ptr = new_node;
 
