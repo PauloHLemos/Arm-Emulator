@@ -1,13 +1,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "symbol_table.h"
 #include <stdio.h>
 #include <string.h>
+#include "symbol_table.h"
 
 // returns address corresponding to label and -1 if label not found.
 bool search_table(struct ST_Node *node, char *label, uint32_t *address_ptr) {
-	while (node->label != label) {
+	while (strcmp(node->label, label) != 0) {
 		if (node->next_ptr == NULL) {
 			return false;
 		}
