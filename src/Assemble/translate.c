@@ -16,7 +16,7 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename,
 	while(fgets(buffer, max_line_length, stream)) {
 		if (!is_label(buffer)) {
 			translated_instruction = convert_instruction(buffer, st_head_ptr, current_address);
-			binary_file_writer(output_stream, translated_instruction);
+			binary_file_writer(output_stream, &translated_instruction);
 			current_address += 4;
 		}		
 	}

@@ -1,8 +1,8 @@
 #ifndef BINARY_FILE_WRITER_H
 #define BINARY_FILE_WRITER_H
 
-[stream obj] open_file_stream();
-bool close_file_stream([stream obj]);
-bool write_word([stream obj] file_stream, uint32_t word);
+FILE *open_file(char *binary_fname);
+void close_file(FILE *file_ptr);
+void binary_file_writer(FILE *file_ptr, uint32_t *word_ptr);
 
 #endif
