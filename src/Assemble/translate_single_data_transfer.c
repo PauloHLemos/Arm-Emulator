@@ -7,17 +7,24 @@
 #include "split_instructions.h"
 #include "instructions.h"
 #include "definitions.h"
+#include "queue.h"
 
 static uint32_t toint(char* string) {
+	bool neg;
+	neg = string[0] == '-';
+	if (neg) {
+		string++;
+	}
 	assert(string != NULL);
 	if (string[1] == 'x') {
 		string += 2;
 		return (uint32_t) strtol(string, NULL, 16);
 	}
-	return atoi(string);
+	return neg ? -atoi(string) : atoi(string);
 }
 
-static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address) {
+static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct QUEUE_Node *node, 
+		uint32_t curr_address, uint32_t end_address) {
 	address++;
 	if (toint(address) < 0xff) {
 		//call mov instruction
@@ -26,7 +33,13 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		//printf("instr: %s\n", instruction);
 		*instruction_struct_ptr = translate_data_processing(instruction);
 	} else {
-
+		instruction_struct_ptr->immediate_offset = false; //true?
+		instruction_struct_ptr->pre_post_indexing = true;
+		instruction_struct_ptr->rn = 15;
+		instruction_struct_ptr->offset = (end_address - curr_address + 4);
+		instruction_struct_ptr->up = true;
+		//add_node(node, toint(address));			
+		*address++;
 		//set up bit	
 	}	
 }
@@ -73,18 +86,19 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 	instruction_struct_ptr->immediate_offset = false;
 }
 
-struct Instruction translate_single_data_transfer(char *instruction) {
+struct Instruction translate_single_data_transfer(char *instruction, struct QUEUE_Node *node, 
+		uint32_t curr_address, uint32_t end_address) {
 	struct Instruction instruction_struct;
 	//address size ensures line of size 512 can be read
 	char opcode[4], rd[4], address[504];
 	instruction_struct.type = SINGLE_DATA_TRANSFER;
 	instruction_struct.cond = ALWAYS;
 	split_3_arguments(instruction, opcode, rd, address);
-	instruction_struct.load_store = (opcode == "ldr");
+	instruction_struct.load_store = !(strcmp(opcode, "ldr"));
 	instruction_struct.rd = atoi(rd + 1);
 
 	if (address[0] == '=') {
-		translate_num_const(&instruction_struct, address);
+		translate_num_const(&instruction_struct, address, node, curr_address, end_address);
 	}
 	else if (address[strlen(address) - 1] == ']') {
 		translate_pre_indexed(&instruction_struct, address);
@@ -93,7 +107,7 @@ struct Instruction translate_single_data_transfer(char *instruction) {
 	}
 
 	instruction_struct.set_condition_codes = false;
-      
+
 	return instruction_struct;
 }
 
