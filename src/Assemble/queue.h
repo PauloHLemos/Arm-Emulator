@@ -10,7 +10,7 @@ struct Queue_Node {
 	struct Queue_Node *next_ptr;
 };
 
-struct Queue_Node get_queue_node(struct Queue_Node *node, uint32_t *binary_ptr);
+struct Queue_Node *get_queue_node(struct Queue_Node *node, uint32_t *binary_ptr);
 void add_queue_node(struct Queue_Node *node, uint32_t binary);
 struct Queue_Node *initialize_queue();
 

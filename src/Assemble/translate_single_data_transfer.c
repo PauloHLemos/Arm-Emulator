@@ -23,7 +23,7 @@ static uint32_t toint(char* string) {
 	return neg ? -atoi(string) : atoi(string);
 }
 
-static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct QUEUE_Node *node, 
+static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct Queue_Node *node, 
 		uint32_t curr_address, uint32_t end_address) {
 	address++;
 	if (toint(address) < 0xff) {
