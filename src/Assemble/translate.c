@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include "binary_file_writer.h"
 #include "convert_instructions.h"
 #include "symbol_table.h"
@@ -26,10 +27,10 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename,
 }
 
 uint32_t reverse_bytes(uint32_t bytes) {
-	int32_t temp = input << 24;
-	temp = temp | ((input & 0b1111111100000000) << 8);
-	temp = temp | ((input >> 8) & 0b1111111100000000);
-	temp = temp | ((input >> 24) & 0b11111111);
+	int32_t temp = bytes << 24;
+	temp |= ((bytes & 0b1111111100000000) << 8);
+	temp |= ((bytes >> 8) & 0b1111111100000000);
+	temp |= ((bytes >> 24) & 0b11111111);
 	return temp;
 }
 
