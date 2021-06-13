@@ -17,8 +17,7 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename,
 	FILE *output_stream = open_file(output_filename);
 	struct Queue_Node *queue_node_ptr = initialize_queue();
 
-	while(!feof(stream)) {
-		fgets(buffer, max_line_length, stream);
+	while(fgets(buffer, max_line_length, stream)) {
 		buffer[strcspn(buffer, "\n")] = 0;
 		if (!is_label(buffer)) {
 			translated_instruction = convert_instructions(buffer, st_head_ptr, queue_node_ptr, 
