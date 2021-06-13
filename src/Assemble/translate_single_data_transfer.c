@@ -109,7 +109,6 @@ struct Instruction translate_single_data_transfer(char *instruction, struct Queu
 	}
 
 	instruction_struct.set_condition_codes = false;
-	instruction_struct.up = true;
 
 	return instruction_struct;
 }
