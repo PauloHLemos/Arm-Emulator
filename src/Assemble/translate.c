@@ -6,7 +6,7 @@
 
 bool is_label(char *instruction);
 
-void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename) {
+void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename, uint32_t end_address) {
 	int max_line_length = 512;
 	char buffer[max_line_length];
 	uint32_t current_address = 0;

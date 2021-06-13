@@ -5,14 +5,15 @@
 #include <stdio.h>
 
 // returns address corresponding to label and -1 if label not found.
-uint32_t search_table(struct ST_Node *node, char *label) {
+bool search_table(struct ST_Node *node, char *label, uint32_t *address_ptr) {
 	while (node->label != label) {
 		if (node->next_ptr == NULL) {
-			return -1;
+			return false;
 		}
 		node = node->next_ptr;
 	}
-	return node->address;
+	*address_ptr = node->address;
+	return true;
 }
 
 void add_node(struct ST_Node *node, char *label, uint32_t address) {

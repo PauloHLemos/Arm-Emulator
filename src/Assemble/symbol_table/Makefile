@@ -1,6 +1,6 @@
 CC	=	gcc
 CFLAGS	=	-Wall
-LIB	=	symbol_table.a
+LIB	=	libsymbol_table.a
 LIBOBJS =	symbol_table.o
 BUILD   = 	$(LIB)
 

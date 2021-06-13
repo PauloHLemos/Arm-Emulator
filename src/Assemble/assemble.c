@@ -22,8 +22,9 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	struct ST_Node *st_head_ptr = build_symbol_table(input_file_ptr);
-	translate(input_file_ptr, st_head_ptr, output_filename);
+	uint32_t end_address;
+	struct ST_Node *st_head_ptr = build_symbol_table(input_file_ptr, &end_address);
+	translate(input_file_ptr, st_head_ptr, output_filename, end_address);
 
 
 	fclose(input_file_ptr);
