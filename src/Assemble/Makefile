@@ -19,7 +19,7 @@ libs:
 
 assemble.o: build_symbol_table.h translate.h symbol_table/symbol_table.h
 build_symbol_table.o: build_symbol_table.h symbol_table/symbol_table.h
-convert_instructions.o: definitions.h encode.h symbol_table/symbol_table.h instructions.h split_instructions.h 
+convert_instructions.o: definitions.h encode.h symbol_table/symbol_table.h instructions.h split_instructions.h queue.h
 encode.o: encode.h definitions.h 
 queue.o: queue.h
 shifts.o: shifts.h definitions.h
