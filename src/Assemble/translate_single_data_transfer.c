@@ -9,23 +9,9 @@
 #include "definitions.h"
 #include "queue.h"
 
-static uint32_t toint(char* string) {
-	bool neg;
-	neg = string[0] == '-';
-	if (neg) {
-		string++;
-	}
-	assert(string != NULL);
-	if (string[1] == 'x') {
-		string += 2;
-		return (uint32_t) strtol(string, NULL, 16);
-	}
-	return neg ? -atoi(string) : atoi(string);
-}
-
 static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct Queue_Node *node, uint32_t curr_address, uint32_t *end_address) {
 	address++;
-	if (toint(address) < 0xff) {
+	if (strtol(address, NULL, 0) < 0xff) {
 		//call mov instruction
 		char instruction[512];
 		sprintf(instruction, "mov r%d, #%s", instruction_struct_ptr->rd, address);
@@ -37,7 +23,7 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		instruction_struct_ptr->rn = 15;
 		instruction_struct_ptr->offset = ((*end_address - curr_address) - 8);
 		instruction_struct_ptr->up = true;
-		add_queue_node(node, toint(address));			
+		add_queue_node(node, strtol(address, NULL, 0));			
 		(*end_address) += 4;
 		//set up bit	
 	}	
@@ -59,9 +45,9 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 		rn[pos_separator] = '\0';
 		address += (pos_separator + 2); 
 		instruction_struct_ptr->rn = atoi(rn + 1);
-		int offset = toint(address);
-		instruction_struct_ptr->offset = abs(offset);
+		int offset = strtol(address, NULL, 0);
 		instruction_struct_ptr->up = offset >= 0;
+		instruction_struct_ptr->offset = abs(offset);
 	}
 	instruction_struct_ptr->pre_post_indexing = true;
 	instruction_struct_ptr->immediate_offset = false;
@@ -77,7 +63,7 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 	rn[pos_separator] = '\0';
 	address += (pos_separator + 2);
 	instruction_struct_ptr->rn = atoi(rn + 1);
-	int offset = toint(address);
+	int offset = strtol(address, NULL, 0);
 	instruction_struct_ptr->offset = abs(offset);
 	instruction_struct_ptr->up = offset >= 0;
 	
