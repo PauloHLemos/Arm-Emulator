@@ -23,8 +23,7 @@ static uint32_t toint(char* string) {
 	return neg ? -atoi(string) : atoi(string);
 }
 
-static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct Queue_Node *node, 
-		uint32_t curr_address, uint32_t *end_address) {
+static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct Queue_Node *node, uint32_t curr_address, uint32_t *end_address) {
 	address++;
 	if (toint(address) < 0xff) {
 		//call mov instruction
@@ -36,9 +35,9 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		instruction_struct_ptr->immediate_offset = false; //true?
 		instruction_struct_ptr->pre_post_indexing = true;
 		instruction_struct_ptr->rn = 15;
-		instruction_struct_ptr->offset = (end_address - curr_address + 4);
+		instruction_struct_ptr->offset = (*end_address - curr_address + 4);
 		instruction_struct_ptr->up = true;
-		//add_node(node, toint(address));			
+		// add_node(node, toint(address));			
 		(*end_address) += 4;
 		//set up bit	
 	}	
@@ -99,7 +98,7 @@ struct Instruction translate_single_data_transfer(char *instruction, struct Queu
 	instruction_struct.rd = atoi(rd + 1);
 
 	if (address[0] == '=') {
-		translate_num_const(&instruction_struct, address, node, curr_address, end_address);
+		translate_num_const(&instruction_struct, address, node, curr_address, &end_address);
 	}
 	else if (address[strlen(address) - 1] == ']') {
 		//pre-indexed address 
