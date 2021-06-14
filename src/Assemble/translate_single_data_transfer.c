@@ -69,7 +69,7 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 	instruction_struct_ptr->up = offset >= 0;
 	
 	instruction_struct_ptr->pre_post_indexing = false;
-	instruction_struct_ptr->immediate_offset = false;
+	instruction_struct_ptr->immediate_offset = true;
 }
 
 struct Instruction translate_single_data_transfer(char *instruction, struct Queue_Node *node, 
