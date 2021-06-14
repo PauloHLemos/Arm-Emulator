@@ -9,6 +9,7 @@
 struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_ptr, uint32_t current_address){
         struct Instruction instruction_struct;
 	memset(&instruction_struct, 0, sizeof(struct Instruction));
+	instruction_struct.type = BRANCH;
         uint32_t target_address;
         uint32_t offset;
         char cond[4], expression[100];
