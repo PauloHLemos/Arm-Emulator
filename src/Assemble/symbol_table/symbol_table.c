@@ -29,13 +29,14 @@ void add_node(struct ST_Node *node, char *label, uint32_t address) {
 }
 
 static struct ST_Node* allocate_node() {
-	struct ST_Node *node = malloc(sizeof(node));
+	struct ST_Node *node = malloc(sizeof(struct ST_Node));
 	return node;
 }
 
 struct ST_Node* initialize() {
 	struct ST_Node *node = allocate_node();
 	strcpy(node->label, "");
+	node->next_ptr = NULL;
 	return node;
 }
 
