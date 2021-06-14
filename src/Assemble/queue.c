@@ -20,7 +20,7 @@ void add_queue_node(struct Queue_Node *node, uint32_t binary) {
 }
 
 static struct Queue_Node* allocate_queue_node() {
-	struct Queue_Node *node = malloc(sizeof(node));
+	struct Queue_Node *node = malloc(sizeof(struct Queue_Node));
 	return node;
 }
 
