@@ -31,13 +31,13 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		sprintf(instruction, "mov r%d, #%s", instruction_struct_ptr->rd, address);
 		//printf("instr: %s\n", instruction);
 		*instruction_struct_ptr = translate_data_processing(instruction);
-	} else {
+	} else { 
 		instruction_struct_ptr->immediate_offset = false; //true?
 		instruction_struct_ptr->pre_post_indexing = true;
 		instruction_struct_ptr->rn = 15;
-		instruction_struct_ptr->offset = (*end_address - curr_address + 4);
+		instruction_struct_ptr->offset = ((*end_address - curr_address) - 8);
 		instruction_struct_ptr->up = true;
-		// add_node(node, toint(address));			
+		add_queue_node(node, toint(address));			
 		(*end_address) += 4;
 		//set up bit	
 	}	
