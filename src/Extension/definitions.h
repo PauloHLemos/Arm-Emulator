@@ -1,11 +1,13 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-struct frame {
+#include <stdint.h>
+
+struct Frame {
 	int width;
 	int height;
 	int num_channels;
 	uint8_t *img;
-}
+};
 
 #endif
