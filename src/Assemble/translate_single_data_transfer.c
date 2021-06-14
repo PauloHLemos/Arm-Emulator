@@ -95,7 +95,7 @@ struct Instruction translate_single_data_transfer(char *instruction, struct Queu
 	instruction_struct.type = SINGLE_DATA_TRANSFER;
 	instruction_struct.cond = ALWAYS;
 	split_3_arguments(instruction, opcode, rd, address);
-	instruction_struct.load_store = !(strcmp(opcode, "ldr"));
+	instruction_struct.load_store = strcmp(opcode, "ldr") != 0;
 	instruction_struct.rd = atoi(rd + 1);
 
 	if (address[0] == '=') {
