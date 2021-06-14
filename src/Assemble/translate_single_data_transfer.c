@@ -45,6 +45,7 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 		rn[pos_separator] = '\0';
 		address += (pos_separator + 2); 
 		instruction_struct_ptr->rn = atoi(rn + 1);
+		if (*address == '#') address++;
 		int offset = strtol(address, NULL, 0);
 		instruction_struct_ptr->up = offset >= 0;
 		instruction_struct_ptr->offset = abs(offset);
@@ -76,11 +77,11 @@ struct Instruction translate_single_data_transfer(char *instruction, struct Queu
 	struct Instruction instruction_struct;
 	memset(&instruction_struct, 0, sizeof(struct Instruction));
 	// address size 504 allows lines of length 512 to be processed
-	char opcode[3], rd[4], address[504];
+	char opcode[10], rd[10], address[510];
 	instruction_struct.type = SINGLE_DATA_TRANSFER;
 	instruction_struct.cond = ALWAYS;
 	split_3_arguments(instruction, opcode, rd, address);
-	instruction_struct.load_store = strcmp(opcode, "ldr") != 0;
+	instruction_struct.load_store = strcmp(opcode, "ldr") == 0;
 	instruction_struct.rd = atoi(rd + 1);
 
 	if (address[0] == '=') {
