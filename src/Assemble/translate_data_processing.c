@@ -87,12 +87,12 @@ uint32_t process_operand2_shifted_register(char *operand2_string) {
 
 	if (*shift_amount_string == 'r') {
 		operand2 += (1 << 4); // signifies is a shifted reg
-		uint32_t shift_register = atoi(shift_amount_string + 1);
+		uint32_t shift_register = strtol(shift_amount_string + 1, NULL, 0);
 		assert(shift_register < (1 << 4));
 		operand2 += (shift_register << 8);
 
 	} else if (*shift_amount_string == '#') {
-		uint32_t immediate_shift = atoi(shift_amount_string + 1);
+		uint32_t immediate_shift = strtol(shift_amount_string + 1, NULL, 0);
 		assert(immediate_shift < (1 << 5));
 		operand2 += (immediate_shift << 7);
 	}
@@ -195,9 +195,19 @@ struct Instruction translate_data_processing(char *instruction_string) {
 	
 	instruction_struct.type = DATA_PROCESSING;
 
-	char opcode_string[100];
+	char opcode_string[10];
 	extract_opcode(instruction_string, opcode_string);
 	if (strcmp(opcode_string, "andeq") == 0) return instruction_struct;
+	if (strcmp(opcode_string, "lsl") == 0) {
+		char rn[10];
+		char expression[30];
+		char new_instruction_string[100];
+
+		split_2_arguments_after_opcode(instruction_string, rn, expression);
+		snprintf(new_instruction_string, 100, "mov %s, %s, lsl %s", rn, rn, expression);
+		instruction_string = new_instruction_string;
+		memcpy(opcode_string, "mov", 4);
+	}
 
 	set_opcode_cond(opcode_string, 
 			&instruction_struct.opcode, 
