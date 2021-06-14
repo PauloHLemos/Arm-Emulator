@@ -11,13 +11,7 @@
 // #include "instructions.h"
 
 void set_opcode_cond(char *opcode_string, enum Opcode *opcode_ptr, enum Condition *cond_ptr) {
-	if (strcmp(opcode_string, "andeq") == 0) {
-		*opcode_ptr = AND;
-		*cond_ptr = EQUAL;
-		return;
-	}
 	*cond_ptr = ALWAYS;
-
 	if	(strcmp(opcode_string, "and") == 0) { *opcode_ptr = AND; } 
 	else if (strcmp(opcode_string, "eor") == 0) { *opcode_ptr = EXCLUSIVE_OR; }
 	else if (strcmp(opcode_string, "sub") == 0) { *opcode_ptr = SUBTRACT; }
@@ -203,6 +197,7 @@ struct Instruction translate_data_processing(char *instruction_string) {
 
 	char opcode_string[100];
 	extract_opcode(instruction_string, opcode_string);
+	if (strcmp(opcode_string, "andeq") == 0) return instruction_struct;
 
 	set_opcode_cond(opcode_string, 
 			&instruction_struct.opcode, 
