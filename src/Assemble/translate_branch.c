@@ -11,7 +11,7 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
 	memset(&instruction_struct, 0, sizeof(struct Instruction));
 	instruction_struct.type = BRANCH;
         uint32_t target_address;
-        uint32_t offset;
+        int32_t offset;
         char cond[4], expression[100];
 
         sscanf(instruction, "%s %s", cond, expression);
@@ -34,7 +34,7 @@ struct Instruction translate_branch(char *instruction, struct ST_Node *st_head_p
         offset = target_address - current_address;
         offset -= 8; //pipeline offset
         offset >>= 2; //right shift two bits
-        instruction_struct.offset = offset;
+        instruction_struct.offset = (uint32_t) (offset & 0xffffff);
         return instruction_struct;
 }
 
