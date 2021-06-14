@@ -98,7 +98,7 @@ struct Instruction translate_single_data_transfer(char *instruction, struct Queu
 	instruction_struct.rd = atoi(rd + 1);
 
 	if (address[0] == '=') {
-		translate_num_const(&instruction_struct, address, node, curr_address, &end_address);
+		translate_num_const(&instruction_struct, address, node, curr_address, end_address);
 	}
 	else if (address[strlen(address) - 1] == ']') {
 		//pre-indexed address 
