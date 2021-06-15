@@ -34,7 +34,7 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 	address[strlen(address) - 1] = '\0';
 	//rn = strtok(rn, ",");
 	if (strchr(address, ',') == NULL) {
-		instruction_struct_ptr->rn = atoi(address + 1);
+		instruction_struct_ptr->rn = strtol(address + 1, NULL, 0);
 		instruction_struct_ptr->offset = 0;
 		instruction_struct_ptr->up = true;
 	} else {
@@ -44,7 +44,7 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 		for (; address[pos_separator] != ','; pos_separator++);
 		rn[pos_separator] = '\0';
 		for (address++; *address != '#'; address++); address++;
-		instruction_struct_ptr->rn = atoi(rn + 1);
+		instruction_struct_ptr->rn = strtol(rn + 1, NULL, 0);
 		int offset = strtol(address, NULL, 0);
 		instruction_struct_ptr->up = offset >= 0;
 		instruction_struct_ptr->offset = abs(offset);
@@ -62,7 +62,7 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 	for (; address[pos_separator] != '\0' && address[pos_separator] != ','; pos_separator++);
 	rn[pos_separator] = '\0';
 	address += (pos_separator + 2);
-	instruction_struct_ptr->rn = atoi(rn + 1);
+	instruction_struct_ptr->rn = strtol(rn + 1, NULL, 0);
 	int offset = strtol(address, NULL, 0);
 	instruction_struct_ptr->offset = abs(offset);
 	instruction_struct_ptr->up = offset >= 0;
@@ -81,7 +81,7 @@ struct Instruction translate_single_data_transfer(char *instruction, struct Queu
 	instruction_struct.cond = ALWAYS;
 	split_3_arguments(instruction, opcode, rd, address);
 	instruction_struct.load_store = strcmp(opcode, "ldr") == 0;
-	instruction_struct.rd = atoi(rd + 1);
+	instruction_struct.rd = strtol(rd + 1, NULL, 0);
 
 	if (address[0] == '=') {
 		translate_num_const(&instruction_struct, address, node, curr_address, end_address);
