@@ -28,25 +28,25 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 }
 
 static void process_offset_shifted_register(struct Instruction *instruction_struct_ptr, char *address) {
-	instruction_struct_ptr->offset = process_operand2_shifted_register(address);
-	instruction_struct_ptr->up = true;
+	instruction_struct_ptr->offset		 = process_operand2_shifted_register(address);
+	instruction_struct_ptr->up		 = true;
 	instruction_struct_ptr->immediate_offset = true;
 }
 
 static void process_offset_immediate(struct Instruction *instruction_struct_ptr, char *address) {
 	address++;
-	int offset = strtol(address, NULL, 0);
-	instruction_struct_ptr->offset = abs(offset);
-	instruction_struct_ptr->up = offset >= 0;
+	int offset				 = strtol(address, NULL, 0);
+	instruction_struct_ptr->offset		 = abs(offset);
+	instruction_struct_ptr->up		 = offset >= 0;
 	instruction_struct_ptr->immediate_offset = false;
 }
 
 
 static void translate_pre_indexed_no_offset(struct Instruction *instruction_struct_ptr, 
 					    char *address) {
-	instruction_struct_ptr->rn = strtol(address + 1, NULL, 0);
-	instruction_struct_ptr->offset = 0;
-	instruction_struct_ptr->up = true;
+	instruction_struct_ptr->rn		 = strtol(address + 1, NULL, 0);
+	instruction_struct_ptr->offset		 = 0;
+	instruction_struct_ptr->up		 = true;
 	instruction_struct_ptr->immediate_offset = false;
 }
 static void translate_pre_indexed_with_offset(struct Instruction *instruction_struct_ptr, 

@@ -117,9 +117,8 @@ void process_result_computing_instruction(char *instruction_string,
 				       	  bool *set_condition_codes_ptr,
 				       	  bool *immediate_operand_ptr,
 				       	  uint32_t *operand2_ptr) {
-		char rd[100];
-		char rn[100];
-		char operand2_string[100];
+
+		char rd[100], rn[100], operand2_string[100];
 		split_3_arguments_after_opcode(instruction_string, rd, rn, operand2_string);
 
 		*rd_ptr			 = atoi(rd + 1);
@@ -134,8 +133,7 @@ void process_move_instruction(char *instruction_string,
 		       	      bool *set_condition_codes_ptr,
 		       	      bool *immediate_operand_ptr,
 		       	      uint32_t *operand2_ptr) {
-		char rd[100];
-		char operand2_string[100];
+		char rd[100], operand2_string[100];
 		split_2_arguments_after_opcode(instruction_string, rd, operand2_string);
 
 		*rd_ptr			 = atoi(rd + 1);
@@ -149,8 +147,7 @@ void process_cpsr_instruction(char *instruction_string,
 		       	      bool *set_condition_codes_ptr,
 		       	      bool *immediate_operand_ptr,
 		       	      uint32_t *operand2_ptr) {
-		char rn[100];
-		char operand2_string[100];
+		char rn[100], operand2_string[100];
 		split_2_arguments_after_opcode(instruction_string, rn, operand2_string);
 
 		*rn_ptr			 = atoi(rn + 1);
@@ -198,12 +195,10 @@ struct Instruction translate_data_processing(char *instruction_string) {
 	extract_opcode(instruction_string, opcode_string);
 	if (strcmp(opcode_string, "andeq") == 0) return instruction_struct;
 	if (strcmp(opcode_string, "lsl") == 0) {
-		char rn[10];
-		char expression[30];
-		char new_instruction_string[100];
-
+		char rn[10], expression[30], new_instruction_string[100];
 		split_2_arguments_after_opcode(instruction_string, rn, expression);
 		snprintf(new_instruction_string, 100, "mov %s, %s, lsl %s", rn, rn, expression);
+
 		instruction_string = new_instruction_string;
 		memcpy(opcode_string, "mov", 4);
 	}
