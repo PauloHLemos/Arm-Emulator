@@ -4,12 +4,10 @@
 #include <string.h>
 #include <assert.h>
 #include "definitions.h"
-#include "test.h"
 #include "split_instructions.h"
-#include "test_translate_data_processing.h"
 #include "shifts.h"
 #include "process_operand2.h"
-// #include "instructions.h"
+#include "instructions.h"
 
 void set_opcode_cond(char *opcode_string, enum Opcode *opcode_ptr, enum Condition *cond_ptr) {
 	*cond_ptr = ALWAYS;
@@ -225,9 +223,3 @@ struct Instruction translate_data_processing(char *instruction_string) {
 
 	return instruction_struct;
 }
-/*
-int main(void) {
-	run_tests();
-	return 0;
-}
-*/
