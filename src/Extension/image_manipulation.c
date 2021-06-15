@@ -1,37 +1,25 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
+#include <stdlib.h>
+#include "definitions.h"
 
-typedef struct greyscale_frame {
-        int width;
-        int height;
-	int channels;
-        uint8_t *frame;
-} greyscale_frame;
-
-typedef struct greyscale_frame {
-        int width;
-        int height;
-	int channels;
-        uint8_t *frame;
-} frame;
-
-uint8_t *get_pixel_ptr(greyscale_frame *frame, int x, int y) {
+uint8_t *get_pixel_ptr(frame *frame, int x, int y) {
         int index = x + y * frame->width;
-        return (frame->frame + index);
+        return (frame->img + index);
 }
 
-uint8_t get_pixel(greyscale_frame *frame, int x, int y) {
+uint8_t get_pixel(frame *frame, int x, int y) {
         if (x < 0 || x >= frame->width || y < 0 || y >= frame->height) 
                 return 0;
         return *get_pixel_ptr(frame, x, y);
 }
 
-void set_pixel(greyscale_frame *frame, uint8_t value, int x, int y) {
+void set_pixel(frame *frame, uint8_t value, int x, int y) {
         *get_pixel_ptr(frame, x, y) = value;
 }
 
-void add_images(greyscale_frame *frame1, greyscale_frame *frame2) {
+void add_images(frame *frame1, frame *frame2) {
         uint8_t new_value;
         for (int y = 0; y < frame1->height; y++) {
                 for (int x = 0; x < frame1->width; x++) {
@@ -41,7 +29,7 @@ void add_images(greyscale_frame *frame1, greyscale_frame *frame2) {
         }
 }
 
-void subtract_images(greyscale_frame *frame1, greyscale_frame *frame2) {
+void subtract_images(frame *frame1, frame *frame2) {
         uint8_t new_value;
         for (int y = 0; y < frame1->height; y++) {
                 for (int x = 0; x < frame1->width; x++) {
@@ -51,17 +39,17 @@ void subtract_images(greyscale_frame *frame1, greyscale_frame *frame2) {
         }
 }
 
-void multiply_image(greyscale_frame *frame, float multiple) {
+void multiply_image(frame *frame, float multiple) {
 	uint8_t new_value;
-	for (int y = 0; y < frame1->height; y++) {
-                for (int x = 0; x < frame1->width; x++) {
-                        new_value = round(get_pixel(frame, x, y) * multiply);
+	for (int y = 0; y < frame->height; y++) {
+                for (int x = 0; x < frame->width; x++) {
+                        new_value = round(get_pixel(frame, x, y) * multiple);
                         set_pixel(frame, new_value, x, y);
                 }
         }
 }
 
-void lower_threshold_image(greyscale_frame *frame, uint8_t threshold) {
+void lower_threshold_image(frame *frame, uint8_t threshold) {
         for (int y = 0; y < frame->height; y++) {
                 for (int x = 0; x < frame->width; x++) {
                         if (get_pixel(frame, x, y) < threshold)
@@ -70,7 +58,7 @@ void lower_threshold_image(greyscale_frame *frame, uint8_t threshold) {
         }
 }
 
-void bitmask_image(greyscale_frame *frame, greyscale_frame *bitmask) {
+void bitmask_image(frame *frame, frame *bitmask) {
         for (int y = 0; y < frame->height; y++) {
                 for (int x = 0; x < frame->width; x++) {
                         if (get_pixel(bitmask, x, y) == 0)
@@ -79,7 +67,7 @@ void bitmask_image(greyscale_frame *frame, greyscale_frame *bitmask) {
         }
 }
 
-void print_image(greyscale_frame *frame) {
+void print_image(frame *frame) {
         for (int y = 0; y < frame->height; y++) {
                 for (int x = 0; x < frame->width; x++) {
                         printf("%d", get_pixel(frame, x, y));
@@ -89,19 +77,19 @@ void print_image(greyscale_frame *frame) {
 }
 
 frame rgb_to_greyscale(frame *frame) {
-	frame greyscale_frame;
-	greyscale_frame.width = frame->width;
-	greyscale_frame.height = frame->height;
-	for (int i = 0; i < frame->width * frame_height; i++) {
-		uint8_t average_colour = round((frame->frame[3 * i] + frame->frame[3 * i + 1] + frame->frame[3 * i + 2]) / 3);
-		greyscale_frame[i] = average_colour;
-        }
-	return greyscale_frame;
+	frame grey;
+	grey.width = frame->width;
+	grey.height = frame->height;
+	for (int i = 0; i < frame->width * frame->height; i++) {
+		uint8_t average_colour = round((frame->img[3 * i] + frame->img[3 * i + 1] + frame->img[3 * i + 2]) / 3);
+		grey.img[i] = average_colour;
+    }
+	return grey;
 }
 
-greyscale_frame convolve_image(greyscale_frame * frame, int kernel[5][5]) {
+frame convolve_image(frame * frame, int kernel[5][5]) {
         uint8_t new_value;
-        greyscale_frame convolved_image;
+        frame convolved_image;
         convolved_image.height = frame->height;
         convolved_image.width = frame->width;
         for (int y = 0; y < frame->height; y++) {
@@ -120,21 +108,24 @@ greyscale_frame convolve_image(greyscale_frame * frame, int kernel[5][5]) {
 
 int main()
 {
-        greyscale_frame frame;
+        printf("hello world");
+        frame frame;
         frame.width = 2;
         frame.height = 2;
-        frame.frame[0] = 2;
-        frame.frame[1] = 4;
-        frame.frame[2] = 8;
-        frame.frame[3] = 9;
+        frame.img = calloc(frame.width * frame.height, sizeof(uint8_t));
+        frame.img[0] = 2;
+        frame.img[1] = 4;
+        frame.img[2] = 8;
+        frame.img[3] = 9;
         
-        greyscale_frame oframe;
+        frame oframe;
         oframe.width = 2;
         oframe.height = 2;
-        oframe.frame[0] = 1;
-        oframe.frame[1] = 1;
-        oframe.frame[2] = 1;
-        oframe.frame[3] = 1;
+        oframe.img = calloc(frame.width * frame.height, sizeof(uint8_t));
+        oframe.img[0] = 1;
+        oframe.img[1] = 1;
+        oframe.img[2] = 1;
+        oframe.img[3] = 1;
         
         int kernel[5][5] = { {  0,  0,  0,  0,  0 },
                                                  {  1,  1,  1,  1,  1 },
@@ -142,41 +133,40 @@ int main()
                                                  {  1,  1,  1,  1,  1 },
                                                  {  0,  0,  0,  0,  0 } };
                                                  
-        greyscale_frame im;
+        frame im;
         im.height = 5;
         im.width = 5;
-        im.frame[0] = 1;
-        im.frame[1] = 1;
-        im.frame[2] = 1;
-        im.frame[3] = 1;
-        im.frame[4] = 1;
-        im.frame[5] = 1;
-        im.frame[6] = 1;
-        im.frame[7] = 1;
-        im.frame[8] = 1;
-        im.frame[9] = 1;
-        im.frame[10] = 1;
-        im.frame[11] = 1;
-        im.frame[12] = 1;
-        im.frame[13] = 1;
-        im.frame[14] = 1;
-        im.frame[15] = 1;
-        im.frame[16] = 1;
-        im.frame[17] = 1;
-        im.frame[18] = 1;
-        im.frame[19] = 1;
-        im.frame[20] = 1;
-        im.frame[21] = 1;
-        im.frame[22] = 1;
-        im.frame[23] = 1;
-        im.frame[24] = 1;
+        im.img[0] = 1;
+        im.img[1] = 1;
+        im.img[2] = 1;
+        im.img[3] = 1;
+        im.img[4] = 1;
+        im.img[5] = 1;
+        im.img[6] = 1;
+        im.img[7] = 1;
+        im.img[8] = 1;
+        im.img[9] = 1;
+        im.img[10] = 1;
+        im.img[11] = 1;
+        im.img[12] = 1;
+        im.img[13] = 1;
+        im.img[14] = 1;
+        im.img[15] = 1;
+        im.img[16] = 1;
+        im.img[17] = 1;
+        im.img[18] = 1;
+        im.img[19] = 1;
+        im.img[20] = 1;
+        im.img[21] = 1;
+        im.img[22] = 1;
+        im.img[23] = 1;
+        im.img[24] = 1;
         add_images(&frame, &oframe);
         
         print_image(&frame);
-        greyscale_frame imm = convolve_image(&im, kernel);
+        frame imm = convolve_image(&im, kernel);
         print_image(&imm);
         
         return 0;
 }
-
 
