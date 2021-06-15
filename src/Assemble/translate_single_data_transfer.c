@@ -41,11 +41,10 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 		char rn[sizeof(address)];
 		strcpy(rn, address);
 		int pos_separator = 0;
-		for (; address[pos_separator] != '\0' && address[pos_separator] != ','; pos_separator++);
+		for (; address[pos_separator] != ','; pos_separator++);
 		rn[pos_separator] = '\0';
-		address += (pos_separator + 2); 
+		for (address++; *address != '#'; address++); address++;
 		instruction_struct_ptr->rn = atoi(rn + 1);
-		if (*address == '#') address++;
 		int offset = strtol(address, NULL, 0);
 		instruction_struct_ptr->up = offset >= 0;
 		instruction_struct_ptr->offset = abs(offset);
@@ -56,7 +55,7 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 
 static void translate_post_indexed(struct Instruction *instruction_struct_ptr, char *address) {
 	address++;
-	char rn[sizeof(address)];
+	char rn[strlen(address)];
 	strcpy(rn, address);
 	//rn = strtok(address, ",");
 	int pos_separator = 0;
