@@ -8,6 +8,7 @@
 #include "instructions.h"
 #include "definitions.h"
 #include "queue.h"
+#include "process_operand2.h"
 
 static void translate_num_const(struct Instruction *instruction_struct_ptr, char *address, struct Queue_Node *node, uint32_t curr_address, uint32_t *end_address) {
 	address++;
@@ -35,7 +36,7 @@ static void translate_pre_indexed_immediate(struct Instruction *instruction_stru
 	instruction_struct_ptr->immediate_offset = false;
 }
 static void translate_pre_indexed_shifted_register(struct Instruction *instruction_struct_ptr, char *address) {
-
+	
 }
 
 static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, char *address) {

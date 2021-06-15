@@ -8,6 +8,7 @@
 #include "split_instructions.h"
 #include "test_translate_data_processing.h"
 #include "shifts.h"
+#include "process_operand2.h"
 // #include "instructions.h"
 
 void set_opcode_cond(char *opcode_string, enum Opcode *opcode_ptr, enum Condition *cond_ptr) {
