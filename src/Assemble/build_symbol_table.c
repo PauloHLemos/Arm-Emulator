@@ -17,9 +17,9 @@ struct ST_Node *build_symbol_table(FILE *stream, uint32_t *address_ptr) {
 		if (strchr(buffer, ':') != NULL) {
 			label = strtok(buffer, ":");
 			add_node(head, label, address);	
-		} else {
+		} else if (strcmp(buffer, "") != 0) {
 			address += 4;
-		}		
+		} 
 	}
 	*address_ptr = address;
 	return head;
