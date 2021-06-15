@@ -47,7 +47,7 @@ static void translate_post_indexed_immediate(struct Instruction *instruction_str
 	int offset = strtol(address, NULL, 0);
 	instruction_struct_ptr->offset = abs(offset);
 	instruction_struct_ptr->up = offset >= 0;
-	instruction_struct_ptr->immediate_offset = true;
+	instruction_struct_ptr->immediate_offset = false;
 }
 
 static void translate_post_indexed_shifted_register(struct Instruction *instruction_struct_ptr, char *address) {
