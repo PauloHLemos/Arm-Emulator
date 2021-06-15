@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include "definitions.h"
 #include "shifts.h"
 
 uint32_t logical_shift_left(uint32_t n, uint32_t spaces, bool *carry_flag_ptr) {
