@@ -19,18 +19,3 @@ FILE *open_file(char *binary_fname){
 void close_file(FILE *file_ptr){
 	fclose(file_ptr);	
 }
-
-// int main(void){
-// 	printf("gg");
-// 	printf("gg");
-// 	uint32_t number = 1234;
-// 	uint32_t *word;
-// 	word = &number;
-// 	printf("gg");
-// 	FILE *file = open_file(("test01"));
-// 	binary_file_writer(file, word);
-// 	binary_file_writer(file, word);
-// 	binary_file_writer(file, word);
-// 	close_file(open_file(("test01")));
-// 	return 0;
-// }

@@ -6,7 +6,6 @@
 
 struct ST_Node *build_symbol_table(FILE *stream, uint32_t *address_ptr) {
 	struct ST_Node* head = initialize();
-	// head->address
 	char *label;
 	uint32_t address = 0;
 	int max_line_length = 512;
@@ -24,8 +23,3 @@ struct ST_Node *build_symbol_table(FILE *stream, uint32_t *address_ptr) {
 	*address_ptr = address;
 	return head;
 }
-
-// int main() {
-// 	printf("Working\n");
-// 	return 0;
-// }
