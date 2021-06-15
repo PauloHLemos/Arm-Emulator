@@ -30,27 +30,28 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 }
 
 static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, char *address) {
+	instruction_struct_ptr->pre_post_indexing = true;
 	address++;
 	address[strlen(address) - 1] = '\0';
-	//rn = strtok(rn, ",");
 	if (strchr(address, ',') == NULL) {
 		instruction_struct_ptr->rn = strtol(address + 1, NULL, 0);
 		instruction_struct_ptr->offset = 0;
 		instruction_struct_ptr->up = true;
+		instruction_struct_ptr->immediate_offset = false;
 	} else {
 		char rn[sizeof(address)];
 		strcpy(rn, address);
 		int pos_separator = 0;
-		for (; address[pos_separator] != ','; pos_separator++);
-		rn[pos_separator] = '\0';
+
+		for (; address[pos_separator] != ','; pos_separator++); rn[pos_separator] = '\0';
 		for (address++; *address != '#'; address++); address++;
+
 		instruction_struct_ptr->rn = strtol(rn + 1, NULL, 0);
 		int offset = strtol(address, NULL, 0);
 		instruction_struct_ptr->up = offset >= 0;
 		instruction_struct_ptr->offset = abs(offset);
+		instruction_struct_ptr->immediate_offset = false;
 	}
-	instruction_struct_ptr->pre_post_indexing = true;
-	instruction_struct_ptr->immediate_offset = false;
 }
 
 static void translate_post_indexed(struct Instruction *instruction_struct_ptr, char *address) {
@@ -61,12 +62,11 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 	int pos_separator = 0;
 	for (; address[pos_separator] != '\0' && address[pos_separator] != ','; pos_separator++);
 	rn[pos_separator] = '\0';
-	address += (pos_separator + 2);
+	for (address++; *address != '#'; address++); address++;
 	instruction_struct_ptr->rn = strtol(rn + 1, NULL, 0);
 	int offset = strtol(address, NULL, 0);
 	instruction_struct_ptr->offset = abs(offset);
 	instruction_struct_ptr->up = offset >= 0;
-	
 	instruction_struct_ptr->pre_post_indexing = false;
 	instruction_struct_ptr->immediate_offset = true;
 }
