@@ -26,9 +26,9 @@ shifts.o: shifts.h definitions.h
 split_instructions.o: split_instructions.h
 translate_branch.o: definitions.h symbol_table/symbol_table.h
 translate.o: binary_file_writer.h convert_instructions.h symbol_table/symbol_table.h
-translate_data_processing.o: definitions.h split_instructions.h shifts.h
+translate_data_processing.o: definitions.h split_instructions.h shifts.h process_operand2.h
 translate_multiply.o: split_instructions.h instructions.h definitions.h
-translate_single_data_transfer.o: split_instructions.h instructions.h definitions.h queue.h
+translate_single_data_transfer.o: split_instructions.h instructions.h definitions.h queue.h process_operand2.h
 binary_file_writer.o: binary_file_writer.h
 
 

@@ -29,14 +29,31 @@ static void translate_num_const(struct Instruction *instruction_struct_ptr, char
 		//set up bit	
 	}	
 }
+
 static void translate_pre_indexed_immediate(struct Instruction *instruction_struct_ptr, char *address) {
 	int offset = strtol(address, NULL, 0);
-	instruction_struct_ptr->up = offset >= 0;
 	instruction_struct_ptr->offset = abs(offset);
+	instruction_struct_ptr->up = offset >= 0;
 	instruction_struct_ptr->immediate_offset = false;
 }
+
 static void translate_pre_indexed_shifted_register(struct Instruction *instruction_struct_ptr, char *address) {
-	
+	instruction_struct_ptr->offset = process_operand2_shifted_register(address);
+	instruction_struct_ptr->up = true;
+	instruction_struct_ptr->immediate_offset = true;
+}
+
+static void translate_post_indexed_immediate(struct Instruction *instruction_struct_ptr, char *address) {
+	int offset = strtol(address, NULL, 0);
+	instruction_struct_ptr->offset = abs(offset);
+	instruction_struct_ptr->up = offset >= 0;
+	instruction_struct_ptr->immediate_offset = true;
+}
+
+static void translate_post_indexed_shifted_register(struct Instruction *instruction_struct_ptr, char *address) {
+	instruction_struct_ptr->offset = process_operand2_shifted_register(address);
+	instruction_struct_ptr->up = true;
+	instruction_struct_ptr->immediate_offset = true;
 }
 
 static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, char *address) {
@@ -63,29 +80,18 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 			translate_pre_indexed_immediate(instruction_struct_ptr, address);
 
 		} else if (*address == 'r') {
-			address++;
 			translate_pre_indexed_shifted_register(instruction_struct_ptr, address);
 		}
 
 	}
 }
 
-static void translate_post_indexed_immediate(struct Instruction *instruction_struct_ptr, char *address) {
-	int offset = strtol(address, NULL, 0);
-	instruction_struct_ptr->offset = abs(offset);
-	instruction_struct_ptr->up = offset >= 0;
-	instruction_struct_ptr->pre_post_indexing = false;
-	instruction_struct_ptr->immediate_offset = true;
-}
-
-static void translate_post_indexed_shifted_register(struct Instruction *instruction_struct_ptr, char *address) {
-
-}
 
 static void translate_post_indexed(struct Instruction *instruction_struct_ptr, char *address) {
 	address++;
 	char rn[strlen(address)];
 	strcpy(rn, address);
+	instruction_struct_ptr->pre_post_indexing = false;
 	
 	int pos_separator = 0;
 	for (; address[pos_separator] != '\0' && address[pos_separator] != ','; pos_separator++);
@@ -98,7 +104,6 @@ static void translate_post_indexed(struct Instruction *instruction_struct_ptr, c
 		translate_post_indexed_immediate(instruction_struct_ptr, address);
 
 	} else if (*address == 'r') {
-		address++;
 		translate_post_indexed_shifted_register(instruction_struct_ptr, address);
 	}
 }
