@@ -32,12 +32,15 @@ uint8_t opcode_to_int(enum Opcode opcode) {
 	}                               
 }                                       
                                         
-void set_bit(uint32_t *number, char bit_no, bool bit_value) {
-	if (bit_value) {
-		*number |= (1 << bit_no);
-	} else {
-		*number &= ~(1 << bit_no);
-	}
+void set_bit(uint32_t *number, char bit_index, bool bit_value) {
+	assert(0 <= bit_index && bit_index <= 31);
+	*number |= (bit_value << bit_index);
+}
+
+void set_bits(uint32_t *number, char no_bits, char first_bit_index, uint32_t value) {
+	assert(value < (1 << no_bits));
+	assert(first_bit_index + no_bits <= 32);
+	*number |= (value << first_bit_index);
 }
 
 uint32_t encode_data_processing(struct Instruction instruction) {
@@ -48,21 +51,17 @@ uint32_t encode_data_processing(struct Instruction instruction) {
 	set_bit(&instruction_binary, 25, instruction.immediate_operand);   // I bit
 
 	// Register setting
-	assert(instruction.rd < (1 << 4));
-	assert(instruction.rn < (1 << 4));
-	instruction_binary |= (instruction.rd << 12);
-	instruction_binary |= (instruction.rn << 16);
+	set_bits(&instruction_binary, 4, 12, instruction.rd);
+	set_bits(&instruction_binary, 4, 16, instruction.rn);
 
 	// Condition setting
-	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+	set_bits(&instruction_binary, 4, 28, cond_to_int(instruction.cond));
 	
 	// Opcode setting
-	instruction_binary |= (opcode_to_int(instruction.opcode) << 21);
+	set_bits(&instruction_binary, 4, 21, opcode_to_int(instruction.opcode));
 	
 	// Operand2 setting
-	assert(instruction.operand2 < (1 << 12));
-	instruction_binary |= instruction.operand2;
-
+	set_bits(&instruction_binary, 12, 0, instruction.operand2);
 	
 	return instruction_binary;
 }
@@ -79,17 +78,13 @@ uint32_t encode_multiply(struct Instruction instruction) {
 	set_bit(&instruction_binary, 21, instruction.accumulate);	   // A bit
 	
 	// Register setting
-	assert(instruction.rn < (1 << 4));
-	assert(instruction.rd < (1 << 4));
-	assert(instruction.rs < (1 << 4));
-	assert(instruction.rm < (1 << 4));
-	instruction_binary |= (instruction.rm);
-	instruction_binary |= (instruction.rs << 8);
-	instruction_binary |= (instruction.accumulate) ? (instruction.rn << 12) : 0;
-	instruction_binary |= (instruction.rd << 16);
+	set_bits(&instruction_binary, 4, 0, instruction.rm);
+	set_bits(&instruction_binary, 4, 8, instruction.rs);
+	set_bits(&instruction_binary, 4, 12, instruction.rn);
+	set_bits(&instruction_binary, 4, 16, instruction.rd);
 	
 	// Condition setting
-	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+	set_bits(&instruction_binary, 4, 28, cond_to_int(instruction.cond));
 
 	return instruction_binary;
 }
@@ -106,17 +101,14 @@ uint32_t encode_single_data_transfer(struct Instruction instruction) {
 	set_bit(&instruction_binary, 25, instruction.immediate_offset);  // I bit
 	
 	// Register setting
-	assert(instruction.rd < (1 << 4));
-	assert(instruction.rn < (1 << 4));
-	instruction_binary |= (instruction.rd << 12);
-	instruction_binary |= (instruction.rn << 16);
+	set_bits(&instruction_binary, 4, 12, instruction.rd);
+	set_bits(&instruction_binary, 4, 16, instruction.rn);
 
 	// Condition setting
-	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+	set_bits(&instruction_binary, 4, 28, cond_to_int(instruction.cond));
 
 	// Offset setting
-	assert(instruction.offset < (1 << 12));
-	instruction_binary |= instruction.offset;
+	set_bits(&instruction_binary, 12, 0, instruction.offset);
 
 	return instruction_binary;
 }
@@ -128,11 +120,10 @@ uint32_t encode_branch(struct Instruction instruction) {
 	set_bit(&instruction_binary, 27, 1);
 
 	// Condition setting
-	instruction_binary |= (cond_to_int(instruction.cond) << 28);
+	set_bits(&instruction_binary, 4, 28, cond_to_int(instruction.cond));
 
 	// Offset setting
-	assert(instruction.offset < (1 << 24));
-	instruction_binary |= instruction.offset;
+	set_bits(&instruction_binary, 24, 0, instruction.offset);
 
 	return instruction_binary;
 }
