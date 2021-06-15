@@ -8,6 +8,6 @@ struct Frame {
 	int height;
 	int num_channels;
 	uint8_t *img;
-};
+} frame;
 
 #endif

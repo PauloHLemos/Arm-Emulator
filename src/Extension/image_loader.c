@@ -9,7 +9,7 @@ struct Frame *load_image(const char *image_path, int desired_channels) {
 	
 	int width, height, orig_num_channels;
 
-	uint8_t* img = stbi_load("image.png", &width, &height, &orig_num_channels, desired_channels);
+	uint8_t* img = stbi_load(image_path, &width, &height, &orig_num_channels, desired_channels);
 	assert(img != NULL);
 	if (desired_channels == 0) {
 		desired_channels = orig_num_channels;
@@ -17,13 +17,13 @@ struct Frame *load_image(const char *image_path, int desired_channels) {
 	printf("Succesfully loaded image of %d channels, into representation with %d channels\n", 
 		orig_num_channels, desired_channels);
 
-	struct Frame *frame = malloc(sizeof(frame));
+	struct Frame *frame_ptr = malloc(sizeof(*frame_ptr));
 	frame->width = width;
 	frame->height = height;
 	frame->num_channels = desired_channels;
 	frame->img = img;
 
-//	stbi_image_free(rgb_image);
+//	stbi_image_free(img);
 
 	return frame;
 }
