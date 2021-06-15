@@ -66,7 +66,7 @@ static void translate_pre_indexed(struct Instruction *instruction_struct_ptr, ch
 		instruction_struct_ptr->up = true;
 		instruction_struct_ptr->immediate_offset = false;
 	} else {
-		char rn[sizeof(address)];
+		char rn[strlen(address)];
 		strcpy(rn, address);
 
 		int pos_separator = 0;
