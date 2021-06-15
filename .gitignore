@@ -1,6 +1,7 @@
 src/Assemble/assemble
 src/Assemble/*.o
-src/Assemble/symbol_table/libsymbol_table.a
+src/Assemble/lib/*.a
+src/Assemble/lib/*.o
 
 src/Emulate/emulate
 src/Emulate/*.o
