@@ -27,7 +27,6 @@ uint32_t convert_instructions(char *instruction, struct ST_Node *st_head_ptr,
 		instruction_struct = translate_data_processing(instruction);
 	}
 
-	// deallocate_queue(queue_node_ptr);
 	return encode(instruction_struct);
 }
 

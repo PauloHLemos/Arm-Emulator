@@ -15,8 +15,6 @@ assemble: assemble.o build_symbol_table.o convert_instructions.o encode.o queue.
 libs:
 	cd symbol_table; make; cd ..;
 
-
-
 assemble.o: build_symbol_table.h translate.h symbol_table/symbol_table.h
 build_symbol_table.o: build_symbol_table.h symbol_table/symbol_table.h
 convert_instructions.o: definitions.h encode.h symbol_table/symbol_table.h instructions.h split_instructions.h queue.h
@@ -26,23 +24,10 @@ shifts.o: shifts.h definitions.h
 split_instructions.o: split_instructions.h
 translate_branch.o: definitions.h symbol_table/symbol_table.h
 translate.o: binary_file_writer.h convert_instructions.h symbol_table/symbol_table.h
-translate_data_processing.o: definitions.h split_instructions.h shifts.h
+translate_data_processing.o: definitions.h split_instructions.h shifts.h process_operand2.h instructions.h
 translate_multiply.o: split_instructions.h instructions.h definitions.h
-translate_single_data_transfer.o: split_instructions.h instructions.h definitions.h queue.h
+translate_single_data_transfer.o: split_instructions.h instructions.h definitions.h queue.h process_operand2.h
 binary_file_writer.o: binary_file_writer.h
-
-
-build_symbol_table: build_symbol_table.o 
-translate_data_processing: translate_data_processing.o split_instructions.o test.o test_translate_data_processing.o shifts.o
-test: translate_multiply.o translate_data_processing.o translate_branch.o translate_single_data_transfer.o encode.o convert_instructions.o shifts.o split_instructions.o
-encode: encode.o test_encode.o
-test_translate_data_processing.o: test_translate_data_processing.h definitions.h instructions.h
-test_encode.o: test_encode.h encode.h definitions.h
-test.o: test.h
-
-
-
-#build_symbol_table.o: symbol_table.h
 
 clean:
 	rm -f $(wildcard *.o)

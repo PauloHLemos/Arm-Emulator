@@ -3,7 +3,6 @@
 #include <assert.h>
 #include "encode.h"
 #include "definitions.h"
-#include "test_encode.h"
 
 uint8_t cond_to_int(enum Condition cond) {
 	switch(cond) {
