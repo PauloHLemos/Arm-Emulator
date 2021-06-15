@@ -3,11 +3,11 @@
 
 #include <stdint.h>
 
-struct Frame {
+typedef struct {
 	int width;
 	int height;
 	int num_channels;
 	uint8_t *img;
-} frame;
+} FRAME;
 
 #endif

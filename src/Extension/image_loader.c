@@ -5,7 +5,7 @@
 #include "stb/stb_image.h"
 #include "image_loader.h"
 
-struct Frame *load_image(const char *image_path, int desired_channels) {
+FRAME *load_image(const char *image_path, int desired_channels) {
 	
 	int width, height, orig_num_channels;
 
@@ -17,24 +17,24 @@ struct Frame *load_image(const char *image_path, int desired_channels) {
 	printf("Succesfully loaded image of %d channels, into representation with %d channels\n", 
 		orig_num_channels, desired_channels);
 
-	struct Frame *frame_ptr = malloc(sizeof(*frame_ptr));
-	frame->width = width;
-	frame->height = height;
-	frame->num_channels = desired_channels;
-	frame->img = img;
+	FRAME *frame_ptr = malloc(sizeof(*frame_ptr));
+	frame_ptr->width = width;
+	frame_ptr->height = height;
+	frame_ptr->num_channels = desired_channels;
+	frame_ptr->img = img;
 
 //	stbi_image_free(img);
 
-	return frame;
+	return frame_ptr;
 }
 
 
-struct Frame *load_rgb(const char *image_path) {
+FRAME *load_rgb(const char *image_path) {
 	return load_image(image_path, 3);
 }
-struct Frame *load_greyscale(const char* image_path) {	
+FRAME *load_greyscale(const char* image_path) {	
 	return load_image(image_path, 1);
 }
-struct Frame *load_full(const char* image_path){
+FRAME *load_full(const char* image_path){
 	return load_image(image_path, 0);
 }
