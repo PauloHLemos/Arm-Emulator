@@ -6,45 +6,30 @@
 #include "symbol_table.h"
 
 // returns address corresponding to label and -1 if label not found.
-bool search_table(struct ST_Node *node, char *label, uint32_t *address_ptr) {
-	while (strcmp(node->label, label) != 0) {
-		if (node->next_ptr == NULL) {
-			return false;
-		}
-		node = node->next_ptr;
+bool search_table(struct ST_Node *node_ptr, char *label, uint32_t *address_ptr) {
+	for (; strcmp(node_ptr->label, label) != 0; node_ptr = node_ptr->next_ptr) {
+		if (node_ptr->next_ptr == NULL) return false;
 	}
-	*address_ptr = node->address;
+	*address_ptr = node_ptr->address;
 	return true;
 }
 
-void add_node(struct ST_Node *node, char *label, uint32_t address) {
-	while (node->next_ptr != NULL) {
-		node = node->next_ptr;
-	}
-	struct ST_Node *new_node = initialize();
-	strcpy(new_node->label, label);
-	new_node->address = address;
-	new_node->next_ptr = NULL;
-	node->next_ptr = new_node;
-}
+void add_node(struct ST_Node *node_ptr, char *label, uint32_t address) {
+	for (; node_ptr->next_ptr != NULL; node_ptr = node_ptr->next_ptr);
 
-static struct ST_Node* allocate_node() {
-	struct ST_Node *node = malloc(sizeof(struct ST_Node));
-	return node;
+	struct ST_Node *new_node_ptr = initialize();
+
+	strcpy(new_node_ptr->label, label);
+	new_node_ptr->address  = address;
+	node_ptr->next_ptr     = new_node_ptr;
 }
 
 struct ST_Node* initialize() {
-	struct ST_Node *node = allocate_node();
-	strcpy(node->label, "");
-	node->next_ptr = NULL;
-	return node;
+	return calloc(1, sizeof(struct ST_Node));
 }
 
-void dealocate(struct ST_Node* node) {
-	struct ST_Node *next;
-	while (node != NULL) {
-		next = node->next_ptr;
-		free(node);
-		node = next;
-	}
+void dealocate(struct ST_Node* node_ptr) {
+	for (struct ST_Node *next_ptr; node_ptr != NULL; next_ptr = node_ptr->next_ptr, 
+							 free(node_ptr), 
+							 node_ptr = next_ptr);
 }
