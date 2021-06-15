@@ -23,8 +23,6 @@ FRAME *load_image(const char *image_path, int desired_channels) {
 	frame_ptr->num_channels = desired_channels;
 	frame_ptr->img = img;
 
-//	stbi_image_free(img);
-
 	return frame_ptr;
 }
 
