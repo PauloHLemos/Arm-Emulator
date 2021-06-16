@@ -59,8 +59,6 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 	FILE *pipeout = popen(out_command, "w");
 	assert(pipeout != NULL);
 
-	uint8_t frame[height * width * 3];
-	uint8_t output_frame[height * width * 3];
 	Frame_Buffer *buffer_ptr = malloc(sizeof(*buffer_ptr));
 	buffer_ptr->width = width;
 	buffer_ptr->height = height;
@@ -75,27 +73,16 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 	bool buffer_filled = false;
 
 	for (count = fread(buffer_ptr->buffer[buffer_ptr->index], 1, height * width * 3, pipein);
-		count  == height * width * 3; 
+		count == height * width * 3; 
 		count = fread(buffer_ptr->buffer[buffer_ptr->index], 1, height * width * 3, pipein)) {
 
-		//buffer_ptr->buffer[buffer_ptr->index] = frame;
-		if (buffer_ptr->index == buffer_size) {
+		if (buffer_ptr->index == (buffer_size - 1)) {
 			buffer_filled = true;
 		}
 		if (buffer_filled) {
-			//run here function
-			// fwrite((*func_ptr)(buffer_ptr), 1, height * width * 3, pipeout);
-			// returns a frame (uint8_t *)
-			//output_frame = (*func_pointer)(buffer_ptr);
-			// should add some assertion on return type
-			/*
-			for (int i = 0 ; i < width * height * 3; ++i) {
-				buffer_ptr->buffer[buffer_ptr->index][i] = 255 - buffer_ptr->buffer[buffer_ptr->index][i];
-			}
-			*/
+			fwrite((*func_ptr)(buffer_ptr), 1, height * width * 3, pipeout);
 		}
 
-		fwrite(buffer_ptr->buffer[buffer_ptr->index], 1, height * width * 3, pipeout);
 		buffer_ptr->index = (buffer_ptr->index + 1) % buffer_size;
 	}
 
@@ -110,6 +97,13 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 	free(buffer_ptr);
 }
 
+uint8_t *invert_pixels(Frame_Buffer* fb_ptr) {
+	for (int i = 0 ; i < fb_ptr->width * fb_ptr->height * 3; ++i) {
+		fb_ptr->buffer[fb_ptr->index][i] = 255 - fb_ptr->buffer[fb_ptr->index][i];
+	}
+	return fb_ptr->buffer[fb_ptr->index];
+}
+
 int main(void) {
-	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, NULL);	
+	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *invert_pixels);	
 }
