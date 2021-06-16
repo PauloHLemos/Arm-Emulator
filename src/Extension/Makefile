@@ -10,13 +10,15 @@ LDLIBS  = -lm
 
 all: main
 
-test: test.o image_loader.o image_storer.o utils.o
+main: main.o image_loader.o image_storer.o utils.o
+test: test.o image_loader.o image_storer.o utils.o image_manipulation.o
 test.o: image_loader.h image_storer.h utils.h
 
 image_loader.o: image_loader.h stb/stb_image.h 
 image_storer.o: image_storer.h stb/stb_image.h stb/stb_image_write.h 
 utils.o: utils.h definitions.h
-main.o: main.c
+main.o: utils.h image_storer.h image_loader.h image_manipulation.h
+image_manipulation.o: image_manipulation.h definitions.h
 
 clean:
 	rm -f $(wildcard *.o)

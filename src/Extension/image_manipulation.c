@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "definitions.h"
+#include "image_manipulation.h"
 
 uint8_t *get_pixel_ptr(Frame *frame_ptr, int x, int y) {
         int index = x + y * frame_ptr->width;
