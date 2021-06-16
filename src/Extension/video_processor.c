@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "definitions.h"
-// #include "video_processor.h"
+#include "video_processor.h"
 
 static int get_width(const char* input_path) {
 	char get_dim_command[200];
