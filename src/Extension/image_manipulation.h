@@ -15,4 +15,4 @@ void print_image(Frame *frame_ptr);
 
 Frame rgb_to_greyscale(Frame *frame_ptr);
 
-Frame convolve_image(Frame *frame_ptr, int kernel[5][5]);
+Frame convolve_image(Frame *frame_ptr, int cols, int kernel[][cols]);

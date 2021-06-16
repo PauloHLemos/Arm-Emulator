@@ -79,34 +79,33 @@ void print_image(Frame *frame_ptr) {
 }
 
 Frame rgb_to_greyscale(Frame *frame_ptr) {
-	Frame *grey_ptr = calloc(1, sizeof(Frame));
-	grey_ptr->img = calloc(3 * frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
-	grey_ptr->width = frame_ptr->width;
+	Frame *grey_ptr  = calloc(1, sizeof(Frame));
+	grey_ptr->img    = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	grey_ptr->width  = frame_ptr->width;
 	grey_ptr->height = frame_ptr->height;
-	grey_ptr->num_channels = 3;
+	grey_ptr->num_channels = 1;
 	for (int i = 0; i < frame_ptr->width * frame_ptr->height; i++) {
 		uint8_t average_colour = round((frame_ptr->img[3 * i] + 
 						frame_ptr->img[3 * i + 1] + 
 		        			frame_ptr->img[3 * i + 2]) / 3);
-		grey_ptr->img[3 * i]     = average_colour;
-		grey_ptr->img[3 * i + 1] = average_colour;
-		grey_ptr->img[3 * i + 2] = average_colour;
+		grey_ptr->img[i] = average_colour;
 	}
 
 	return *grey_ptr;
 }
 
-Frame convolve_image(Frame *frame_ptr, int kernel[5][5]) {
+Frame convolve_image(Frame *frame_ptr, int cols, int kernel[][cols]) {
         uint8_t new_value;
-        Frame convolved_image;
-        convolved_image.height = frame_ptr->height;
-        convolved_image.width = frame_ptr->width;
+        Frame convolved_image = rgb_to_greyscale(frame_ptr);
+	uint8_t max_offset = cols / 2;
+
         for (int y = 0; y < frame_ptr->height; y++) {
                 for (int x = 0; x < frame_ptr->width; x++) {
                         new_value = 0;
-                        for (int y_off = -2; y_off < 2; y_off++) {
-                                for (int x_off = -2; x_off < 2; x_off++) {
-                                        new_value += kernel[y_off][x_off] * get_pixel(frame_ptr, x + x_off, y + y_off);
+                        for (int y_off = -1 * max_offset; y_off <= max_offset; y_off++) {
+                                for (int x_off = -1 * max_offset; x_off <= max_offset; x_off++) {
+                                        new_value += kernel[max_offset + y_off][max_offset + x_off] * 
+						     get_pixel(frame_ptr, x + x_off, y + y_off);
                                 }
                         }
                         set_pixel(&convolved_image, new_value, x, y);
