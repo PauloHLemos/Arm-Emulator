@@ -37,9 +37,11 @@ FRAME *load_full(const char* image_path){
 	return load_image(image_path, 0);
 }
 
+/*
 int main(void) {
 	FRAME *frame_ptr = load_image("samples/aeroplane.png", 3);
 	printf("width: %d, height %d, num_channel:s %d, size of arr: %ld.\n", frame_ptr->width, frame_ptr->height, 
 		frame_ptr->num_channels, sizeof(frame_ptr->img));
 	return 0;
 }
+*/

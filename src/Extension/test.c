@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "utils.h"
 #include "image_loader.h"
 #include "image_storer.h"
 #include "definitions.h"
