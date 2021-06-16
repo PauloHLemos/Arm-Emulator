@@ -6,8 +6,9 @@
 #include "symbol_table.h"
 #include "queue.h"
 
-bool is_label(char *instruction);
-uint32_t reverse_bytes(uint32_t bytes);
+bool is_label(char *instruction) {
+	return strchr(instruction, ':') != NULL;
+}
 
 void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename, uint32_t *end_address) {
 	int max_line_length = 512;
@@ -19,11 +20,13 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename,
 
 	while(fgets(buffer, max_line_length, stream)) {
 		buffer[strcspn(buffer, "\n")] = 0;
-		if (strcmp(buffer, "") == 0) continue;
-		if (!is_label(buffer)) {
-			translated_instruction = convert_instructions(buffer, st_head_ptr, queue_node_ptr, 
-				current_address, end_address);
-			uint32_t reversed_translated_instruction = reverse_bytes(translated_instruction);
+		if (!is_label(buffer) && strcmp(buffer, "") != 0) {
+			translated_instruction = 
+				convert_instructions(buffer, 
+						     st_head_ptr, 
+					      	     queue_node_ptr, 
+					      	     current_address, 
+					      	     end_address);
 			binary_file_writer(output_stream, &translated_instruction);
 			current_address += 4;
 		}		
@@ -37,14 +40,3 @@ void translate(FILE *stream, struct ST_Node *st_head_ptr, char *output_filename,
 	close_file(output_stream);
 }
 
-uint32_t reverse_bytes(uint32_t bytes) {
-	int32_t temp = bytes << 24;
-	temp |= ((bytes & 0b1111111100000000) << 8);
-	temp |= ((bytes >> 8) & 0b1111111100000000);
-	temp |= ((bytes >> 24) & 0b11111111);
-	return temp;
-}
-
-bool is_label(char *instruction) {
-	return strchr(instruction, ':') != NULL;
-}

@@ -4,100 +4,100 @@
 #include <stdlib.h>
 #include "definitions.h"
 
-uint8_t *get_pixel_ptr(frame *frame, int x, int y) {
-        int index = x + y * frame->width;
-        return (frame->img + index);
+uint8_t *get_pixel_ptr(Frame *frame_ptr, int x, int y) {
+        int index = x + y * frame_ptr->width;
+        return (frame_ptr->img + index);
 }
 
-uint8_t get_pixel(frame *frame, int x, int y) {
-        if (x < 0 || x >= frame->width || y < 0 || y >= frame->height) 
+uint8_t get_pixel(Frame *frame_ptr, int x, int y) {
+        if (x < 0 || x >= frame_ptr->width || y < 0 || y >= frame_ptr->height) 
                 return 0;
-        return *get_pixel_ptr(frame, x, y);
+        return *get_pixel_ptr(frame_ptr, x, y);
 }
 
-void set_pixel(frame *frame, uint8_t value, int x, int y) {
-        *get_pixel_ptr(frame, x, y) = value;
+void set_pixel(Frame *frame_ptr, uint8_t value, int x, int y) {
+        *get_pixel_ptr(frame_ptr, x, y) = value;
 }
 
-void add_images(frame *frame1, frame *frame2) {
+void add_images(Frame *frame1_ptr, Frame *frame2_ptr) {
         uint8_t new_value;
-        for (int y = 0; y < frame1->height; y++) {
-                for (int x = 0; x < frame1->width; x++) {
-                        new_value = get_pixel(frame1, x, y) + get_pixel(frame2, x, y);
-                        set_pixel(frame1, new_value, x, y);
+        for (int y = 0; y < frame1_ptr->height; y++) {
+                for (int x = 0; x < frame1_ptr->width; x++) {
+                        new_value = get_pixel(frame1_ptr, x, y) + get_pixel(frame2_ptr, x, y);
+                        set_pixel(frame1_ptr, new_value, x, y);
                 }
         }
 }
 
-void subtract_images(frame *frame1, frame *frame2) {
+void subtract_images(Frame *frame1_ptr, Frame *frame2_ptr) {
         uint8_t new_value;
-        for (int y = 0; y < frame1->height; y++) {
-                for (int x = 0; x < frame1->width; x++) {
-                        new_value = get_pixel(frame1, x, y) - get_pixel(frame2, x, y);
-                        set_pixel(frame1, new_value, x, y);
+        for (int y = 0; y < frame1_ptr->height; y++) {
+                for (int x = 0; x < frame1_ptr->width; x++) {
+                        new_value = get_pixel(frame1_ptr, x, y) - get_pixel(frame2_ptr, x, y);
+                        set_pixel(frame1_ptr, new_value, x, y);
                 }
         }
 }
 
-void multiply_image(frame *frame, float multiple) {
+void multiply_image(Frame *frame_ptr, float multiple) {
 	uint8_t new_value;
-	for (int y = 0; y < frame->height; y++) {
-                for (int x = 0; x < frame->width; x++) {
-                        new_value = round(get_pixel(frame, x, y) * multiple);
-                        set_pixel(frame, new_value, x, y);
+	for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
+                        new_value = round(get_pixel(frame_ptr, x, y) * multiple);
+                        set_pixel(frame_ptr, new_value, x, y);
                 }
         }
 }
 
-void lower_threshold_image(frame *frame, uint8_t threshold) {
-        for (int y = 0; y < frame->height; y++) {
-                for (int x = 0; x < frame->width; x++) {
-                        if (get_pixel(frame, x, y) < threshold)
-                                set_pixel(frame, 0, x, y);
+void lower_threshold_image(Frame *frame_ptr, uint8_t threshold) {
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
+                        if (get_pixel(frame_ptr, x, y) < threshold)
+                                set_pixel(frame_ptr, 0, x, y);
                 }
         }
 }
 
-void bitmask_image(frame *frame, frame *bitmask) {
-        for (int y = 0; y < frame->height; y++) {
-                for (int x = 0; x < frame->width; x++) {
+void bitmask_image(Frame *frame_ptr, Frame *bitmask) {
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
                         if (get_pixel(bitmask, x, y) == 0)
-                                set_pixel(frame, 0, x, y);
+                                set_pixel(frame_ptr, 0, x, y);
                 }
         }
 }
 
-void print_image(frame *frame) {
-        for (int y = 0; y < frame->height; y++) {
-                for (int x = 0; x < frame->width; x++) {
-                        printf("%d", get_pixel(frame, x, y));
+void print_image(Frame *frame_ptr) {
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
+                        printf("%d", get_pixel(frame_ptr, x, y));
                 }
                 printf("\n");
         }
 }
 
-frame rgb_to_greyscale(frame *frame) {
-	frame grey;
-	grey.width = frame->width;
-	grey.height = frame->height;
-	for (int i = 0; i < frame->width * frame->height; i++) {
-		uint8_t average_colour = round((frame->img[3 * i] + frame->img[3 * i + 1] + frame->img[3 * i + 2]) / 3);
+Frame rgb_to_greyscale(Frame *frame_ptr) {
+	Frame grey;
+	grey.width = frame_ptr->width;
+	grey.height = frame_ptr->height;
+	for (int i = 0; i < frame_ptr->width * frame_ptr->height; i++) {
+		uint8_t average_colour = round((frame_ptr->img[3 * i] + frame_ptr->img[3 * i + 1] + frame_ptr->img[3 * i + 2]) / 3);
 		grey.img[i] = average_colour;
     }
 	return grey;
 }
 
-frame convolve_image(frame * frame, int kernel[5][5]) {
+Frame convolve_image(Frame *frame_ptr, int kernel[5][5]) {
         uint8_t new_value;
-        frame convolved_image;
-        convolved_image.height = frame->height;
-        convolved_image.width = frame->width;
-        for (int y = 0; y < frame->height; y++) {
-                for (int x = 0; x < frame->width; x++) {
+        Frame convolved_image;
+        convolved_image.height = frame_ptr->height;
+        convolved_image.width = frame_ptr->width;
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
                         new_value = 0;
                         for (int y_off = -2; y_off < 2; y_off++) {
                                 for (int x_off = -2; x_off < 2; x_off++) {
-                                        new_value += kernel[y_off][x_off] * get_pixel(frame, x + x_off, y + y_off);
+                                        new_value += kernel[y_off][x_off] * get_pixel(frame_ptr, x + x_off, y + y_off);
                                 }
                         }
                         set_pixel(&convolved_image, new_value, x, y);
@@ -109,7 +109,7 @@ frame convolve_image(frame * frame, int kernel[5][5]) {
 int main()
 {
         printf("hello world");
-        frame frame;
+        Frame frame;
         frame.width = 2;
         frame.height = 2;
         frame.img = calloc(frame.width * frame.height, sizeof(uint8_t));

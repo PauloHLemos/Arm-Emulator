@@ -1,18 +1,18 @@
 #include <stdint.h>
 #include "definitions.h"
 
-void add_images(frame *frame1, frame *frame2);
+void add_images(Frame *frame1_ptr, Frame *frame2_ptr);
 
-void subtract_images(frame *frame1, frame *frame2);
+void subtract_images(Frame *frame1_ptr, Frame *frame2_ptr);
 
-void multiply_image(frame *frame, float multiple);
+void multiply_image(Frame *frame_ptr, float multiple);
 
-void lower_threshold_image(frame *frame, uint8_t threshold);
+void lower_threshold_image(Frame *frame_ptr, uint8_t threshold);
 
-void bitmask_image(frame *frame, frame *bitmask);
+void bitmask_image(Frame *frame_ptr, Frame *bitmask_ptr);
 
-void print_image(frame *frame);
+void print_image(Frame *frame_ptr);
 
-frame rgb_to_greyscale(frame *frame);
+Frame rgb_to_greyscale(Frame *frame_ptr);
 
-frame convolve_image(frame *frame, int kernel[5][5]);
+Frame convolve_image(Frame *frame_ptr, int kernel[5][5]);
