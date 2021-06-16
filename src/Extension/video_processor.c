@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "definitions.h"
 // #include "video_processor.h"
 
@@ -33,7 +34,8 @@ static int get_height(const char* input_path) {
 	return atoi(dimension);
 }
 
-void process_video(const char* input_path, const char* output_path, int buffer_size /*, array of function pointers*/) {
+void process_video(const char* input_path, const char* output_path, int buffer_size,
+		uint8_t *(*func_ptr)(Frame_Buffer *)) {
 	int x, y, count;
 	int width = get_width(input_path);
 	int height = get_height(input_path);
@@ -58,25 +60,42 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 	assert(pipeout != NULL);
 
 	uint8_t frame[height * width * 3];
-	// apparently just this declaration by itself breaks the code
-	// uint8_t frame_buffer[buffer_size][height * width * 3];
+	uint8_t output_frame[height * width * 3];
+	Frame_Buffer *buffer_ptr = malloc(sizeof(*buffer_ptr));
+	buffer_ptr->width = width;
+	buffer_ptr->height = height;
+	buffer_ptr->num_channels = 3;
+	buffer_ptr->buffer_size = buffer_size;
+	buffer_ptr->index = 0;
 	uint8_t *buffer[buffer_size];
 	for (int i = 0; i < buffer_size; i++) {
 		buffer[i] = (uint8_t *) malloc(height * width * 3 * sizeof(uint8_t));
 	}
+	buffer_ptr->buffer = buffer; 
+	bool buffer_filled = false;
 
-	int buffer_index = 0;
 	for (count = fread(frame, 1, height * width * 3, pipein);
 		count  == height * width * 3; count = fread(frame, 1, height * width * 3, pipein)) {
 
-		buffer[buffer_index] = frame;
-		
-		for (int i = 0 ; i < width * height * 3; ++i) {
-		    buffer[buffer_index][i] = 255 - buffer[buffer_index][i];
+		buffer_ptr->buffer[buffer_ptr->index] = frame;
+		if (buffer_ptr->index == buffer_size) {
+			buffer_filled = true;
 		}
-		 
-		fwrite(buffer[buffer_index], 1, height * width * 3, pipeout);
-		buffer_index = (buffer_index + 1) % buffer_size;
+		if (buffer_filled) {
+			//run here function
+			// fwrite((*func_ptr)(buffer_ptr), 1, height * width * 3, pipeout);
+			// returns a frame (uint8_t *)
+			//output_frame = (*func_pointer)(buffer_ptr);
+			// should add some assertion on return type
+			/*
+			for (int i = 0 ; i < width * height * 3; ++i) {
+				buffer_ptr->buffer[buffer_ptr->index][i] = 255 - buffer_ptr->buffer[buffer_ptr->index][i];
+			}
+			*/
+		}
+
+		fwrite(buffer_ptr->buffer[buffer_ptr->index], 1, height * width * 3, pipeout);
+		buffer_ptr->index = (buffer_ptr->index + 1) % buffer_size;
 	}
 
 	// Flush and close input and output pipes
@@ -87,5 +106,5 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 }
 
 int main(void) {
-	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3);	
+	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, NULL);	
 }

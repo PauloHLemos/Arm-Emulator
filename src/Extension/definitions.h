@@ -10,4 +10,14 @@ typedef struct {
 	uint8_t *img;
 } FRAME;
 
+typedef struct {
+	int width;
+	int height;
+	int num_channels;
+	int buffer_size;
+	int index;
+	uint8_t **buffer;
+
+} Frame_Buffer;
+
 #endif
