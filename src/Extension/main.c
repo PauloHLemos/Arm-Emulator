@@ -8,9 +8,12 @@
 #include "generate_kernel.h"
 
 int main(void) {
-       double laplacian[][3] = { {  0,  -1,  0 },
-				 {  -1,  4,  -1 },
-       			      	 {  0,  -1,  0 } };
+        double laplacian[][3] = { {  0,  -1,  0 },
+				  {  -1,  4,  -1 },
+       			      	  {  0,  -1,  0 } };
+        double laplacian2[][3] = { {  -1,  -1,  -1 },
+				   {  -1,  8,  -1 },
+       			      	   {  -1,  -1,  -1 } };
 	Frame *frame_ptr = load_image("samples/FMmY6.png", 3);
 
 	double **blur = generate_blur(5);
