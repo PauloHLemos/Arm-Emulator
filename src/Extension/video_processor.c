@@ -74,10 +74,11 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 	buffer_ptr->buffer = buffer; 
 	bool buffer_filled = false;
 
-	for (count = fread(frame, 1, height * width * 3, pipein);
-		count  == height * width * 3; count = fread(frame, 1, height * width * 3, pipein)) {
+	for (count = fread(buffer_ptr->buffer[buffer_ptr->index], 1, height * width * 3, pipein);
+		count  == height * width * 3; 
+		count = fread(buffer_ptr->buffer[buffer_ptr->index], 1, height * width * 3, pipein)) {
 
-		buffer_ptr->buffer[buffer_ptr->index] = frame;
+		//buffer_ptr->buffer[buffer_ptr->index] = frame;
 		if (buffer_ptr->index == buffer_size) {
 			buffer_filled = true;
 		}
@@ -103,6 +104,10 @@ void process_video(const char* input_path, const char* output_path, int buffer_s
 	pclose(pipein);
 	fflush(pipeout);
 	pclose(pipeout);
+	for (int i = 0; i < buffer_ptr->buffer_size; i++) {
+		free(buffer_ptr->buffer[i]);
+	}
+	free(buffer_ptr);
 }
 
 int main(void) {
