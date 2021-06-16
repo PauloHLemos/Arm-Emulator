@@ -7,6 +7,10 @@ void deallocate_frame(Frame *frame_ptr) {
 	free(frame_ptr);
 }
 
+void deallocate_img(Frame *frame_ptr) {
+	free(frame_ptr->img);
+}
+
 uint8_t *avg_arrays(uint8_t* arr1, uint8_t* arr2) {
 	assert(sizeof(arr1) == sizeof(arr2));
 	uint8_t *res = malloc(sizeof(arr1));

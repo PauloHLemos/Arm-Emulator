@@ -28,10 +28,7 @@ void add_images(Frame *frame1_ptr, Frame *frame2_ptr) {
                 for (int x = 0; x < frame1_ptr->width; x++) {
                         new_value = get_pixel(frame1_ptr, x, y) + get_pixel(frame2_ptr, x, y);
                         set_pixel(frame1_ptr, new_value, x, y);
-                }
-        }
-}
-
+                } } } 
 void subtract_images(Frame *frame1_ptr, Frame *frame2_ptr) {
         uint8_t new_value;
         for (int y = 0; y < frame1_ptr->height; y++) {
@@ -80,29 +77,30 @@ void print_image(Frame *frame_ptr) {
 }
 
 Frame rgb_to_greyscale(Frame *frame_ptr) {
-	Frame *grey_ptr  = calloc(1, sizeof(Frame));
-	grey_ptr->img    = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
-	grey_ptr->width  = frame_ptr->width;
-	grey_ptr->height = frame_ptr->height;
-	grey_ptr->num_channels = 1;
+	Frame grey;
+	grey.img          = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	grey.width        = frame_ptr->width;
+	grey.height       = frame_ptr->height;
+	grey.num_channels = 1;
 	for (int i = 0; i < frame_ptr->width * frame_ptr->height; i++) {
 		uint8_t average_colour = round((frame_ptr->img[3 * i] + 
 						frame_ptr->img[3 * i + 1] + 
 		        			frame_ptr->img[3 * i + 2]) / 3);
-		grey_ptr->img[i] = average_colour;
+		grey.img[i] = average_colour;
 	}
 
-	return *grey_ptr;
+	return grey;
 }
 
 Frame convolve_image(Frame *frame_ptr, int cols, double kernel[][cols]) {
 	assert(frame_ptr->num_channels == 1);
         uint8_t new_value;
         Frame convolved_image;
-	convolved_image.img    = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
-	convolved_image.width  = frame_ptr->width;
-	convolved_image.height = frame_ptr->height;
+	convolved_image.img	     = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	convolved_image.width  	     = frame_ptr->width;
+	convolved_image.height 	     = frame_ptr->height;
 	convolved_image.num_channels = 1;
+
 	uint8_t max_offset = cols / 2;
 
         for (int y = 0; y < frame_ptr->height; y++) {
