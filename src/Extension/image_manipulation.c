@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #include "definitions.h"
 #include "image_manipulation.h"
 
@@ -78,14 +79,21 @@ void print_image(Frame *frame_ptr) {
 }
 
 Frame rgb_to_greyscale(Frame *frame_ptr) {
-	Frame grey;
-	grey.width = frame_ptr->width;
-	grey.height = frame_ptr->height;
+	Frame *grey_ptr = calloc(1, sizeof(Frame));
+	grey_ptr->img = calloc(3 * frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	grey_ptr->width = frame_ptr->width;
+	grey_ptr->height = frame_ptr->height;
+	grey_ptr->num_channels = 3;
 	for (int i = 0; i < frame_ptr->width * frame_ptr->height; i++) {
-		uint8_t average_colour = round((frame_ptr->img[3 * i] + frame_ptr->img[3 * i + 1] + frame_ptr->img[3 * i + 2]) / 3);
-		grey.img[i] = average_colour;
-    }
-	return grey;
+		uint8_t average_colour = round((frame_ptr->img[3 * i] + 
+						frame_ptr->img[3 * i + 1] + 
+		        			frame_ptr->img[3 * i + 2]) / 3);
+		grey_ptr->img[3 * i]     = average_colour;
+		grey_ptr->img[3 * i + 1] = average_colour;
+		grey_ptr->img[3 * i + 2] = average_colour;
+	}
+
+	return *grey_ptr;
 }
 
 Frame convolve_image(Frame *frame_ptr, int kernel[5][5]) {
@@ -107,67 +115,67 @@ Frame convolve_image(Frame *frame_ptr, int kernel[5][5]) {
         return convolved_image;
 }
 
-int main()
-{
-        printf("hello world");
-        Frame frame;
-        frame.width = 2;
-        frame.height = 2;
-        frame.img = calloc(frame.width * frame.height, sizeof(uint8_t));
-        frame.img[0] = 2;
-        frame.img[1] = 4;
-        frame.img[2] = 8;
-        frame.img[3] = 9;
-        
-        frame oframe;
-        oframe.width = 2;
-        oframe.height = 2;
-        oframe.img = calloc(frame.width * frame.height, sizeof(uint8_t));
-        oframe.img[0] = 1;
-        oframe.img[1] = 1;
-        oframe.img[2] = 1;
-        oframe.img[3] = 1;
-        
-        int kernel[5][5] = { {  0,  0,  0,  0,  0 },
-                                                 {  1,  1,  1,  1,  1 },
-                                                 {  0,  0,  0,  0,  0 },
-                                                 {  1,  1,  1,  1,  1 },
-                                                 {  0,  0,  0,  0,  0 } };
-                                                 
-        frame im;
-        im.height = 5;
-        im.width = 5;
-        im.img[0] = 1;
-        im.img[1] = 1;
-        im.img[2] = 1;
-        im.img[3] = 1;
-        im.img[4] = 1;
-        im.img[5] = 1;
-        im.img[6] = 1;
-        im.img[7] = 1;
-        im.img[8] = 1;
-        im.img[9] = 1;
-        im.img[10] = 1;
-        im.img[11] = 1;
-        im.img[12] = 1;
-        im.img[13] = 1;
-        im.img[14] = 1;
-        im.img[15] = 1;
-        im.img[16] = 1;
-        im.img[17] = 1;
-        im.img[18] = 1;
-        im.img[19] = 1;
-        im.img[20] = 1;
-        im.img[21] = 1;
-        im.img[22] = 1;
-        im.img[23] = 1;
-        im.img[24] = 1;
-        add_images(&frame, &oframe);
-        
-        print_image(&frame);
-        frame imm = convolve_image(&im, kernel);
-        print_image(&imm);
-        
-        return 0;
-}
+// int main()
+// {
+//         printf("hello world");
+//         Frame frame;
+//         frame.width = 2;
+//         frame.height = 2;
+//         frame.img = calloc(frame.width * frame.height, sizeof(uint8_t));
+//         frame.img[0] = 2;
+//         frame.img[1] = 4;
+//         frame.img[2] = 8;
+//         frame.img[3] = 9;
+//         
+//         Frame oframe;
+//         oframe.width = 2;
+//         oframe.height = 2;
+//         oframe.img = calloc(frame.width * frame.height, sizeof(uint8_t));
+//         oframe.img[0] = 1;
+//         oframe.img[1] = 1;
+//         oframe.img[2] = 1;
+//         oframe.img[3] = 1;
+//         
+//         int kernel[5][5] = { {  0,  0,  0,  0,  0 },
+//                                                  {  1,  1,  1,  1,  1 },
+//                                                  {  0,  0,  0,  0,  0 },
+//                                                  {  1,  1,  1,  1,  1 },
+//                                                  {  0,  0,  0,  0,  0 } };
+//                                                  
+//         Frame im;
+//         im.height = 5;
+//         im.width = 5;
+//         im.img[0] = 1;
+//         im.img[1] = 1;
+//         im.img[2] = 1;
+//         im.img[3] = 1;
+//         im.img[4] = 1;
+//         im.img[5] = 1;
+//         im.img[6] = 1;
+//         im.img[7] = 1;
+//         im.img[8] = 1;
+//         im.img[9] = 1;
+//         im.img[10] = 1;
+//         im.img[11] = 1;
+//         im.img[12] = 1;
+//         im.img[13] = 1;
+//         im.img[14] = 1;
+//         im.img[15] = 1;
+//         im.img[16] = 1;
+//         im.img[17] = 1;
+//         im.img[18] = 1;
+//         im.img[19] = 1;
+//         im.img[20] = 1;
+//         im.img[21] = 1;
+//         im.img[22] = 1;
+//         im.img[23] = 1;
+//         im.img[24] = 1;
+//         add_images(&frame, &oframe);
+//         
+//         print_image(&frame);
+//         Frame imm = convolve_image(&im, kernel);
+//         print_image(&imm);
+//         
+//         return 0;
+// }
 

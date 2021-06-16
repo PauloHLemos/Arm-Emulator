@@ -10,7 +10,7 @@ LDLIBS  = -lm
 
 all: main
 
-main: main.o image_loader.o image_storer.o utils.o
+main: main.o image_loader.o image_storer.o utils.o image_manipulation.o
 test: test.o image_loader.o image_storer.o utils.o image_manipulation.o
 test.o: image_loader.h image_storer.h utils.h
 

@@ -7,7 +7,9 @@
 
 int main(void) {
 	Frame *frame_ptr = load_image("samples/aeroplane.png", 3);
-	store_image(frame_ptr, "test_out.jpeg");
+	Frame greyscale_frame = rgb_to_greyscale(frame_ptr);
+	store_image(&greyscale_frame, "test_out.png");
+	//deallocate_frame(&greyscale_frame);
 	deallocate_frame(frame_ptr);
 	return 0;
 }

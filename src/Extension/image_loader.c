@@ -9,7 +9,7 @@ Frame *load_image(const char *image_path, int desired_channels) {
 	
 	int width, height, orig_num_channels;
 
-	uint8_t* img = stbi_load(image_path, &width, &height, &orig_num_channels, desired_channels);
+	uint8_t *img = stbi_load(image_path, &width, &height, &orig_num_channels, desired_channels);
 	assert(img != NULL);
 	if (desired_channels == 0) {
 		desired_channels = orig_num_channels;

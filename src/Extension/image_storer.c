@@ -6,6 +6,10 @@
 #include "image_storer.h"
 
 Frame *store_image(Frame *frame_ptr, const char *store_path) {
-	stbi_write_png(store_path, frame_ptr->width, frame_ptr->height, frame_ptr->num_channels, frame_ptr->img,
-		frame_ptr->width * frame_ptr->num_channels);
+	stbi_write_png(store_path, 
+		       frame_ptr->width, 
+		       frame_ptr->height, 
+		       frame_ptr->num_channels, 
+		       frame_ptr->img,
+		       frame_ptr->width * frame_ptr->num_channels);
 }
