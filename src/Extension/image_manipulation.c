@@ -95,7 +95,7 @@ Frame rgb_to_greyscale(Frame *frame_ptr) {
 	return *grey_ptr;
 }
 
-Frame convolve_image(Frame *frame_ptr, int cols, int kernel[][cols]) {
+Frame convolve_image(Frame *frame_ptr, int cols, double kernel[][cols]) {
 	assert(frame_ptr->num_channels == 1);
         uint8_t new_value;
         Frame convolved_image;
