@@ -96,7 +96,12 @@ Frame rgb_to_greyscale(Frame *frame_ptr) {
 
 Frame convolve_image(Frame *frame_ptr, int cols, int kernel[][cols]) {
         uint8_t new_value;
-        Frame convolved_image = rgb_to_greyscale(frame_ptr);
+        Frame greyscale_image = rgb_to_greyscale(frame_ptr);
+        Frame convolved_image;
+	convolved_image.img    = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	convolved_image.width  = frame_ptr->width;
+	convolved_image.height = frame_ptr->height;
+	convolved_image.num_channels = 1;
 	uint8_t max_offset = cols / 2;
 
         for (int y = 0; y < frame_ptr->height; y++) {
@@ -105,7 +110,7 @@ Frame convolve_image(Frame *frame_ptr, int cols, int kernel[][cols]) {
                         for (int y_off = -1 * max_offset; y_off <= max_offset; y_off++) {
                                 for (int x_off = -1 * max_offset; x_off <= max_offset; x_off++) {
                                         new_value += kernel[max_offset + y_off][max_offset + x_off] * 
-						     get_pixel(frame_ptr, x + x_off, y + y_off);
+						     get_pixel(&greyscale_image, x + x_off, y + y_off);
                                 }
                         }
                         set_pixel(&convolved_image, new_value, x, y);

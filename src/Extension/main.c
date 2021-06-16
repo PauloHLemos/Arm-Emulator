@@ -19,7 +19,7 @@ int main(void) {
        			  {  1,  1,  1 } };
 	Frame *frame_ptr = load_image("samples/oldestmanthumb.jpg", 3);
 	Frame convolved_image = convolve_image(frame_ptr, 3, sobel);
-	store_image(frame_ptr, "test_out.png");
+	store_image(&convolved_image, "test_out.png");
 	//deallocate_frame(&greyscale_frame);
 	deallocate_frame(frame_ptr);
 	return 0;
