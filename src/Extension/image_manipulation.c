@@ -39,6 +39,24 @@ void subtract_images(Frame *frame1_ptr, Frame *frame2_ptr) {
         }
 }
 
+void absolute_difference(Frame *frame1_ptr, Frame *frame2_ptr) {
+        uint8_t new_value;
+        for (int y = 0; y < frame1_ptr->height; y++) {
+                for (int x = 0; x < frame1_ptr->width; x++) {
+                        new_value = abs(get_pixel(frame1_ptr, x, y) - get_pixel(frame2_ptr, x, y));
+                        set_pixel(frame1_ptr, new_value, x, y);
+                }
+        }
+}
+
+void invert_image(Frame *frame_ptr) {
+        for (int y = 0; y < frame1_ptr->height; y++) {
+                for (int x = 0; x < frame1_ptr->width; x++) {
+                        set_pixel(frame_ptr, 255 - get_pixel(frame_ptr, x, y), x, y);
+                }
+        }
+}
+
 void multiply_image(Frame *frame_ptr, float multiple) {
 	uint8_t new_value;
 	for (int y = 0; y < frame_ptr->height; y++) {
@@ -95,7 +113,7 @@ void fill_right(Frame *frame_ptr, Frame *mask_ptr, uint8_t threshold) {
                         if (get_pixel(frame_ptr, x, y) > threshold) {
 				break;
 			} else {
-				set_pixel(mask_ptr, 1, x, y);
+				set_pixel(mask_ptr, 255, x, y);
 			}
                 }
         }
