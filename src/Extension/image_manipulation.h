@@ -13,6 +13,8 @@ void lower_threshold_image(Frame *frame_ptr, uint8_t threshold);
 
 void bitmask_image(Frame *frame_ptr, Frame *bitmask_ptr);
 
+void invert_bitmask(Frame *bitmask_ptr);
+
 void print_image(Frame *frame_ptr);
 
 Frame rgb_to_greyscale(Frame *frame_ptr);

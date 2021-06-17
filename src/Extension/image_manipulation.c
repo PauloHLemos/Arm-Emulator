@@ -97,6 +97,16 @@ void bitmask_image(Frame *frame_ptr, Frame *bitmask) {
         }
 }
 
+void invert_bitmask(Frame *bitmask_ptr) {
+	for (int i = 0; i < bitmask->width * bitmask->height; i++) {
+		if (bitmask_ptr->img[i] == 0) {
+			bitmask_ptr->img[i] = 255;
+		} else {
+			bitmask_ptr->img[i] = 0;
+		}
+	}
+}
+
 void print_image(Frame *frame_ptr) {
         for (int y = 0; y < frame_ptr->height; y++) {
                 for (int x = 0; x < frame_ptr->width; x++) {
