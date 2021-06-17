@@ -104,6 +104,6 @@ uint8_t *invert_pixels(Frame_Buffer* fb_ptr) {
 	return fb_ptr->buffer[fb_ptr->index];
 }
 
-int main(void) {
-	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *invert_pixels);	
-}
+// int main(void) {
+// 	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *invert_pixels);	
+// }

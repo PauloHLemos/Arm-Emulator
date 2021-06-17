@@ -1,11 +1,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "definitions.h"
 #include "utils.h"
 #include "image_storer.h"
 #include "image_loader.h"
 #include "image_manipulation.h"
 #include "generate_kernel.h"
+#include "video_processor.h"
 
 int main(void) {
         double laplacian[][3] = { {  0,  -1,  0 },
@@ -31,5 +33,8 @@ int main(void) {
 	deallocate_img(&grayscale_image_blur);
 	deallocate_img(&convolved_image);
 	deallocate_img(&convolved_image_blur);
+
+ 	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *invert_pixels);	
+
 	return 0;
 }

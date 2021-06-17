@@ -2,6 +2,7 @@ src/Assemble/assemble
 src/Assemble/*.o
 src/Assemble/utilities/*.a
 src/Assemble/utilities/*.o
+src/Extension/samples/test_output.mp4
 
 src/Emulate/emulate
 src/Emulate/*.o
