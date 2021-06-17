@@ -7,6 +7,8 @@ void subtract_images(Frame *frame1_ptr, Frame *frame2_ptr);
 
 void multiply_image(Frame *frame_ptr, float multiple);
 
+void one_to_three_channels(Frame *frame_ptr);
+
 void lower_threshold_image(Frame *frame_ptr, uint8_t threshold);
 
 void bitmask_image(Frame *frame_ptr, Frame *bitmask_ptr);
