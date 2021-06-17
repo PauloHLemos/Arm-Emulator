@@ -1,4 +1,5 @@
-#include <assert.h> #include <stdio.h>
+#include <assert.h> 
+#include <stdio.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"

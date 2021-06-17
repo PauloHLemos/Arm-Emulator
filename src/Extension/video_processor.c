@@ -36,7 +36,7 @@ static int get_height(const char* input_path) {
 
 void process_video(const char* input_path, const char* output_path, int buffer_size,
 		uint8_t *(*func_ptr)(Frame_Buffer *)) {
-	int x, y, count;
+	int /* x, y, */ count;
 	int width = get_width(input_path);
 	int height = get_height(input_path);
 

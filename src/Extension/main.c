@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "definitions.h"
 #include "utils.h"
 #include "image_storer.h"
@@ -9,32 +10,58 @@
 #include "generate_kernel.h"
 #include "video_processor.h"
 
-int main(void) {
+uint8_t *detect_edges(Frame_Buffer* fb_ptr) {
         double laplacian[][3] = { {  0,  -1,  0 },
 				  {  -1,  4,  -1 },
        			      	  {  0,  -1,  0 } };
-        double laplacian2[][3] = { {  -1,  -1,  -1 },
-				   {  -1,  8,  -1 },
-       			      	   {  -1,  -1,  -1 } };
-	Frame *frame_ptr = load_image("samples/FMmY6.png", 3);
-
+	assert(fb_ptr->buffer_size == 1);
 	double **blur = generate_blur(5);
 
-	Frame grayscale_image	   = rgb_to_greyscale(frame_ptr);
+	Frame current_frame;
+	current_frame.width	   = fb_ptr->width;
+	current_frame.height	   = fb_ptr->height;
+	current_frame.num_channels = fb_ptr->num_channels;
+	current_frame.img	   = fb_ptr->buffer[fb_ptr->index];
+
+	Frame grayscale_image	   = rgb_to_greyscale(&current_frame);
 	Frame grayscale_image_blur = convolve_image(&grayscale_image, 5, blur);
-	Frame convolved_image	   = convolve_image(&grayscale_image_blur, 3, laplacian);
+	Frame convolved_image	   = convolve_image(&grayscale_image_blur, 3, (double **) laplacian);
 	Frame convolved_image_blur = convolve_image(&convolved_image, 5, blur);
 
-	store_image(&convolved_image_blur, "test_out.png");
+	// store_image(&convolved_image_blur, "test_out.png");
 
 	deallocate_kernel(blur, 5);
-	deallocate_frame(frame_ptr);
+	// deallocate_frame(frame_ptr); must be freed elsewhere
 	deallocate_img(&grayscale_image);
 	deallocate_img(&grayscale_image_blur);
 	deallocate_img(&convolved_image);
-	deallocate_img(&convolved_image_blur);
+	// deallocate_img(&convolved_image_blur); must be freed elsewhere
 
- 	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *invert_pixels);	
+	one_to_three_channels(&convolved_image_blur);
+	return convolved_image_blur.img;
+}
+
+int main(void) {
+	// Frame *frame_ptr = load_image("samples/FMmY6.png", 3);
+
+	// double **blur = generate_blur(5);
+
+	// Frame grayscale_image	   = rgb_to_greyscale(frame_ptr);
+	// Frame grayscale_image_blur = convolve_image(&grayscale_image, 5, blur);
+	// Frame convolved_image	   = convolve_image(&grayscale_image_blur, 3, laplacian);
+	// Frame convolved_image_blur = convolve_image(&convolved_image, 5, blur);
+	// one_to_three_channels(&convolved_image_blur);
+
+	// store_image(&convolved_image_blur, "test_out.png");
+
+	// deallocate_kernel(blur, 5);
+	// deallocate_frame(frame_ptr);
+	// deallocate_img(&grayscale_image);
+	// deallocate_img(&grayscale_image_blur);
+	// deallocate_img(&convolved_image);
+	// deallocate_img(&convolved_image_blur);
+
+ 	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *detect_edges);	
 
 	return 0;
 }

@@ -5,7 +5,7 @@
 #include "stb/stb_image_write.h"
 #include "image_storer.h"
 
-Frame *store_image(Frame *frame_ptr, const char *store_path) {
+void store_image(Frame *frame_ptr, const char *store_path) {
 	stbi_write_png(store_path, 
 		       frame_ptr->width, 
 		       frame_ptr->height, 
