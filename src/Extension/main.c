@@ -25,7 +25,7 @@ uint8_t *detect_edges(Frame_Buffer* fb_ptr) {
 
 	Frame grayscale_image	   = rgb_to_greyscale(&current_frame);
 	Frame grayscale_image_blur = convolve_image(&grayscale_image, 5, blur);
-	Frame convolved_image	   = convolve_image(&grayscale_image_blur, 3, (double **) laplacian);
+	Frame convolved_image	   = convolve_image(&grayscale_image_blur, 3, laplacian);
 	Frame convolved_image_blur = convolve_image(&convolved_image, 5, blur);
 
 	// store_image(&convolved_image_blur, "test_out.png");
@@ -61,7 +61,7 @@ int main(void) {
 	// deallocate_img(&convolved_image);
 	// deallocate_img(&convolved_image_blur);
 
- 	process_video("samples/teapot.mp4", "samples/test_output.mp4", 3, *detect_edges);	
+ 	process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
 
 	return 0;
 }
