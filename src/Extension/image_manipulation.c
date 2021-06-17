@@ -76,6 +76,31 @@ void print_image(Frame *frame_ptr) {
         }
 }
 
+void fill_left(Frame *frame_ptr, Frame *mask_ptr, uint8_t threshold) {
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
+                        if (get_pixel(frame_ptr, x, y) > threshold) {
+				break;
+			} else {
+				set_pixel(mask_ptr, 1, x, y);
+			}
+                }
+        }
+}
+
+
+void fill_right(Frame *frame_ptr, Frame *mask_ptr, uint8_t threshold) {
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = frame_ptr->width - 1; x >= 0; x--) {
+                        if (get_pixel(frame_ptr, x, y) > threshold) {
+				break;
+			} else {
+				set_pixel(mask_ptr, 1, x, y);
+			}
+                }
+        }
+}
+
 Frame rgb_to_greyscale(Frame *frame_ptr) {
 	Frame grey;
 	grey.img          = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
