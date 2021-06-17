@@ -8,7 +8,7 @@ typedef struct {
 	int height;
 	int num_channels;
 	uint8_t *img;
-} FRAME;
+} Frame;
 
 typedef struct {
 	int width;

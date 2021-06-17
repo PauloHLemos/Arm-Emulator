@@ -8,18 +8,19 @@ LDLIBS  = -lm
 
 .PHONY: all clean
 
-all: test
-# 	cp ./emulate ../emulate
+all: main
 
-test: test.o image_loader.o image_storer.o utils.o
+main: main.o image_loader.o image_storer.o utils.o image_manipulation.o generate_kernel.o
+test: test.o image_loader.o image_storer.o utils.o image_manipulation.o
 test.o: image_loader.h image_storer.h utils.h
 
-image_loader.o: image_loader.h stb/stb_image.h # definitions.h
+image_loader.o: image_loader.h stb/stb_image.h 
 image_storer.o: image_storer.h stb/stb_image.h stb/stb_image_write.h 
 utils.o: utils.h definitions.h
+main.o: utils.h image_storer.h image_loader.h image_manipulation.h generate_kernel.h
+image_manipulation.o: image_manipulation.h definitions.h
+generate_kernel.o: generate_kernel.h 
 
 clean:
 	rm -f $(wildcard *.o)
-#	rm -f emulate
-#	rm -f ../emulate
 	rm -f core
