@@ -48,6 +48,18 @@ void multiply_image(Frame *frame_ptr, float multiple) {
                 }
         }
 }
+void one_to_three_channels(Frame *frame_ptr) {
+	assert(frame_ptr->num_channels == 1);
+	uint8_t *new_img = calloc(3 * frame_ptr->height * frame_ptr->width, sizeof(uint8_t));
+	for (int i = 0; i < frame_ptr->width * frame_ptr->height * 3; i += 3) {
+		new_img[i    ] = frame_ptr->img[i];
+		new_img[i + 1] = frame_ptr->img[i];
+		new_img[i + 2] = frame_ptr->img[i];
+	}
+	free(frame_ptr->img);
+	frame_ptr->num_channels = 3;
+	frame_ptr->img = new_img;
+}
 
 void lower_threshold_image(Frame *frame_ptr, uint8_t threshold) {
         for (int y = 0; y < frame_ptr->height; y++) {
