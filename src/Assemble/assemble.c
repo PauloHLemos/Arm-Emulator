@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	translate(input_file_ptr, st_head_ptr, output_filename, &end_address);
 
 
-	dealocate(st_head_ptr);
+	deallocate(st_head_ptr);
 	fclose(input_file_ptr);
 	return EXIT_SUCCESS;
 }
