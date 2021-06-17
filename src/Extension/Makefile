@@ -10,7 +10,7 @@ LDLIBS  = -lm
 
 all: main
 
-main: main.o image_loader.o image_storer.o utils.o image_manipulation.o generate_kernel.o video_processor.o 
+main: main.o image_loader.o image_storer.o utils.o image_manipulation.o generate_kernel.o video_processor.o background_removal.o
 test: test.o image_loader.o image_storer.o utils.o image_manipulation.o 
 test.o: image_loader.h image_storer.h utils.h
 
@@ -21,6 +21,7 @@ main.o: utils.h image_storer.h image_loader.h image_manipulation.h generate_kern
 image_manipulation.o: image_manipulation.h definitions.h
 generate_kernel.o: generate_kernel.h 
 video_processor.o: video_processor.h definitions.h
+background_removal.o: generate_kernel.h image_manipulation.h definitions.h
 
 clean:
 	rm -f $(wildcard *.o)

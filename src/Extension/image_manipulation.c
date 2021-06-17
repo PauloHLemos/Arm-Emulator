@@ -50,8 +50,8 @@ void absolute_difference(Frame *frame1_ptr, Frame *frame2_ptr) {
 }
 
 void invert_image(Frame *frame_ptr) {
-        for (int y = 0; y < frame1_ptr->height; y++) {
-                for (int x = 0; x < frame1_ptr->width; x++) {
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
                         set_pixel(frame_ptr, 255 - get_pixel(frame_ptr, x, y), x, y);
                 }
         }

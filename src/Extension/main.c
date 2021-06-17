@@ -9,6 +9,7 @@
 #include "image_manipulation.h"
 #include "generate_kernel.h"
 #include "video_processor.h"
+#include "background_removal.h"
 
 uint8_t *detect_edges(Frame_Buffer* fb_ptr) {
         double laplacian[][3] = { {  0,  -1,  0 },
@@ -47,8 +48,11 @@ uint8_t *detect_edges(Frame_Buffer* fb_ptr) {
 }
 
 int main(void) {
-	// Frame *frame_ptr = load_image("samples/FMmY6.png", 3);
-
+	Frame *original_background_ptr = load_image("samples/FMmY6.png", 3);
+	Frame *desired_background_ptr = load_image("samples/FMmY6.png", 3);
+	Frame *current_frame_ptr = load_image("samples/FMmY6.png", 3);
+		
+	Frame *processed_frame_ptr = replace_background(current_frame_ptr, original_background_ptr, desired_background_ptr);		
 	// double **blur = generate_blur(5);
 
 	// Frame grayscale_image	   = rgb_to_greyscale(frame_ptr);
@@ -66,7 +70,7 @@ int main(void) {
 	// deallocate_img(&convolved_image);
 	// deallocate_img(&convolved_image_blur);
 
- 	process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
-
+ 	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
+	
 	return 0;
 }
