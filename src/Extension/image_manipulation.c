@@ -104,6 +104,19 @@ Frame rgb_to_greyscale(Frame *frame_ptr) {
 	return grey;
 }
 
+void rgb_to_greyscale_direct(Frame *frame_ptr) {
+	uint8_t *new_img_ptr	= calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	frame_ptr->num_channels = 1;
+
+	for (int i = 0; i < frame_ptr->width * frame_ptr->height; i++) {
+		uint8_t average_colour = round((frame_ptr->img[3 * i] + 
+						frame_ptr->img[3 * i + 1] + 
+		        			frame_ptr->img[3 * i + 2]) / 3);
+		new_img_ptr[i] = average_colour;
+	}
+	frame_ptr->img = new_img_ptr;
+}
+
 Frame convolve_image(Frame *frame_ptr, int cols, double kernel[][cols]) {
 	assert(frame_ptr->num_channels == 1);
         double new_value;
@@ -128,6 +141,29 @@ Frame convolve_image(Frame *frame_ptr, int cols, double kernel[][cols]) {
                 }
         }
         return convolved_image;
+}
+
+void convolve_image_direct(Frame *frame_ptr, int cols, double kernel[][cols]) {
+	assert(frame_ptr->num_channels == 1);
+        double new_value;
+	uint8_t *new_img = calloc(frame_ptr->width * frame_ptr->height, sizeof(uint8_t));
+	uint8_t max_offset = cols / 2;
+
+        for (int y = 0; y < frame_ptr->height; y++) {
+                for (int x = 0; x < frame_ptr->width; x++) {
+                        new_value = 0;
+                        for (int y_off = -1 * max_offset; y_off <= max_offset; y_off++) {
+                                for (int x_off = -1 * max_offset; x_off <= max_offset; x_off++) {
+                                        new_value += kernel[max_offset + y_off][max_offset + x_off] * 
+						     get_pixel(frame_ptr, x + x_off, y + y_off);
+                                }
+                        }
+                        // set_pixel(&convolved_image, new_value, x, y);
+			new_img[x + y * frame_ptr->width] = new_value;
+                }
+        }
+	free(frame_ptr->img);
+	frame_ptr->img = new_img;
 }
 
 // int main()

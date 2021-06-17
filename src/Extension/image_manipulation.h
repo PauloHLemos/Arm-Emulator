@@ -16,5 +16,7 @@ void bitmask_image(Frame *frame_ptr, Frame *bitmask_ptr);
 void print_image(Frame *frame_ptr);
 
 Frame rgb_to_greyscale(Frame *frame_ptr);
+void rgb_to_greyscale_direct(Frame *frame_ptr);
 
 Frame convolve_image(Frame *frame_ptr, int cols, double kernel[][cols]);
+void convolve_image_direct(Frame *frame_ptr, int cols, double kernel[][cols]);
