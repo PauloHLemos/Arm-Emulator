@@ -1,3 +1,7 @@
+#ifndef IMAGE_STORER_H
+#define IMAGE_STORER_H
 #include "definitions.h"
 
-struct Frame *store_image(struct Frame *frame, const char *store_path);
+void store_image(Frame *frame_ptr, const char *store_path);
+
+#endif

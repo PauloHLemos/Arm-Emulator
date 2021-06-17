@@ -1,7 +1,8 @@
 src/Assemble/assemble
 src/Assemble/*.o
-src/Assemble/lib/*.a
-src/Assemble/lib/*.o
+src/Assemble/utilities/*.a
+src/Assemble/utilities/*.o
+src/Extension/samples/test_output.mp4
 
 src/Emulate/emulate
 src/Emulate/*.o
@@ -14,7 +15,6 @@ doc/Report.log
 doc/Report.pdf
 
 .idea/
-src/Assemble/symbol_table/symbol_table.o
 
 
 
