@@ -13,13 +13,13 @@ uint32_t process_operand2_immediate_value(uint32_t operand2, bool *carry_flag_pt
 uint32_t process_operand2_shifted_register(struct State *state_ptr, uint32_t operand2, bool *carry_flag_ptr) {
 	uint32_t rm_index	   = operand2 & 0xf;
 	uint32_t rm		   = state_ptr->registers.array_access[rm_index];
-	uint32_t shift_code	   = (operand2 & 0b1100000) >> 5;
+	uint32_t shift_code	   = (operand2 & 96 /*1100000*/) >> 5;
 	uint32_t shift_amount	   = get_shift_amount(state_ptr, operand2);
 	return shift(rm, shift_code, shift_amount, carry_flag_ptr);
 }
 
 uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2) {
-	bool bit_4 = (operand2 & 0b10000) != 0;
+	bool bit_4 = (operand2 & 16 /*10000*/) != 0;
 	if (bit_4) {
 		// Register case, bits 8-11 are the register, we use bottom byte of it
 		uint32_t rs_index      = (operand2 & 0xf00) >> 8;
@@ -28,7 +28,8 @@ uint32_t get_shift_amount(struct State *state_ptr, uint32_t operand2) {
 		return rs_first_byte;
 	} else {
 		// Integer case, bits 7-11 are the shift
-		uint32_t immediate_shift = ((operand2 & 0b111110000000) >> 7);
+		//					111110000000
+		uint32_t immediate_shift = ((operand2 & 3968) >> 7);
 		return immediate_shift;
 	}
 }
