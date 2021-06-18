@@ -48,53 +48,40 @@ The assembler is structured as follows:
   \section*{Extension}
 
   \subsection*{Overview of the Extension}
-  For our extension we created a machine vision library to efficiently transform images and videos. Using this library we then implemented a background removal program using edge detection and bitmasking.
-  \subsection*{Loading and Storing}
-  We first wrote functions to load images and videos into a common frame format so that we could easily manipulate them. We then wrote functions to store these frames again as images and videos.
+  For our extension we created a machine vision library to efficiently transform images and videos. Using this library we then implemented a background removal program using edge detection and bitmasking. We first wrote functions to load images and videos into a common frame format so that we could easily manipulate them and wrote functions to store these frames again as images and videos. We then wrote a number of functions that are commonly used in machine vision. 
 
-%
+
+  \subsection*{Loading and Storing}
 A key aspect of this project is loading and storing media efficiently. We chose to represent images using an 8 bit colour range, as this is the industry standard. To take advantage of the efficient pointer arithmetic in C, we decided on a 1d array representation of the images in which each 2d channel is flattened and the channel values of each pixel are placed adjacently. This way we could obtain any value by offsetting a single array pointer. We decided to represent videos by converting each frame into an 8 bit colour image.
 
-%
 Because most image and video formats involve complex forms of compression, retrieving their information into our 8 bit colour format efficiently would exceed the scope of our project, and so we decided to use optimised libraries for this part.
 
-%
 For image I/O we used a library called stb, which supports most of the common formats. For video I/O we use the popen() function from the standard library to create two pipes, one for input and one for output, using the ffmpeg library. These pipes allow for each frame to be read and then written at a time. However, to be compatible with operations that need to consider adjacent frames as well, we created a variable sized frame buffer, which is implemented as a circular array where the newest frame overrides the oldest.
 
-%
 For single image manipulation, an image is loaded into a struct Frame by the functions in image\_loader.c, which allow for a different number of channels to be loaded. This frame is then manipulated by calling the desired functions, and stored using the store\_image function in image\_storer.c.
 
-%
 For video, the process\_video function in video\_processor.c is to be used. This is where the main loop containing the two pipes is run, and the frame manipulation is done using the function passed in as a parameter.
 
   \subsection*{Transformations}
-We then wrote a number of functions that are commonly used in machine vision. The add\_images function takes in 2 image frames, and adds the second image to the first pixel wise.
+The add\_images function takes in 2 image frames, and adds the second image to the first pixel wise.
 
-%
 The subtract\_images function takes two image frames and subtracts the second image from the first one pixel wise.
 
-%
 The multiply\_image function takes in an image frame and a float value, and multiplies each pixel in the image by the value.
 
-%
 The lower\_image\_threshold function takes in an image frame and a threshold and sets all pixels below the threshold to 0.
 
-%
 The bitmask\_image function takes in an image frame and a bitmask frame of the same dimensions. For each zero valued pixel in the bitmask, the corresponding pixel in the image is set to 0 too.
 
-%
 The rgb\_to\_greyscale function is used to convert an rgb image to a greyscale image by averaging the three colour channels. It returns a single channel image frame. Note that to save greyscale images, they have to be converted into 3 channel frames using the  one\_to\_three\_channels function.
 
-%
 The convolve\_image function takes in an image frame, a kernel (an n by n matrix) and the number of rows/columns in the kernel. It then performs a convolution over the image (with zero padding around the image) and returns the resultant image. We also wrote functions to generate common filters such as a block blur and a laplacian filter.
 
   \subsection*{Background Removal Program}
 Our background removal program takes a picture of the original background, the desired replacement background and frame buffer containing the video the user wants to remove the background for. It then removes the background around the user and replaces it with the desired image. 
 
-%
 Two special fill functions were written for this task: fill left and fill right. Both functions take an image and a threshold. They both start at the top of the image and scan it from the left and right respectively, until they hit a pixel value larger than the threshold value. They then move onto the line below until they reach the bottom of the image. By doing this they fill an image from the left and the right.
 
-%
 To do this the same process was repeated for each frame. First both the original background and the current frame are converted to greyscale. Then we blur them, apply a laplacian transform and then blur the images again using our convolution function. The absolute difference between the transformed current frame and the transformed original background is then calculated to create an outline of the person. Finally we use the fill left and fill right functions on the outline to create a bitmask that cuts out the background. Using the bitmask\_image function, this bitmask is applied to the current frame, and then inverted and applied to the current image. These two bitmasked images can then be added to produce the frame with the background removed. 
 
   \subsection*{Testing}
@@ -107,16 +94,17 @@ As a testing approach for our extension we have experimented with and manipulate
 
   \subsection*{Group Reflection}
 
-Communication was primarily carried out through online meetings and messaging throughout the project. Although this may have hindered group programming, we felt this medium was adequate for making design decisions, allocating work or helping each other solve problems. Meetings were held almost daily throughout the project and on days where we could not all meet, we kept each other updated on the progress of our work through messages. We also used a Gantt chart through Google Sheets which each member updated to track the progress of individual tasks; this gave a good visual representation of our progress but it was less frequently updated later on as we talked enough to know where everyone was at.
+Communication was primarily carried out through online meetings and messaging throughout the project. Although this medium may have hindered group programming, we felt it was adequate for making design decisions, allocating work or helping each other solve problems. Meetings were held almost daily throughout the project and on days where we could not all meet, we kept each other updated on the progress of our work through messages. One thing we feel we could have communicated better were each of our working hours for contact, and our personal plans. 
 
-Our work allocation was generally fair and members were often assigned tasks they thought they would be stronger at to ensure a better outcome. At the beginning of all three tasks, we decided together the structure and the main functions we needed to implement before distributing work. This gave each member a better understanding of how their work integrated into the entire project as well as a broader view of the program.
+We also used a Gantt chart through Google Sheets which each member updated to track the progress of individual tasks; this gave a good visual representation of our progress but it was less frequently updated later on. The further we strayed from the GANTT chart, the more difficult it was to follow; We feel that we could have made the GANTT chart even more useful if we had progress meetings to check where we were at on the chart, and manage contingencies on the fly. 
+
+Our work allocation was generally fair and members were often assigned tasks they thought they would be stronger at to ensure a better outcome. At the beginning of all three tasks, we decided together the structure and the main functions we needed to implement before distributing work. This gave each member a better understanding of how their work integrated into the entire project as well as a broader view of the program. Towards the start of the project, the work allocation was very fixed, resulting in certain team members with larger tasks being under more pressure to perform. In the second two sections our work allocation was much more dynamic and adaptable based on progress of the current tasks.
 
 In terms of things we would change, we feel that our group could be slightly more timely with finishing our tasks. There were times when a certain part would be a day late although this was not severely detrimental as we set our internal deadlines quite ambitiously. We could also adhere more closely to our decided code style standards as we faced some code style issues e.g bad variable names which made debugging more difficult. Another change could be more in-person group programming sessions which could be more efficient as communication would be more straightforward.
 
-Our strengths for this project would be our consistency and organisation. Throughout the project, we have kept a steady tempo in finishing tasks in a way that we weren't rushed at the end. Our git organisation was also tidy as we used branches for individual tasks and kept to a standard commit style.
+Our strengths for this project would be our consistency and organisation. Throughout the project, we have kept a steady tempo in finishing tasks in a way that we weren't rushed at the end. Our git organdisation was also tidy as we used branches for individual tasks and kept to a standard commit style.
 
 Overall, we feel we have worked well as a group with all members contributing fairly and achieving our objectives.
-
   \subsection*{Individual Reflection}
 
 \texttt{Otto White:} Overall I enjoyed the experience of working in a team. I really tried to communicate, deliver on time, and be useful anywhere else I could. I wrote multiple large components myself, and integrated other team members components to form a whole, making very heavy use of GDB to debug. Occasionally delivery was delayed due to underestimated problem sizes and I found unnecessary frustration in this; I should have stepped back and re-distributed subtasks of the problem, lessening the pressure on the group and minimising the recovery time. Above all I would like to spend more down-time with my team mates in which we don’t talk about work, and have a good time. I believe this is just as important as the work itself, and will positively side-effect the work and experience.
@@ -128,59 +116,4 @@ Overall, we feel we have worked well as a group with all members contributing fa
 
 \texttt{Weizhong Zhao:} I feel I have integrated well into the group and have enjoyed collaborating and learning from others. I was mainly responsible for the branch instructions in emulator and assembler, file loading/writing processes and instruction fetching. My main strength has been time management and meeting deadlines which has been important as many functions have been interdependent. Whenever I finished my tasks early, I would work on other jobs such as the report. My main weakness from the emulator task was failing to properly check some of my functions which I improved on for the assembler by creating more thorough unit tests. I also feel my git knowledge was lacking as there were moments where I was unsure on how to fix merge conflicts; I have now learnt more about git to have a good understanding about merging and branching. For another project, I would add more commentary and write unit tests before my functions as this would help my code understandability for others while also giving me a concrete objective to code towards.
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
