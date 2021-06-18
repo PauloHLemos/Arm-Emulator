@@ -24,25 +24,6 @@ int main(void) {
 	Frame *current_frame_ptr = load_image("samples/current_frame.png", 3);
 		
 	Frame *processed_frame_ptr = replace_background(current_frame_ptr, original_background_ptr, desired_background_ptr);		
-	// double **blur = generate_blur(5);
-
-	// Frame grayscale_image	   = rgb_to_greyscale(frame_ptr);
-	// Frame grayscale_image_blur = convolve_image(&grayscale_image, 5, blur);
-	// Frame convolved_image	   = convolve_image(&grayscale_image_blur, 3, laplacian);
-	// Frame convolved_image_blur = convolve_image(&convolved_image, 5, blur);
-	// one_to_three_channels(&convolved_image_blur);
-
-	// store_image(&convolved_image_blur, "test_out.png");
-
-	// deallocate_kernel(blur, 5);
-	// deallocate_frame(frame_ptr);
-	// deallocate_img(&grayscale_image);
-	// deallocate_img(&grayscale_image_blur);
-	// deallocate_img(&convolved_image);
-	// deallocate_img(&convolved_image_blur);
-
- 	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
-	
 	store_image(processed_frame_ptr, "samples/background_replacement.png");
 
 	
