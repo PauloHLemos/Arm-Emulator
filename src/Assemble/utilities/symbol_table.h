@@ -14,6 +14,6 @@ struct ST_Node {
 bool search_table(struct ST_Node *node_ptr, char *label, uint32_t *address_ptr);
 void add_node(struct ST_Node *node_ptr, char *label, uint32_t address);
 struct ST_Node *initialize();
-void dealocate(struct ST_Node *node_ptr);
+void deallocate(struct ST_Node *node_ptr);
 
 #endif

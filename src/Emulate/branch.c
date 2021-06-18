@@ -5,6 +5,7 @@
 
 void branch(struct State *state_ptr, struct Instruction *instruction_ptr){
 	uint32_t offset = instruction_ptr->offset << 2;
-	if ((offset & (1 << 25)) != 0) offset |= 0b11111100000000000000000000000000;
+						/*11111100000000000000000000000000*/
+	if ((offset & (1 << 25)) != 0) offset |= 4227858432;
 	state_ptr->registers.struct_access.PC += offset;
 }

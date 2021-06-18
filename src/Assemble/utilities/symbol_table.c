@@ -28,7 +28,7 @@ struct ST_Node* initialize() {
 	return calloc(1, sizeof(struct ST_Node));
 }
 
-void dealocate(struct ST_Node* node_ptr) {
+void deallocate(struct ST_Node* node_ptr) {
 	for (struct ST_Node *next_ptr; node_ptr != NULL; next_ptr = node_ptr->next_ptr, 
 							 free(node_ptr), 
 							 node_ptr = next_ptr);
