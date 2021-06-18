@@ -16,7 +16,23 @@ double **generate_blur(int size) {
 }
 
 double **generate_laplace(int size) {
-	return 0;
+	double **laplace_ptr = malloc(size * sizeof(double *));
+	
+	for (int i = 0; i < size; i++) {
+		laplace_ptr[i] = malloc(size * sizeof(double));
+	}
+
+	laplace_ptr[0][0] = 0;
+	laplace_ptr[0][1] = 0;
+	laplace_ptr[0][2] = 0;
+	laplace_ptr[1][0] = 0;
+	laplace_ptr[1][1] = 0;
+	laplace_ptr[1][2] = 0;
+	laplace_ptr[2][0] = 0;
+	laplace_ptr[2][1] = 0;
+	laplace_ptr[2][2] = 0;
+
+	return laplace_ptr;
 }
 
 void deallocate_kernel(double **kernel_ptr, int size) {

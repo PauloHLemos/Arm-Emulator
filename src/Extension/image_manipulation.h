@@ -15,6 +15,12 @@ void bitmask_image(Frame *frame_ptr, Frame *bitmask_ptr);
 
 void invert_bitmask(Frame *bitmask_ptr);
 
+void fill_left(Frame *frame_ptr, Frame *mask_ptr, uint8_t threshold);
+
+void fill_right(Frame *frame_ptr, Frame *mask_ptr, uint8_t threshold);
+
+void absolute_difference(Frame *frame1_ptr, Frame *frame2_ptr);
+
 void print_image(Frame *frame_ptr);
 
 Frame rgb_to_greyscale(Frame *frame_ptr);

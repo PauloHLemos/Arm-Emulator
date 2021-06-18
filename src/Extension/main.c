@@ -48,9 +48,9 @@ uint8_t *detect_edges(Frame_Buffer* fb_ptr) {
 }
 
 int main(void) {
-	Frame *original_background_ptr = load_image("samples/FMmY6.png", 3);
-	Frame *desired_background_ptr = load_image("samples/FMmY6.png", 3);
-	Frame *current_frame_ptr = load_image("samples/FMmY6.png", 3);
+	Frame *original_background_ptr = load_image("samples/original_background.png", 3);
+	Frame *desired_background_ptr = load_image("samples/replacement_background.png", 3);
+	Frame *current_frame_ptr = load_image("samples/current_frame.png", 3);
 		
 	Frame *processed_frame_ptr = replace_background(current_frame_ptr, original_background_ptr, desired_background_ptr);		
 	// double **blur = generate_blur(5);
@@ -72,5 +72,7 @@ int main(void) {
 
  	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
 	
+	store_image(processed_frame_ptr, "samples/background_replacement.png");
+
 	return 0;
 }

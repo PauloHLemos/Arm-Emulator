@@ -66,6 +66,7 @@ void multiply_image(Frame *frame_ptr, float multiple) {
                 }
         }
 }
+
 void one_to_three_channels(Frame *frame_ptr) {
 	assert(frame_ptr->num_channels == 1);
 	uint8_t *new_img = calloc(3 * frame_ptr->height * frame_ptr->width, sizeof(uint8_t));
@@ -98,7 +99,7 @@ void bitmask_image(Frame *frame_ptr, Frame *bitmask) {
 }
 
 void invert_bitmask(Frame *bitmask_ptr) {
-	for (int i = 0; i < bitmask->width * bitmask->height; i++) {
+	for (int i = 0; i < bitmask_ptr->width * bitmask_ptr->height; i++) {
 		if (bitmask_ptr->img[i] == 0) {
 			bitmask_ptr->img[i] = 255;
 		} else {
