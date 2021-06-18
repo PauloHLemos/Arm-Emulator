@@ -23,13 +23,13 @@ double **generate_laplace(int size) {
 	}
 
 	laplace_ptr[0][0] = 0;
-	laplace_ptr[0][1] = 0;
+	laplace_ptr[0][1] = 1;
 	laplace_ptr[0][2] = 0;
-	laplace_ptr[1][0] = 0;
-	laplace_ptr[1][1] = 0;
-	laplace_ptr[1][2] = 0;
+	laplace_ptr[1][0] = 1;
+	laplace_ptr[1][1] = -4;
+	laplace_ptr[1][2] = 1;
 	laplace_ptr[2][0] = 0;
-	laplace_ptr[2][1] = 0;
+	laplace_ptr[2][1] = 1;
 	laplace_ptr[2][2] = 0;
 
 	return laplace_ptr;
