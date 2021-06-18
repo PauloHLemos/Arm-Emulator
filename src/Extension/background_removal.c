@@ -36,13 +36,6 @@ Frame *filter_edges(Frame *frame_ptr) {
 	double **blur9 = generate_blur(9);
 	double **laplacian = generate_laplace(3);
 
-//	Frame *blur7_frame_ptr = malloc(sizeof(Frame));
-//	Frame *laplacian_frame_ptr = malloc(sizeof(Frame));
-//	Frame *blur9_frame_ptr = malloc(sizeof(Frame));
-//	*blur7_frame_ptr = convolve_image(frame_ptr, 7, *blur7);
-//	Frame blur7_frame_ptr = convolve_image(frame_ptr, 7, *blur7);
-	// *laplacian_frame_ptr = 
-
 	Frame blur7_frame = convolve_image(frame_ptr, 7, blur7);
 	Frame laplacian_frame  = convolve_image(&blur7_frame, 3, laplacian);
 	Frame *blur9_frame_ptr = malloc(sizeof(Frame));
