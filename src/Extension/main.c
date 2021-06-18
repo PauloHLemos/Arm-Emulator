@@ -36,15 +36,19 @@ int main(void) {
 
  	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
 	
-	store_image(processed_frame_ptr, "samples/background_replacement.png");
+	store_image(processed_framdddd_ptr, "samples/background_replacement.png");
 
 	
-	Frame *right_side = load_image("samples/right_side.png", 3);
-	Frame *left_side = load_image("samples/left_side.png", 3);
+	Frame *baboon_ptr = load_image("samples/baboon.png", 3);
+	Frame *aeroplane_ptr = load_image("samples/aeroplane.png", 3);
+	
+	Frame *gray_baboon_ptr = rgb_to_greyscale(baboon_ptr);
+	Frame *gray_aeroplane_ptr = rgb_to_greyscale(aeroplane_ptr);	
 
-	add_images(right_side, left_side);
+	add_images(gray_baboon_ptr, gray_aeroplane_ptr);
+	one_to_three_channels(grey_baboon_ptr);
 
-	store_image(right_side, "added_images.png");
+	store_image(grey_baboon_ptr, "addition.png");
 
 	return 0;
 }
