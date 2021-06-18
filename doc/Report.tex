@@ -63,19 +63,23 @@ For single image manipulation, an image is loaded into a struct Frame by the fun
 For video, the process\_video function in video\_processor.c is to be used. This is where the main loop containing the two pipes is run, and the frame manipulation is done using the function passed in as a parameter.
 
   \subsection*{Transformations}
-The add\_images function takes in 2 image frames, and adds the second image to the first pixel wise.
 
-The subtract\_images function takes two image frames and subtracts the second image from the first one pixel wise.
+  \begin{itemize}
+\item The add\_images function takes in 2 image frames, and adds the second image to the first pixel wise.
 
-The multiply\_image function takes in an image frame and a float value, and multiplies each pixel in the image by the value.
+\item The subtract\_images function takes two image frames and subtracts the second image from the first one pixel wise.
 
-The lower\_image\_threshold function takes in an image frame and a threshold and sets all pixels below the threshold to 0.
+\item The multiply\_image function takes in an image frame and a float value, and multiplies each pixel in the image by the value.
 
-The bitmask\_image function takes in an image frame and a bitmask frame of the same dimensions. For each zero valued pixel in the bitmask, the corresponding pixel in the image is set to 0 too.
+\item The lower\_image\_threshold function takes in an image frame and a threshold and sets all pixels below the threshold to 0.
 
-The rgb\_to\_greyscale function is used to convert an rgb image to a greyscale image by averaging the three colour channels. It returns a single channel image frame. Note that to save greyscale images, they have to be converted into 3 channel frames using the  one\_to\_three\_channels function.
+\item The bitmask\_image function takes in an image frame and a bitmask frame of the same dimensions. For each zero valued pixel in the bitmask, the corresponding pixel in the image is set to 0 too.
 
-The convolve\_image function takes in an image frame, a kernel (an n by n matrix) and the number of rows/columns in the kernel. It then performs a convolution over the image (with zero padding around the image) and returns the resultant image. We also wrote functions to generate common filters such as a block blur and a laplacian filter.
+\item The rgb\_to\_greyscale function is used to convert an rgb image to a greyscale image by averaging the three colour channels. It returns a single channel image frame. Note that to save greyscale images, they have to be converted into 3 channel frames using the  one\_to\_three\_channels function.
+
+\item The convolve\_image function takes in an image frame, a kernel (an n by n matrix) and the number of rows/columns in the kernel. It then performs a convolution over the image (with zero padding around the image) and returns the resultant image. We also wrote functions to generate common filters such as a block blur and a laplacian filter.
+
+\end{itemize}
 
   \subsection*{Background Removal Program}
 Our background removal program takes a picture of the original background, the desired replacement background and frame buffer containing the video the user wants to remove the background for. It then removes the background around the user and replaces it with the desired image. 
@@ -102,7 +106,7 @@ Our work allocation was generally fair and members were often assigned tasks the
 
 In terms of things we would change, we feel that our group could be slightly more timely with finishing our tasks. There were times when a certain part would be a day late although this was not severely detrimental as we set our internal deadlines quite ambitiously. We could also adhere more closely to our decided code style standards as we faced some code style issues e.g bad variable names which made debugging more difficult. Another change could be more in-person group programming sessions which could be more efficient as communication would be more straightforward.
 
-Our strengths for this project would be our consistency and organisation. Throughout the project, we have kept a steady tempo in finishing tasks in a way that we weren't rushed at the end. Our git organdisation was also tidy as we used branches for individual tasks and kept to a standard commit style.
+Our strengths for this project would be our consistency and organisation. Throughout the project, we have kept a steady tempo in finishing tasks in a way that we weren't rushed at the end. Our git organisation was also tidy as we used branches for individual tasks and kept to a standard commit style.
 
 Overall, we feel we have worked well as a group with all members contributing fairly and achieving our objectives.
   \subsection*{Individual Reflection}
