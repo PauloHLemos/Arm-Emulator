@@ -9,7 +9,7 @@ void loader(char *fname, uint8_t *memory){
 				perror("Error opening file.txt!");
 				exit(1);
 		}
-		size_t size = fread(memory, 1, 65536, file);    
+		fread(memory, 1, 65536, file);    
 		if (ferror(file)){
 				perror("Error reading from stream.\n");
 				exit(1);	
