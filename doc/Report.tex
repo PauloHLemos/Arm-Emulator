@@ -5,6 +5,9 @@
   \graphicspath{ {./images/} }
   \setlength{\parindent}{0pt} 
   \setlength{\parskip}{1em}
+
+
+
   \begin{document}
   \title{ARM Final Report}
   \author{Otto White, Paulo Lemos, Robert Stok, Weizhong Zhao}
@@ -29,7 +32,7 @@ The assembler is structured as follows:
 
 \item \texttt{convert\_instructions.c} defines the convert\_instructions function. First, this determines the nature of an instruction and passes it to the appropiate function from translate\_multiply, translate\_single\_data\_transfer, translate\_branch or translate\_data\_processing. The output is then fed through encode in \texttt{encode.c} and returned.
 
-\item \texttt{translate\_multiply.c, translate\_single\_data\_transfer.c, translate\_branch.c, and translate\_data\_processing.c} each define the respective translate functions. A common tokenizer in split\_instructions.c in \texttt{utilities} is used to seperate the instruction and avoid code duplication. A new Instruction struct, representing the instruction, is populated with relevant opcodes and operand fields and then returned.
+\item \texttt{translate\_multiply.c, translate\_single\_data\_ transfer.c, translate\_branch.c,} \\ \texttt{translate\_data\_processing.c} each define the respective translate functions. A common tokenizer in split\_instructions.c in \texttt{utilities} is used to seperate the instruction and avoid code duplication. A new Instruction struct, representing the instruction, is populated with relevant opcodes and operand fields and then returned.
 
 \item \texttt{encode.c} defines the encode function which builds the final binary word from the instruction struct and returns it as a uint\_32t.
 
@@ -39,9 +42,8 @@ The assembler is structured as follows:
 
 \item \texttt{testing} contains unit tests for different parts of the assembler.
 
-We decided to implement a two pass assembler as . The idea of writing line by line
-
 \end{itemize}
+
 
   \section*{Extension}
 
@@ -65,4 +67,67 @@ Overall, we feel we have worked well as a group with all members contributing fa
 
   \subsection*{Individual Reflection}
 
-  \end{document}
+\texttt{Otto White:}
+
+\texttt{Paulo Lemos:} 
+
+\texttt{Robert Stok:} 
+
+\texttt{Weizhong Zhao:} I feel I have integrated well into the group and have enjoyed collaborating and learning from others. I was mainly responsible for the branch instructions in emulator and assembler, file loading/writing processes and instruction fetching. My main strength has been time management and meeting deadlines which has been important as many functions have been interdependent. Whenever I finished my tasks early, I would work on other jobs such as the report. My main weakness from the emulator task was failing to properly check some of my functions which I improved on for the assembler by creating more thorough unit tests. I also feel my git knowledge was lacking as there were moments where I was unsure on how to fix merge conflicts; I have now learnt more about git to have a good understanding about merging and branching. For another project, I would add more commentary and write unit tests before my functions as this would help my code understandability for others while also giving me a concrete objective to code towards.
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
