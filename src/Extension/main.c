@@ -11,6 +11,13 @@
 #include "video_processor.h"
 #include "background_removal.h"
 
+Frame blur(Frame_Buffer frame_buffer) {
+	Frame *frame = frame_buffer.buffer[0];
+	double **blur = generate_blur(5);	
+	return convolve_image(frame, 5, blur);
+}
+	
+
 int main(void) {
 	Frame *original_background_ptr = load_image("samples/original_background.png", 3);
 	Frame *desired_background_ptr = load_image("samples/desired_background.png", 3);
@@ -36,7 +43,7 @@ int main(void) {
 
  	// process_video("samples/teapot.mp4", "samples/test_output.mp4", 1, *detect_edges);	
 	
-	store_image(processed_framdddd_ptr, "samples/background_replacement.png");
+	store_image(processed_frame_ptr, "samples/background_replacement.png");
 
 	
 	Frame *baboon_ptr = load_image("samples/baboon.png", 3);
@@ -49,6 +56,17 @@ int main(void) {
 	one_to_three_channels(grey_baboon_ptr);
 
 	store_image(grey_baboon_ptr, "addition.png");
+
+	
+	double **laplacian = generate_laplace(3);
+	Frame aeroplane_edges = convolve_image(gray_aeroplane_ptr, 3, laplacian);
+	one_to_three_channels(&aeroplane_edges);
+	
+	store_image(&aeroplane_edges, "edges.png");
+
+
+	process_video("samples/Venice_10.mp4", "samples/blurred_venice.mp4", 1, blur);
+	
 
 	return 0;
 }
